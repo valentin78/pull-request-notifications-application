@@ -1,18 +1,34 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './components/app/app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './components/app/app.component';
+import {OptionsComponent} from './components/options/options.component';
+import {FormsModule} from '@angular/forms';
+import {SettingsService} from './services/settings.service';
+import {HomeComponent} from './components/home/home.component';
+import {BitbucketService} from './services/bitbucket.service';
+import {HttpClientModule} from '@angular/common/http';
+import { PullRequestComponent } from './components/pull-request-view/pull-request.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    OptionsComponent,
+    HomeComponent,
+    PullRequestComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    SettingsService,
+    BitbucketService
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

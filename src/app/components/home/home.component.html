@@ -1,0 +1,28 @@
+<div class="home">
+  <div class="authored">
+    <h3>Authored</h3>
+    <ng-container *ngIf="authored">
+      <div *ngFor="let pr of authored.values">
+        <app-pull-request [pullRequest]="pr"></app-pull-request>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="reviewing">
+    <h3>Reviewing</h3>
+    <ng-container *ngIf="reviewing">
+      <div *ngFor="let pr of reviewing.values">
+        <app-pull-request [pullRequest]="pr"></app-pull-request>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="participant">
+    <h3>Participant</h3>
+    <ng-container *ngIf="participant">
+      <div *ngFor="let pr of participant.values">
+        <app-pull-request [pullRequest]="pr"></app-pull-request>
+      </div>
+    </ng-container>
+  </div>
+</div>

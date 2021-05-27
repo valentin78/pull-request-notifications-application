@@ -1,0 +1,13 @@
+<div>
+  <div>
+    <label style="width: 75px;" for="bitbucketUrl">URL:</label>
+    <input id="bitbucketUrl" type="text" size="50"  placeholder="bitbucket url" pattern="^https?://" [(ngModel)]="settings.url">
+  </div>
+
+  <div>
+    <label style="width: 75px;" for="bitbucketToken">Token:</label>
+    <input id="bitbucketToken" type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="settings.token">
+  </div>
+
+  <button (click)="onSave()">Save</button>
+</div>
