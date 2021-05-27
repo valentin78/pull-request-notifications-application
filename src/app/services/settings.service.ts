@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BitbucketSettings} from '../models/bitbucketSettings';
+import {BitbucketSettings} from '../models/models';
 
 @Injectable()
 export class SettingsService {

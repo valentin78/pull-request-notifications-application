@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PullRequest} from '../../services/bitbucket.service';
+import {PullRequest} from '../../models/models';
 
 @Component({
   selector: 'app-pull-request',
@@ -8,12 +8,17 @@ import {PullRequest} from '../../services/bitbucket.service';
 })
 export class PullRequestComponent implements OnInit {
 
-  @Input() pullRequest: PullRequest | undefined;
+  @Input()
+  pullRequest!: PullRequest;
+
+  selfUrl!: string;
 
   constructor() {
   }
 
   ngOnInit(): void {
+    if (this.pullRequest.links.self.length > 0) {
+      this.selfUrl = this.pullRequest.links.self[0].href;
+    }
   }
-
 }

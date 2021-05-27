@@ -1,3 +1,9 @@
-<div *ngIf="pullRequest">
-  <span>{{pullRequest.title}}</span>
+<div *ngIf="pullRequest" class="container">
+  <app-pull-request-state [state]="pullRequest.state"></app-pull-request-state>
+<!--  <app-user [user]="pullRequest.author.user"></app-user>-->
+  <a class="self-url" href="{{selfUrl}}" target="_blank">{{pullRequest.title}}</a>
+  <span *ngIf="pullRequest.properties.mergeResult.outcome !== 'CLEAN'" class="conflicts" title="code conflict detected"></span>
+  <ng-container *ngFor="let reviewer of pullRequest.reviewers">
+    <app-user [user]="reviewer.user" [approved]="reviewer.approved"></app-user>
+  </ng-container>
 </div>

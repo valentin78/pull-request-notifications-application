@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  line-height: 24px;
+  white-space: nowrap;
+  align-items: center;
+}
+
+.self-url {
+  margin-right: 5px;
+}
+
+.conflicts {
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+  background-color: yellow;
+}

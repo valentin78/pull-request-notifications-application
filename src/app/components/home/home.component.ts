@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {BitbucketResponse, BitbucketService, PullRequest} from '../../services/bitbucket.service';
+import {BitbucketService} from '../../services/bitbucket.service';
 import {PullRequestRole} from '../../models/enums';
+import {BitbucketResponse, PullRequest} from '../../models/models';
 
 @Component({
   selector: 'app-main',

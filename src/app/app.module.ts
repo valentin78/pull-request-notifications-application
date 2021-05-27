@@ -10,13 +10,17 @@ import {HomeComponent} from './components/home/home.component';
 import {BitbucketService} from './services/bitbucket.service';
 import {HttpClientModule} from '@angular/common/http';
 import { PullRequestComponent } from './components/pull-request-view/pull-request.component';
+import { UserComponent } from './components/user/user.component';
+import { PullRequestStateComponent } from './components/pull-request-state/pull-request-state.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     OptionsComponent,
     HomeComponent,
-    PullRequestComponent
+    PullRequestComponent,
+    UserComponent,
+    PullRequestStateComponent
   ],
   imports: [
     BrowserModule,

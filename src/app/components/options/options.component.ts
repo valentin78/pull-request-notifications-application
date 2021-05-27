@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BitbucketSettings} from '../../models/bitbucketSettings';
+import {BitbucketSettings} from '../../models/models';
 import {SettingsService} from '../../services/settings.service';
 
 @Component({
