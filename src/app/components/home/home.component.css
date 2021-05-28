@@ -1,5 +1,23 @@
 .home {
+  display: flex;
+  flex-flow: column nowrap;
   min-width: 400px;
   min-height: 250px;
+}
+
+.role {
+  margin-bottom: 10px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  height: 25px;
+  background-color: lightgrey;
+  padding-left: 10px;
+  background-blend-mode: darken;
+}
+
+.list {
   margin: auto 10px;
 }

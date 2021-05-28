@@ -1,12 +1,10 @@
 .container {
   display: flex;
-  line-height: 24px;
-  white-space: nowrap;
-  align-items: center;
-}
-
-.self-url {
-  margin-right: 5px;
+  align-items: flex-start; /* vertical alignment */
+  flex-flow: row nowrap;
+  justify-content: flex-start; /* horizontal alignment */
+  padding: 2px 0;
+  border: red solid 1px;
 }
 
 .conflicts {
@@ -14,4 +12,27 @@
   height: 15px;
   margin-right: 10px;
   background-color: yellow;
+}
+
+.data {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: left;
+  margin-right: 5px;
+}
+
+.self-url {
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+
+.status-bar {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.reviewers {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center; /* vertical alignment */
 }

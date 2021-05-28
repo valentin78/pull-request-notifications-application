@@ -1,28 +1,28 @@
 <div class="home">
-  <div class="authored">
-    <h3>Authored</h3>
-    <ng-container *ngIf="authored">
+  <div class="role">
+    <div class="title"><h3>Authored</h3></div>
+    <div *ngIf="authored" class="list">
       <div *ngFor="let pr of authored.values">
         <app-pull-request [pullRequest]="pr"></app-pull-request>
       </div>
-    </ng-container>
+    </div>
   </div>
 
-  <div class="reviewing">
-    <h3>Reviewing</h3>
-    <ng-container *ngIf="reviewing">
+  <div class="role">
+    <div class="title"><h3>Reviewing</h3></div>
+    <div *ngIf="reviewing" class="list">
       <div *ngFor="let pr of reviewing.values">
         <app-pull-request [pullRequest]="pr"></app-pull-request>
       </div>
-    </ng-container>
+    </div>
   </div>
 
-  <div class="participant">
-    <h3>Participant</h3>
-    <ng-container *ngIf="participant">
+  <div class="role">
+    <div class="title"><h3>Participant</h3></div>
+    <div *ngIf="participant" class="list">
       <div *ngFor="let pr of participant.values">
         <app-pull-request [pullRequest]="pr"></app-pull-request>
       </div>
-    </ng-container>
+    </div>
   </div>
 </div>
