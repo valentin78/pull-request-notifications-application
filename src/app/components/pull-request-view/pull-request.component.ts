@@ -4,7 +4,7 @@ import {PullRequest} from '../../models/models';
 @Component({
   selector: 'app-pull-request',
   templateUrl: './pull-request.component.html',
-  styleUrls: ['./pull-request.component.css']
+  styleUrls: ['./pull-request.component.scss']
 })
 export class PullRequestComponent implements OnInit {
 
