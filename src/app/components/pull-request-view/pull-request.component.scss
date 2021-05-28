@@ -1,10 +1,11 @@
 .container {
-  display: flex;
-  align-items: flex-start; /* vertical alignment */
-  flex-flow: row nowrap;
-  justify-content: flex-start; /* horizontal alignment */
   padding: 2px 0;
-  border: red solid 1px;
+  //border: red solid 1px;
+  border-top: 1px solid #444c56;
+
+  &:hover {
+    background-color: #2D333BC1;
+  }
 }
 
 .conflicts {
@@ -12,6 +13,14 @@
   height: 15px;
   margin-right: 10px;
   background-color: yellow;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start; /* vertical alignment */
+  flex-flow: row nowrap;
+  justify-content: flex-start; /* horizontal alignment */
+  margin: 0 5px;
 }
 
 .data {

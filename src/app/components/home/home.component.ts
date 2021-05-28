@@ -6,7 +6,7 @@ import {BitbucketResponse, PullRequest} from '../../models/models';
 @Component({
   selector: 'app-main',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
   authored: BitbucketResponse<PullRequest> | undefined;

@@ -1,11 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 body {
   background-attachment: fixed;
-  background-color: #DEF1FA;
+  background-color: #22272e;
   background-image: url("/assets/home.png");
   background-position: -200px bottom;
   background-repeat: no-repeat;
   margin: 0;
   padding: 0;
+  color: rgb(173, 186, 199);
   font-family: sans-serif;
+}
+
+a {
+  background-color: rgba(0, 0, 0, 0);
+  color: rgb(83, 155, 245);
 }
