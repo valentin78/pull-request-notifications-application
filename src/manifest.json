@@ -4,6 +4,7 @@
   "version": "1.0",
   "description": "Bitbucket Notifications",
   "action": {
+    "default_icon": "assets/bitbucket.png",
     "default_popup": "/index.html"
   },
   "options_ui": {

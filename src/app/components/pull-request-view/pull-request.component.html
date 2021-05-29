@@ -1,11 +1,24 @@
 <div class="container" *ngIf="pullRequest">
   <div class="content">
     <div class="data">
-      <a class="self-url" href="{{selfUrl}}" target="_blank">{{pullRequest.title}}</a>
+      <span class="self-url">
+        <app-user *ngIf="showAuthorAvatar" [user]="pullRequest.author.user" [size]="14"></app-user>
+        <a href="{{selfUrl}}" target="_blank">{{pullRequest.title}}</a>
+      </span>
       <div class="status-bar">
-        <app-pull-request-state [state]="pullRequest.state"></app-pull-request-state>
-        <span>{{pullRequest.createdDate | date}}</span>
-        <span>"comments"</span>
+
+        <span class="pr-status"
+              [class.pr-can-be-merged]="canBeMerged"
+              [class.pr-has-conflicts]="hasConflicts"
+              title="status">{{pullRequest.state}}</span>
+
+        <span title="created date">{{pullRequest.createdDate | date}}</span>
+
+        <span class="comments" *ngIf="commentsCount" title="{{commentsCount}} comment(s)">
+          {{commentsCount}}
+          <i class="icon icon-bubble"></i>
+        </span>
+
       </div>
     </div>
     <div class="reviewers">

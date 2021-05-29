@@ -1,15 +1,27 @@
 <div class="home">
   <div class="role">
-    <div class="title"><h3>Authored</h3></div>
+    <div class="title">
+      <h3>
+        <i style="margin-right: 2px;" class="icon icon-user"></i>
+        Authored
+        <span *ngIf="authored">&nbsp;| {{authored.values.length}}</span>
+      </h3>
+    </div>
     <div *ngIf="authored" class="list">
       <div *ngFor="let pr of authored.values">
-        <app-pull-request [pullRequest]="pr"></app-pull-request>
+        <app-pull-request [pullRequest]="pr" [showAuthorAvatar]="false"></app-pull-request>
       </div>
     </div>
   </div>
 
   <div class="role">
-    <div class="title"><h3>Reviewing</h3></div>
+    <div class="title">
+      <h3>
+        <i style="margin-right: 2px;" class="icon icon-git"></i>
+        Reviewing
+        <span *ngIf="reviewing">&nbsp;| {{reviewing.values.length}}</span>
+      </h3>
+    </div>
     <div *ngIf="reviewing" class="list">
       <div *ngFor="let pr of reviewing.values">
         <app-pull-request [pullRequest]="pr"></app-pull-request>
@@ -18,7 +30,13 @@
   </div>
 
   <div class="role">
-    <div class="title"><h3>Participant</h3></div>
+    <div class="title">
+      <h3>
+        <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
+        Participant
+        <span *ngIf="participant">&nbsp;| {{participant.values.length}}</span>
+      </h3>
+    </div>
     <div *ngIf="participant" class="list">
       <div *ngFor="let pr of participant.values">
         <app-pull-request [pullRequest]="pr"></app-pull-request>

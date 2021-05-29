@@ -8,10 +8,13 @@ import {PullRequest} from '../../models/models';
 })
 export class PullRequestComponent implements OnInit {
 
-  @Input()
-  pullRequest!: PullRequest;
+  @Input() pullRequest!: PullRequest;
+  @Input() showAuthorAvatar: boolean = true;
 
   selfUrl!: string;
+  canBeMerged!: boolean;
+  hasConflicts!: boolean;
+  commentsCount!: number;
 
   constructor() {
   }
@@ -20,5 +23,10 @@ export class PullRequestComponent implements OnInit {
     if (this.pullRequest.links.self.length > 0) {
       this.selfUrl = this.pullRequest.links.self[0].href;
     }
+
+    // this.canBeMerged = this.pullRequest.reviewers.some(r => r.approved);
+    this.hasConflicts = this.pullRequest.properties.mergeResult.outcome !== 'CLEAN';
+
+    this.commentsCount = this.pullRequest.properties.commentCount || 0;
   }
 }

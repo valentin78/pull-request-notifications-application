@@ -8,7 +8,8 @@ import {BitbucketUser} from '../../models/models';
 })
 export class UserComponent implements OnInit {
   @Input() user!: BitbucketUser;
-  @Input() approved: boolean = true;
+  @Input() approved?: boolean;
+  @Input() size: number = 30;
 
   title!: string;
   avatar!: string;

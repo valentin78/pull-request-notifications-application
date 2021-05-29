@@ -9,7 +9,7 @@ export class BitbucketResponse<T> {
   size: number | undefined;
   limit: number | undefined;
   isLastPage: boolean | undefined;
-  values: T[] | undefined;
+  values!: T[];
 }
 
 export class PullRequest {
@@ -33,6 +33,7 @@ export class PullRequest {
 
 export class Properties {
   mergeResult!: MergeResult;
+  commentCount?: number;
 }
 
 export class MergeResult {
