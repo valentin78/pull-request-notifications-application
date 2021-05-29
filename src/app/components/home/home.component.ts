@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {BitbucketService} from '../../services/bitbucket.service';
 import {PullRequestRole} from '../../models/enums';
 import {BitbucketResponse, PullRequest} from '../../models/models';
+import {NotificationService} from '../../services/notification.service';
 
 @Component({
   selector: 'app-main',
@@ -13,7 +14,9 @@ export class HomeComponent implements OnInit {
   reviewing: BitbucketResponse<PullRequest> | undefined;
   participant: BitbucketResponse<PullRequest> | undefined;
 
-  constructor(private bitbucketService: BitbucketService) {
+  constructor(
+    private bitbucketService: BitbucketService,
+    private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -22,6 +25,17 @@ export class HomeComponent implements OnInit {
       .getPullRequests(PullRequestRole.Author)
       .subscribe(data => {
         this.authored = data;
+        // this.notificationService.sendNotification(
+        //   'title',
+        //   {
+        //     body: 'test',
+        //     badge: undefined,
+        //     icon: undefined,
+        //     image: undefined,
+        //     // dir: 'rtl',
+        //     tag: undefined
+        //   }
+        // );
       });
 
     this.bitbucketService
@@ -37,3 +51,4 @@ export class HomeComponent implements OnInit {
       });
   }
 }
+
