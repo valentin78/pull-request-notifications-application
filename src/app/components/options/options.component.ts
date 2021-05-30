@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BitbucketSettings} from '../../models/models';
-import {SettingsService} from '../../services/settings.service';
+import {DataService} from '../../services/data.service';
 
 @Component({
   selector: 'app-options',
@@ -12,7 +12,7 @@ export class OptionsComponent implements OnInit {
   settings: BitbucketSettings;
   statusMessage?: string;
 
-  constructor(private settingsService: SettingsService) {
+  constructor(private settingsService: DataService) {
     this.settings = settingsService.getBitbucketSettings();
   }
 

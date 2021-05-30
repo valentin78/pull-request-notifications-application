@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BitbucketSettings} from '../models/models';
 
 @Injectable()
-export class SettingsService {
+export class DataService {
 
   private settingsKey: string = 'bitbucket-notifications.settings.bitbucket';
 

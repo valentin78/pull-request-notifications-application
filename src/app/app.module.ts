@@ -5,7 +5,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app/app.component';
 import {OptionsComponent} from './components/options/options.component';
 import {FormsModule} from '@angular/forms';
-import {SettingsService} from './services/settings.service';
+import {DataService} from './services/data.service';
 import {HomeComponent} from './components/home/home.component';
 import {BitbucketService} from './services/bitbucket.service';
 import {HttpClientModule} from '@angular/common/http';
@@ -30,7 +30,7 @@ import {NotificationService} from './services/notification.service';
     HttpClientModule
   ],
   providers: [
-    SettingsService,
+    DataService,
     BitbucketService,
     NotificationService
   ],
