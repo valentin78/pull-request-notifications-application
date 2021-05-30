@@ -1,13 +1,30 @@
-<div>
-  <div>
-    <label style="width: 75px;" for="bitbucketUrl">URL:</label>
-    <input id="bitbucketUrl" type="text" size="50"  placeholder="bitbucket url" pattern="^https?://" [(ngModel)]="settings.url">
+<div class="container">
+  <div class="title">
+    <img src="favicon.ico"/>
+    <h2> Extension settings: </h2>
   </div>
 
-  <div>
-    <label style="width: 75px;" for="bitbucketToken">Token:</label>
-    <input id="bitbucketToken" type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="settings.token">
-  </div>
+  <div class="options-list">
+    <div class="options-item">
+      <label for="bitbucketUrl">URL:</label>
+      <input id="bitbucketUrl" type="text" size="50" placeholder="bitbucket url" pattern="^https?://" [(ngModel)]="settings.url">
+    </div>
 
-  <button (click)="onSave()">Save</button>
+    <div class="options-item">
+      <label for="bitbucketToken">Token:</label>
+      <input id="bitbucketToken" type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="settings.token">
+    </div>
+
+    <div class="options-item notification-settings" style="display: none;">
+      <label for="notificationSettings">Notification settings:</label>
+      <select id="notificationSettings">
+        <option value="all">ALL</option>
+        <option value="mentions" title="Notify only about comments where user is mentioned (even in replies)">Mentions only</option>
+      </select>
+    </div>
+  </div>
+  <div class="controls">
+    <button (click)="onSave()">Save</button>
+    <span style="margin-left: 10px;" *ngIf="statusMessage">{{statusMessage}}</span>
+  </div>
 </div>

@@ -1,6 +1,8 @@
+@import "src/variables";
+
 .container {
   padding: 2px 0;
-  border-top: 1px solid #444c56;
+  border-top: 1px solid $border-color;
 
   &:hover {
     background-color: #2D333BC1;

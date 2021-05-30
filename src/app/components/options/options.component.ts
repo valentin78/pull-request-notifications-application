@@ -5,11 +5,12 @@ import {SettingsService} from '../../services/settings.service';
 @Component({
   selector: 'app-options',
   templateUrl: './options.component.html',
-  styleUrls: ['./options.component.css']
+  styleUrls: ['./options.component.scss']
 })
 export class OptionsComponent implements OnInit {
 
   settings: BitbucketSettings;
+  statusMessage?: string;
 
   constructor(private settingsService: SettingsService) {
     this.settings = settingsService.getBitbucketSettings();
@@ -18,8 +19,13 @@ export class OptionsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSave(){
+  onSave() {
     this.settingsService.saveBitbucketSettings(this.settings);
+
+    this.statusMessage = 'saved!';
+    setTimeout(() => {
+      this.statusMessage = undefined;
+    }, 3000);
   }
 }
 
