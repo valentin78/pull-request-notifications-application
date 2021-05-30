@@ -8,7 +8,7 @@
       </h3>
     </div>
     <div *ngIf="authored" class="list">
-      <div *ngFor="let pr of authored.values">
+      <div *ngFor="let pr of authored">
         <app-pull-request [pullRequest]="pr" [showAuthorAvatar]="false"></app-pull-request>
       </div>
     </div>
@@ -19,11 +19,11 @@
       <h3>
         <i style="margin-right: 2px;" class="icon icon-git"></i>
         Reviewing
-        <span *ngIf="reviewing">&nbsp;| {{reviewing.values.length}}</span>
+        <span *ngIf="reviewing">&nbsp;| {{reviewing.length}}</span>
       </h3>
     </div>
     <div *ngIf="reviewing" class="list">
-      <div *ngFor="let pr of reviewing.values">
+      <div *ngFor="let pr of reviewing">
         <app-pull-request [pullRequest]="pr"></app-pull-request>
       </div>
     </div>
@@ -34,11 +34,11 @@
       <h3>
         <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
         Participant
-        <span *ngIf="participant">&nbsp;| {{participant.values.length}}</span>
+        <span *ngIf="participant">&nbsp;| {{participant.length}}</span>
       </h3>
     </div>
     <div *ngIf="participant" class="list">
-      <div *ngFor="let pr of participant.values">
+      <div *ngFor="let pr of participant">
         <app-pull-request [pullRequest]="pr"></app-pull-request>
       </div>
     </div>
