@@ -1,5 +1,10 @@
 import {PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
 
+export class ExtensionSettings {
+  bitbucket: BitbucketSettings = new BitbucketSettings();
+  refreshIntervalInSeconds: number = 60;
+}
+
 export class BitbucketSettings {
   url: string | undefined;
   token: string | undefined;

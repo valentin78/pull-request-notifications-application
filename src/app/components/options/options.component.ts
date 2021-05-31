@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BitbucketSettings} from '../../models/models';
+import {ExtensionSettings} from '../../models/models';
 import {DataService} from '../../services/data.service';
 
 @Component({
@@ -9,18 +9,18 @@ import {DataService} from '../../services/data.service';
 })
 export class OptionsComponent implements OnInit {
 
-  settings: BitbucketSettings;
+  settings: ExtensionSettings;
   statusMessage?: string;
 
   constructor(private settingsService: DataService) {
-    this.settings = settingsService.getBitbucketSettings();
+    this.settings = settingsService.getExtensionSettings();
   }
 
   ngOnInit(): void {
   }
 
   onSave() {
-    this.settingsService.saveBitbucketSettings(this.settings);
+    this.settingsService.saveExtensionSettings(this.settings);
 
     this.statusMessage = 'saved!';
     setTimeout(() => {

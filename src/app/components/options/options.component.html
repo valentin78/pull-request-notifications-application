@@ -6,18 +6,24 @@
 
   <div class="options-list">
     <div class="options-item">
-      <label for="bitbucketUrl">URL:</label>
-      <input id="bitbucketUrl" type="text" size="50" placeholder="bitbucket url" pattern="^https?://" [(ngModel)]="settings.url">
+      <span>URL:</span>
+      <input type="text" size="50" placeholder="bitbucket url" pattern="^https?://" [(ngModel)]="settings.bitbucket.url">
     </div>
 
     <div class="options-item">
-      <label for="bitbucketToken">Token:</label>
-      <input id="bitbucketToken" type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="settings.token">
+      <span>Token:</span>
+      <input type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="settings.bitbucket.token">
+    </div>
+
+    <div class="options-item">
+      <span>Refresh interval:</span>
+      <input type="number" min="30" max="7200" style="width: 50px;" [(ngModel)]="settings.refreshIntervalInSeconds">
+      <span>, in seconds</span>
     </div>
 
     <div class="options-item notification-settings" style="display: none;">
-      <label for="notificationSettings">Notification settings:</label>
-      <select id="notificationSettings">
+      <span>Notification settings:</span>
+      <select>
         <option value="all">ALL</option>
         <option value="mentions" title="Notify only about comments where user is mentioned (even in replies)">Mentions only</option>
       </select>
