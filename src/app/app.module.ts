@@ -14,7 +14,7 @@ import {UserComponent} from './components/user/user.component';
 import {PullRequestStateComponent} from './components/pull-request-state/pull-request-state.component';
 import {NotificationService} from './services/notification.service';
 import {Guard} from './services/guard.service';
-import {BackgroundServiceComponent} from './components/background-service/background-service.component';
+import {BackgroundPageComponent} from './components/background-page/background-page.component';
 import {BackgroundService} from './services/background.service';
 
 @NgModule({
@@ -25,7 +25,7 @@ import {BackgroundService} from './services/background.service';
     PullRequestComponent,
     UserComponent,
     PullRequestStateComponent,
-    BackgroundServiceComponent
+    BackgroundPageComponent
   ],
   imports: [
     BrowserModule,

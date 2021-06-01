@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.readPullRequestData(undefined);
 
-    // todo: subscribe to 'chrome' message
     this.backgroundService.prResponseProcessor
       .subscribe(role => this.readPullRequestData(role));
   }

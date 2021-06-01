@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {BitbucketService} from './bitbucket.service';
-import {PullRequestRole} from '../models/enums';
+import {PullRequestRole, PullRequestState} from '../models/enums';
 import {PullRequest} from '../models/models';
 import {DataService} from './data.service';
 import {NotificationService} from './notification.service';
@@ -17,70 +17,36 @@ export class BackgroundService {
     private notificationService: NotificationService) {
     this.prResponseProcessor = new EventEmitter<PullRequestRole>(true);
     const settings = this.dataService.getExtensionSettings();
-    this.interval = settings.refreshIntervalInSeconds;
+    this.interval = settings.refreshIntervalInMinutes;
   }
 
-  setupWorker() {
-    if (!this.timer) {
-      // todo: replace with chrome alarm
-      const self = this;
-      this.timer = setInterval(() => {
-        self.do();
-
-
-
-        // // @ts-ignore
-        // chrome.browserAction.setBadgeText({text: new Date().getSeconds().toString()});
-        // // @ts-ignore
-        // chrome.browserAction
-        //   .setTitle(
-        //     {
-        //       title: `a: ${this.authored.length}, r: ${this.reviewing.length}, p: ${this.participant.length}`
-        //     });
-
-
-
-        const settings = self.dataService.getExtensionSettings();
-        const newInterval = settings.refreshIntervalInSeconds;
-        if (settings.refreshIntervalInSeconds !== self.interval) {
-          console.log(`interval changed from ${self.interval} to ${newInterval}, restarting worker...`);
-          self.interval = newInterval;
-          self.stopWorker();
-          self.setupWorker();
-        }
-      }, this.interval * 1000);
-      console.log('worker set');
-    } else {
-      console.log('worker is running already');
-    }
-  }
-
-  stopWorker() {
-    clearInterval(this.timer);
-    this.timer = undefined;
-    console.log('worker stopped');
-  }
-
-  do() {
+  doWork() {
     const settings = this.dataService.getExtensionSettings();
     if (!settings.bitbucket.isValid()) {
       console.log('setup bitbucket settings first...');
+      this.notificationService.setBadge({message: '401', color: 'red', title: 'missing settings'});
       return;
     }
 
     this.bitbucketService
-      .getPullRequests(PullRequestRole.Author)
-      .subscribe(data => this.handleResponse(PullRequestRole.Author, data.values));
+      .getAllPullRequests(PullRequestState.Open)
+      .subscribe(data => {
+        const authored = data.values.filter(v => v.author.user.name === settings.bitbucket.username);
+        const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === settings.bitbucket.username));
+        const participant = data.values.filter(v => v.participants.some(r => r.user.name === settings.bitbucket.username));
 
-    this.bitbucketService
-      .getPullRequests(PullRequestRole.Reviewer)
-      .subscribe(data => this.handleResponse(PullRequestRole.Reviewer, data.values));
+        this.handleResponse(PullRequestRole.Author, authored);
+        this.handleResponse(PullRequestRole.Reviewer, reviewing);
+        this.handleResponse(PullRequestRole.Participant, participant);
 
-    this.bitbucketService
-      .getPullRequests(PullRequestRole.Participant)
-      .subscribe(data => this.handleResponse(PullRequestRole.Participant, data.values));
+        this.notificationService.setBadge({
+          message: `${authored.length}/${reviewing.length}/${participant.length}`,
+          color: 'green',
+          title: `authored: ${authored.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${new Date().toLocaleTimeString()}`
+        });
 
-    console.log('done');
+        this.prResponseProcessor.emit(undefined);
+      });
   }
 
   handleResponse(role: PullRequestRole, values: PullRequest[]) {
@@ -101,16 +67,6 @@ export class BackgroundService {
     }
 
     this.dataService.savePullRequests(role, values);
-
-    // todo: update badge text
-    // chrome.action
-    //   .getBadgeText({})
-    //   .then((text: string) => {
-    //     chrome.action.setBadgeText({text: 'test'});
-    //   });
-
-    // todo: send message using 'chrome'
-    this.prResponseProcessor.emit(role);
   }
 
   // run for pull requests with any role

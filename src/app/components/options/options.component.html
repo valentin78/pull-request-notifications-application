@@ -22,8 +22,8 @@
 
     <div class="options-item">
       <span>Refresh interval:</span>
-      <input type="number" min="30" max="7200" style="width: 50px;" [(ngModel)]="settings.refreshIntervalInSeconds">
-      <span>, in seconds</span>
+      <input type="number" min="1" max="120" style="width: 50px;" [(ngModel)]="settings.refreshIntervalInMinutes">
+      <span>, in minutes</span>
     </div>
 
     <div class="options-item notification-settings" style="display: none;">

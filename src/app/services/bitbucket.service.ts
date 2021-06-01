@@ -3,7 +3,7 @@ import {BitbucketResponse, BitbucketUser, ExtensionSettings, PullRequest} from '
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {DataService} from './data.service';
-import {PullRequestRole} from '../models/enums';
+import {PullRequestRole, PullRequestState} from '../models/enums';
 import {map} from 'rxjs/operators';
 
 @Injectable()
@@ -30,6 +30,15 @@ export class BitbucketService {
     // todo: https://bitbucket.teamvelocityonline.com/rest/api/latest/dashboard/pull-requests?limit=50&state=OPEN
     return this.http.get(
       `${this.settings.bitbucket.url}/rest/api/latest/inbox/pull-requests?role=${role}&limit=50`,
+      {headers: this.headers})
+      .pipe(
+        map((data) => data as BitbucketResponse<PullRequest>)
+      );
+  }
+
+  getAllPullRequests(state?: PullRequestState): Observable<BitbucketResponse<PullRequest>> {
+    return this.http.get(
+      `${this.settings.bitbucket.url}/rest/api/latest/dashboard/pull-requests?state=${state}&limit=100`,
       {headers: this.headers})
       .pipe(
         map((data) => data as BitbucketResponse<PullRequest>)

@@ -19,4 +19,21 @@ export class NotificationService {
         }
       });
   }
+
+  setBadge(options: { title?: string, message?: string, color?: string }) {
+    if (options.message) {
+      // @ts-ignore
+      chrome.browserAction.setBadgeText({text: options.message});
+    }
+
+    if (options.color) {
+      // @ts-ignore
+      chrome.browserAction.setBadgeBackgroundColor({color: options.color});
+    }
+
+    if (options.title) {
+      // @ts-ignore
+      chrome.browserAction.setTitle({title: options.title});
+    }
+  }
 }

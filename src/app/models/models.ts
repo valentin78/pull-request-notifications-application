@@ -2,7 +2,7 @@ import {PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
 
 export class ExtensionSettings {
   bitbucket: BitbucketSettings = new BitbucketSettings(undefined);
-  refreshIntervalInSeconds: number = 60;
+  refreshIntervalInMinutes: number = 1;
 
   constructor(data?: ExtensionSettings) {
     if (data) {
