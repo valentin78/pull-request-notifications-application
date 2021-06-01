@@ -20,8 +20,8 @@ export class DataService {
     window.localStorage.setItem(this.keys.settings, JSON.stringify(settings));
   }
 
-  getPullRequests(role: PullRequestRole) {
-    return JSON.parse(window.localStorage.getItem(`${this.keys.pullRequests}.${role}`) as string) || {};
+  getPullRequests(role: PullRequestRole): PullRequest[] {
+    return JSON.parse(window.localStorage.getItem(`${this.keys.pullRequests}.${role}`) as string) || [];
   }
 
   savePullRequests(role: PullRequestRole, values: PullRequest[]) {

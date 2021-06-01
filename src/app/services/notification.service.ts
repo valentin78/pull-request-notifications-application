@@ -10,10 +10,11 @@ export class NotificationService {
     return new Promise<NotificationPermission>(() => Notification.permission);
   }
 
-  sendNotification(title: string, options?: NotificationOptions) {
+  sendNotification(title: string, options: NotificationOptions) {
     this.requestPermission()
       .then(permission => {
         if (permission === 'granted') {
+          options.icon = options.icon || 'favicon.ico';
           const notification = new Notification(title, options);
         }
       });

@@ -11,6 +11,11 @@
     </div>
 
     <div class="options-item">
+      <span>Username:</span>
+      <input type="text" size="50" placeholder="bitbucket username" pattern=".+" [(ngModel)]="settings.bitbucket.username">
+    </div>
+
+    <div class="options-item">
       <span>Token:</span>
       <input type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="settings.bitbucket.token">
     </div>

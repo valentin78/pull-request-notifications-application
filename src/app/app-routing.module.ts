@@ -2,11 +2,13 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {OptionsComponent} from './components/options/options.component';
 import {HomeComponent} from './components/home/home.component';
+import {Guard} from './services/guard.service';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [Guard]
   },
   {
     path: 'options',

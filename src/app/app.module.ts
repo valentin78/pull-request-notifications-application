@@ -13,6 +13,7 @@ import {PullRequestComponent} from './components/pull-request-view/pull-request.
 import {UserComponent} from './components/user/user.component';
 import {PullRequestStateComponent} from './components/pull-request-state/pull-request-state.component';
 import {NotificationService} from './services/notification.service';
+import {Guard} from './services/guard.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {NotificationService} from './services/notification.service';
   providers: [
     DataService,
     BitbucketService,
-    NotificationService
+    NotificationService,
+    Guard
   ],
   bootstrap: [AppComponent]
 })

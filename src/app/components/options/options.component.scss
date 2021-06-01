@@ -6,7 +6,7 @@
   flex-flow: column nowrap;
 
   & > * {
-    padding-left: 10px;
+    padding: 0 10px;
   }
 }
 
@@ -46,5 +46,5 @@
 }
 
 .controls {
-  margin-top: 10px;
+  margin: 10px 0;
 }

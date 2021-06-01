@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BitbucketResponse, ExtensionSettings, PullRequest} from '../models/models';
+import {BitbucketResponse, BitbucketUser, ExtensionSettings, PullRequest} from '../models/models';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {DataService} from './data.service';
@@ -16,8 +16,18 @@ export class BitbucketService {
     this.headers = {'Authorisation': `Bearer + ${this.settings.bitbucket.token}`};
   }
 
+  validateCredentials(url?: string, token?: string, userSlug?: string): Observable<BitbucketUser> {
+    return this.http.get(
+      `${url}/rest/api/latest/users/${userSlug}`,
+      {headers: {'Authorisation': `Bearer + ${token}`}})
+      .pipe(
+        map((data) => data as BitbucketUser)
+      );
+  }
+
   getPullRequests(role: PullRequestRole): Observable<BitbucketResponse<PullRequest>> {
     // normally participant shouldn't be assigned to more than 50 PRs
+    // todo: https://bitbucket.teamvelocityonline.com/rest/api/latest/dashboard/pull-requests?limit=50&state=OPEN
     return this.http.get(
       `${this.settings.bitbucket.url}/rest/api/latest/inbox/pull-requests?role=${role}&limit=50`,
       {headers: this.headers})

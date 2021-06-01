@@ -7,7 +7,12 @@ export class ExtensionSettings {
 
 export class BitbucketSettings {
   url: string | undefined;
+  username: string | undefined;
   token: string | undefined;
+
+  get isValid(): boolean {
+    return !!(this.url && this.username && this.token);
+  }
 }
 
 export class BitbucketResponse<T> {
