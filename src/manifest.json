@@ -1,9 +1,9 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Bitbucket Notifications",
   "version": "1.0",
   "description": "Bitbucket Notifications",
-  "action": {
+  "browser_action": {
     "default_icon": "assets/bitbucket.png",
     "default_popup": "/index.html"
   },
@@ -11,11 +11,13 @@
     "page": "/index.html#options",
     "open_in_tab": true
   },
+  "background": {
+    "page": "/index.html#background",
+    "persistent": false
+  },
   "permissions": [
     "background",
-    "notifications"
-  ],
-  "host_permissions": [
+    "notifications",
     "https://*/*"
   ]
 }

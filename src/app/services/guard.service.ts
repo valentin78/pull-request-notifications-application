@@ -10,7 +10,7 @@ export class Guard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
     const settings = this.dataService.getExtensionSettings();
-    if (settings?.bitbucket?.isValid) {
+    if (settings?.bitbucket?.isValid()) {
       return true;
     }
 

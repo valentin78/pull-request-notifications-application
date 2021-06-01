@@ -1,8 +1,16 @@
 import {PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
 
 export class ExtensionSettings {
-  bitbucket: BitbucketSettings = new BitbucketSettings();
+  bitbucket: BitbucketSettings = new BitbucketSettings(undefined);
   refreshIntervalInSeconds: number = 60;
+
+  constructor(data?: ExtensionSettings) {
+    if (data) {
+      Object.assign(this, data, {
+        bitbucket: new BitbucketSettings(data.bitbucket)
+      });
+    }
+  }
 }
 
 export class BitbucketSettings {
@@ -10,7 +18,13 @@ export class BitbucketSettings {
   username: string | undefined;
   token: string | undefined;
 
-  get isValid(): boolean {
+  constructor(data?: BitbucketSettings) {
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
+  isValid() {
     return !!(this.url && this.username && this.token);
   }
 }

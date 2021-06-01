@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {OptionsComponent} from './components/options/options.component';
 import {HomeComponent} from './components/home/home.component';
 import {Guard} from './services/guard.service';
+import {BackgroundServiceComponent} from './components/background-service/background-service.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,10 @@ const routes: Routes = [
   {
     path: 'options',
     component: OptionsComponent
+  },
+  {
+    path: 'background',
+    component: BackgroundServiceComponent
   },
   {
     path: '**',

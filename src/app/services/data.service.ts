@@ -13,7 +13,7 @@ export class DataService {
   getExtensionSettings(): ExtensionSettings {
     let settings = JSON.parse(window.localStorage.getItem(this.keys.settings) as string);
 
-    return settings || new ExtensionSettings();
+    return new ExtensionSettings(settings);
   }
 
   saveExtensionSettings(settings: ExtensionSettings) {

@@ -3,8 +3,8 @@ import {ExtensionSettings} from '../../models/models';
 import {DataService} from '../../services/data.service';
 import {Router} from '@angular/router';
 import {BitbucketService} from '../../services/bitbucket.service';
+import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {of, throwError} from 'rxjs';
 
 @Component({
   selector: 'app-options',
@@ -36,7 +36,7 @@ export class OptionsComponent implements OnInit {
         this.statusMessage = 'saved!';
         setTimeout(() => {
           this.statusMessage = undefined;
-          this.router.navigate(['']);
+          // this.router.navigate(['']);
         }, 1000);
       });
   }
