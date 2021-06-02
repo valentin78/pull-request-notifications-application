@@ -9,11 +9,11 @@ import {map} from 'rxjs/operators';
 @Injectable()
 export class BitbucketService {
   private settings: ExtensionSettings;
-  private readonly headers: { Authorisation: string };
+  private readonly headers: { Authorization: string };
 
   constructor(private http: HttpClient, settings: DataService) {
     this.settings = settings.getExtensionSettings();
-    this.headers = {'Authorisation': `Bearer + ${this.settings.bitbucket.token}`};
+    this.headers = {'Authorization': `Bearer + ${this.settings.bitbucket?.token}`};
   }
 
   validateCredentials(url?: string, token?: string, userSlug?: string): Observable<BitbucketUser> {
@@ -29,7 +29,7 @@ export class BitbucketService {
     // normally participant shouldn't be assigned to more than 50 PRs
     // todo: https://bitbucket.teamvelocityonline.com/rest/api/latest/dashboard/pull-requests?limit=50&state=OPEN
     return this.http.get(
-      `${this.settings.bitbucket.url}/rest/api/latest/inbox/pull-requests?role=${role}&limit=50`,
+      `${this.settings.bitbucket?.url}/rest/api/latest/inbox/pull-requests?role=${role}&limit=50`,
       {headers: this.headers})
       .pipe(
         map((data) => data as BitbucketResponse<PullRequest>)
@@ -38,7 +38,7 @@ export class BitbucketService {
 
   getAllPullRequests(state?: PullRequestState): Observable<BitbucketResponse<PullRequest>> {
     return this.http.get(
-      `${this.settings.bitbucket.url}/rest/api/latest/dashboard/pull-requests?state=${state}&limit=100`,
+      `${this.settings.bitbucket?.url}/rest/api/latest/dashboard/pull-requests?state=${state}&limit=100`,
       {headers: this.headers})
       .pipe(
         map((data) => data as BitbucketResponse<PullRequest>)
@@ -47,7 +47,7 @@ export class BitbucketService {
 
   getPullRequestActivities(projectKey: string, repositorySlug: string, pullRequestId: number) {
     return this.http.get(
-      `${this.settings.bitbucket.url}/rest/api/latest/projects/${projectKey}/repos/${repositorySlug}/pull-requests/${pullRequestId}/activities?limit=100`,
+      `${this.settings.bitbucket?.url}/rest/api/latest/projects/${projectKey}/repos/${repositorySlug}/pull-requests/${pullRequestId}/activities?limit=100`,
       {headers: this.headers}
     );
   }

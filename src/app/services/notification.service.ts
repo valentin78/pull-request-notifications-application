@@ -1,7 +1,22 @@
 import {Injectable} from '@angular/core';
+import {DataService} from './data.service';
+import {SlackClient} from './slackClient';
+import {ExtensionSettings} from '../models/models';
+import {catchError} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 @Injectable()
 export class NotificationService {
+  private readonly slackClient?: SlackClient;
+  private readonly extensionSettings: ExtensionSettings;
+
+  constructor(dataService: DataService) {
+    this.extensionSettings = dataService.getExtensionSettings();
+    if (this.extensionSettings.notifications.slack) {
+      this.slackClient = new SlackClient(this.extensionSettings.notifications.slack.token);
+    }
+  }
+
   private requestPermission(): Promise<NotificationPermission> {
     if (Notification.permission !== 'denied') {
       return Notification.requestPermission();
@@ -11,13 +26,30 @@ export class NotificationService {
   }
 
   sendNotification(title: string, options: NotificationOptions) {
-    this.requestPermission()
-      .then(permission => {
-        if (permission === 'granted') {
-          options.icon = options.icon || 'favicon.ico';
-          const notification = new Notification(title, options);
-        }
-      });
+    if (this.extensionSettings.notifications.browser) {
+      this.requestPermission()
+        .then(permission => {
+          if (permission === 'granted') {
+            options.icon = options.icon || 'favicon.ico';
+            const notification = new Notification(title, options);
+          }
+        });
+    }
+
+    // check if slack is enabled
+    if (this.slackClient && this.extensionSettings.notifications.slack) {
+      this.slackClient
+        .postMessage({
+          channel: this.extensionSettings.notifications.slack.token,
+          text: title
+        })
+        .pipe(
+          catchError((error: any) => {
+            this.setBadge({title: error.error, color: 'red', message: 'slack'});
+            return throwError(error);
+          }))
+        .subscribe();
+    }
   }
 
   setBadge(options: { title?: string, message?: string, color?: string }) {

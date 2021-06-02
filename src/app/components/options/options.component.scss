@@ -1,12 +1,11 @@
 @import "src/variables";
 
 .container {
-  padding-top: 10px;
   display: flex;
   flex-flow: column nowrap;
 
-  & > * {
-    padding: 0 10px;
+  & > div {
+    padding-left: 10px;
   }
 }
 
@@ -21,9 +20,8 @@
 }
 
 .options-list {
-  padding: 10px 0;
+  padding: 0 10px 10px;
   border-top: 1px solid $border-color;
-  border-bottom: 1px dashed $border-color;
 }
 
 .options-item {
@@ -39,12 +37,14 @@
 .notification-settings {
   display: block;
   align-items: center;
+}
 
-  & > label {
-    margin-right: 5px;
-  }
+.slack-settings{
+  background-color: #2f363e;
+  border-top: 1px solid;
 }
 
 .controls {
-  margin: 10px 0;
+  padding: 10px 0;
+  border-top: 1px dashed $border-color;
 }

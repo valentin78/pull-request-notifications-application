@@ -22,9 +22,9 @@ export class BackgroundService {
 
   doWork() {
     const settings = this.dataService.getExtensionSettings();
-    if (!settings.bitbucket.isValid()) {
+    if (!settings.bitbucket?.isValid()) {
       console.log('setup bitbucket settings first...');
-      this.notificationService.setBadge({message: '401', color: 'red', title: 'missing settings'});
+      this.notificationService.setBadge({message: '404', color: 'red', title: 'missing settings'});
       return;
     }
 
@@ -33,9 +33,9 @@ export class BackgroundService {
     this.bitbucketService
       .getAllPullRequests(PullRequestState.Open)
       .subscribe(data => {
-        const authored = data.values.filter(v => v.author.user.name === settings.bitbucket.username);
-        const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === settings.bitbucket.username));
-        const participant = data.values.filter(v => v.participants.some(r => r.user.name === settings.bitbucket.username));
+        const authored = data.values.filter(v => v.author.user.name === settings.bitbucket?.username);
+        const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === settings.bitbucket?.username));
+        const participant = data.values.filter(v => v.participants.some(r => r.user.name === settings.bitbucket?.username));
 
         this.handleResponse(PullRequestRole.Author, authored);
         this.handleResponse(PullRequestRole.Reviewer, reviewing);

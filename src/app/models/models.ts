@@ -1,8 +1,9 @@
 import {PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
 
 export class ExtensionSettings {
-  bitbucket: BitbucketSettings = new BitbucketSettings(undefined);
+  bitbucket?: BitbucketSettings = new BitbucketSettings(undefined);
   refreshIntervalInMinutes: number = 1;
+  notifications: { browser: boolean, slack?: SlackSettings } = {browser: true};
 
   constructor(data?: ExtensionSettings) {
     if (data) {
@@ -11,6 +12,11 @@ export class ExtensionSettings {
       });
     }
   }
+}
+
+export class SlackSettings {
+  token!: string;
+  memberId!: string;
 }
 
 export class BitbucketSettings {

@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {ExtensionSettings} from '../../models/models';
+import {BitbucketSettings, ExtensionSettings, SlackSettings} from '../../models/models';
 import {DataService} from '../../services/data.service';
-import {Router} from '@angular/router';
 import {BitbucketService} from '../../services/bitbucket.service';
-import {throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {forkJoin, of, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {SlackClient} from '../../services/slackClient';
 
 @Component({
   selector: 'app-options',
@@ -15,9 +15,20 @@ export class OptionsComponent implements OnInit {
 
   settings: ExtensionSettings;
   statusMessage?: string;
+  errorMessage?: string;
 
-  constructor(private settingsService: DataService, private bitbucketService: BitbucketService, private router: Router) {
+  enableSlackNotifications: boolean;
+  slackSettings: SlackSettings;
+  bitbucketSettings: BitbucketSettings;
+
+  constructor(
+    private settingsService: DataService,
+    private bitbucketService: BitbucketService) {
     this.settings = settingsService.getExtensionSettings();
+
+    this.enableSlackNotifications = !!this.settings.notifications.slack;
+    this.slackSettings = this.settings.notifications.slack || new SlackSettings();
+    this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
   }
 
   ngOnInit(): void {
@@ -25,20 +36,70 @@ export class OptionsComponent implements OnInit {
 
   onSave() {
     this.statusMessage = 'saving...';
-    this.bitbucketService
-      .validateCredentials(this.settings.bitbucket.url, this.settings.bitbucket.token, this.settings.bitbucket.username)
+    const bitbucketPromise = this.bitbucketService
+      .validateCredentials(this.bitbucketSettings.url, this.bitbucketSettings.token, this.bitbucketSettings.username)
       .pipe(catchError((error, _) => {
-        this.statusMessage = 'wrong credentials';
+        this.showError('wrong bitbucket credentials');
         return throwError(error);
-      }))
-      .subscribe(user => {
+      }));
+
+    let slackClient = new SlackClient();
+    const slackPromise = this.enableSlackNotifications
+      ? slackClient
+        .testAuth(this.slackSettings.token)
+        .pipe(
+          tap((data: any) => {
+            if (!data.ok) {
+              this.showError('wrong slack credentials');
+              throw 'wrong slack credentials';
+            }
+          }),
+          catchError((error, _) => {
+            this.showError('wrong slack credentials');
+            return throwError(error);
+          })
+        )
+      : of(null);
+
+    forkJoin([bitbucketPromise, slackPromise])
+      .subscribe(_ => {
+        this.settings.bitbucket = this.bitbucketSettings;
+        this.settings.notifications.slack = this.enableSlackNotifications
+          ? this.slackSettings
+          : undefined;
         this.settingsService.saveExtensionSettings(this.settings);
-        this.statusMessage = 'saved!';
-        setTimeout(() => {
-          this.statusMessage = undefined;
-          // this.router.navigate(['']);
-        }, 1000);
+        this.showMessage('saved!');
       });
+  }
+
+  onSlackTest() {
+    let slackClient = new SlackClient(this.slackSettings.token);
+    slackClient
+      .postMessage({
+        'channel': this.slackSettings.memberId,
+        'text': 'hello'
+      })
+      .subscribe((data: any) => {
+        if (!data.ok) {
+          this.showError(data.error || 'wrong slack credentials');
+        } else {
+          this.showMessage('message sent');
+        }
+      });
+  }
+
+  showMessage(message: string){
+    this.statusMessage = message;
+    setTimeout(() => {
+      this.statusMessage = undefined;
+    }, 2000);
+  }
+
+  showError(error: string){
+    this.errorMessage = error;
+    setTimeout(() => {
+      this.errorMessage = undefined;
+    }, 5000);
   }
 }
 

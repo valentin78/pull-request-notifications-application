@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -16,6 +16,8 @@ import {NotificationService} from './services/notification.service';
 import {Guard} from './services/guard.service';
 import {BackgroundPageComponent} from './components/background-page/background-page.component';
 import {BackgroundService} from './services/background.service';
+
+export let AppInjector: Injector;
 
 @NgModule({
   declarations: [
@@ -43,4 +45,7 @@ import {BackgroundService} from './services/background.service';
   bootstrap: [AppComponent]
 })
 export class AppModule {
+  constructor(private injector: Injector) {
+    AppInjector = this.injector;
+  }
 }
