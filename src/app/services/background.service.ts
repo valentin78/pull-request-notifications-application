@@ -9,13 +9,13 @@ import {NotificationService} from './notification.service';
 export class BackgroundService {
   timer?: number;
   interval: number;
-  public prResponseProcessor!: EventEmitter<PullRequestRole>;
+  public dataProcessed!: EventEmitter<PullRequestRole>;
 
   constructor(
     private dataService: DataService,
     private bitbucketService: BitbucketService,
     private notificationService: NotificationService) {
-    this.prResponseProcessor = new EventEmitter<PullRequestRole>(true);
+    this.dataProcessed = new EventEmitter<PullRequestRole>(true);
     const settings = this.dataService.getExtensionSettings();
     this.interval = settings.refreshIntervalInMinutes;
   }
@@ -28,6 +28,8 @@ export class BackgroundService {
       return;
     }
 
+    this.notificationService.setBadge({message: '...', title: 'loading...', color: 'gray'});
+    const processingTime = new Date();
     this.bitbucketService
       .getAllPullRequests(PullRequestState.Open)
       .subscribe(data => {
@@ -42,10 +44,10 @@ export class BackgroundService {
         this.notificationService.setBadge({
           message: `${authored.length}/${reviewing.length}/${participant.length}`,
           color: 'green',
-          title: `authored: ${authored.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${new Date().toLocaleTimeString()}`
+          title: `authored: ${authored.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${processingTime.toLocaleTimeString()}`
         });
 
-        this.prResponseProcessor.emit(undefined);
+        this.dataProcessed.emit();
       });
   }
 
@@ -75,7 +77,7 @@ export class BackgroundService {
       .filter(b => now.some(n => n.id === b.id && n.properties.commentCount !== b.properties.commentCount))
       .forEach(b => {
         // todo: perform deep event processing
-        // - check if comment is not mine or not
+        // - check if comment is mine or not
         //
         debugger;
         this.notificationService.sendNotification(

@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.readPullRequestData(undefined);
 
-    this.backgroundService.prResponseProcessor
+    this.backgroundService.dataProcessed
       .subscribe(role => this.readPullRequestData(role));
   }
 
@@ -38,6 +38,10 @@ export class HomeComponent implements OnInit {
     this.authored = this.dataService.getPullRequests(PullRequestRole.Author);
     this.reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
     this.participant = this.dataService.getPullRequests(PullRequestRole.Participant);
+  }
+
+  onRefresh() {
+    this.backgroundService.doWork();
   }
 }
 
