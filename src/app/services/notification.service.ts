@@ -1,20 +1,15 @@
 import {Injectable} from '@angular/core';
 import {DataService} from './data.service';
 import {SlackClient} from './slackClient';
-import {ExtensionSettings} from '../models/models';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
+import {NotificationOptions} from '../models/models';
+import {PullRequestAction} from '../models/enums';
 
 @Injectable()
 export class NotificationService {
-  private readonly slackClient?: SlackClient;
-  private readonly extensionSettings: ExtensionSettings;
 
-  constructor(dataService: DataService) {
-    this.extensionSettings = dataService.getExtensionSettings();
-    if (this.extensionSettings.notifications.slack) {
-      this.slackClient = new SlackClient(this.extensionSettings.notifications.slack.token);
-    }
+  constructor(private dataService: DataService) {
   }
 
   private requestPermission(): Promise<NotificationPermission> {
@@ -25,30 +20,53 @@ export class NotificationService {
     return new Promise<NotificationPermission>(() => Notification.permission);
   }
 
-  sendNotification(title: string, options: NotificationOptions) {
-    if (this.extensionSettings.notifications.browser) {
+  sendNotification(options: NotificationOptions) {
+    let extensionSettings = this.dataService.getExtensionSettings();
+
+    if (extensionSettings.notifications.browser) {
       this.requestPermission()
         .then(permission => {
           if (permission === 'granted') {
-            options.icon = options.icon || 'favicon.ico';
-            const notification = new Notification(title, options);
+
+            let body = '';
+            switch (options.action) {
+              case PullRequestAction.Comment:
+                body = ';';
+                break;
+              case PullRequestAction.Created:
+                body = 'new pull request created';
+                break;
+            }
+
+            const notification = new Notification(options.pullRequest.title, {
+              icon: 'favicon.ico',
+              body: body
+            });
           }
         });
     }
 
     // check if slack is enabled
-    if (this.slackClient && this.extensionSettings.notifications.slack) {
-      this.slackClient
+    if (extensionSettings.notifications.slack) {
+      let slackClient = new SlackClient(extensionSettings.notifications.slack.token);
+      slackClient
         .postMessage({
-          channel: this.extensionSettings.notifications.slack.token,
-          text: title
+          channel: extensionSettings.notifications.slack.memberId,
+          icon_url: `${options.pullRequest.author.user.links?.self[0].href}/avatar.png`,
+          text: options.pullRequest.title
         })
         .pipe(
           catchError((error: any) => {
             this.setBadge({title: error.error, color: 'red', message: 'slack'});
             return throwError(error);
           }))
-        .subscribe();
+        .subscribe((data: any) => {
+          if (!data.ok) {
+            console.log(data);
+            this.setBadge({title: data.error, color: 'red', message: 'slack'});
+            throw data.error;
+          }
+        });
     }
   }
 

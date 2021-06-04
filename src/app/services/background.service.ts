@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {BitbucketService} from './bitbucket.service';
-import {PullRequestRole, PullRequestState} from '../models/enums';
+import {PullRequestAction, PullRequestRole, PullRequestState} from '../models/enums';
 import {PullRequest} from '../models/models';
 import {DataService} from './data.service';
 import {NotificationService} from './notification.service';
@@ -81,12 +81,11 @@ export class BackgroundService {
         //
         debugger;
         this.notificationService.sendNotification(
-          b.title,
           {
-            body: 'comment(s) added'
+            action: PullRequestAction.Comment,
+            pullRequest: b
           });
       });
-
   }
 
   // run only for REVIEWING or PARTICIPANT role
@@ -95,9 +94,9 @@ export class BackgroundService {
       .filter(b => !before.some(n => n.id === b.id))
       .forEach(b => {
         this.notificationService.sendNotification(
-          b.title,
           {
-            body: 'new pull request created'
+            action: PullRequestAction.Created,
+            pullRequest: b
           });
       });
 

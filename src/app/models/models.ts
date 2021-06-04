@@ -1,4 +1,4 @@
-import {PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
+import {PullRequestAction, PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
 
 export class ExtensionSettings {
   bitbucket?: BitbucketSettings = new BitbucketSettings(undefined);
@@ -98,4 +98,9 @@ export class PullRequestReviewer extends PullRequestParticipant {
 }
 
 export class PullRequestAuthor extends PullRequestParticipant {
+}
+
+export class NotificationOptions {
+  action!: PullRequestAction;
+  pullRequest!: PullRequest;
 }

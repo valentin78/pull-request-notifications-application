@@ -13,3 +13,8 @@ export enum PullRequestStatus {
   Approved = 'APPROVED',
   Unapproved = 'UNAPPROVED'
 }
+
+export enum PullRequestAction {
+  Comment = 'comment',
+  Created = 'created'
+}

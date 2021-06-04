@@ -2,7 +2,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AppInjector} from '../app.module';
 
 export class SlackClient {
-  private slackApiUrl: string = 'https://slack.com/api/';
+  private slackApiUrl: string = 'https://slack.com/api';
   private readonly token?: string;
   private http: HttpClient;
 
