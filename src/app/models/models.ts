@@ -36,16 +36,17 @@ export class BitbucketSettings {
 }
 
 export class BitbucketResponse<T> {
-  size: number | undefined;
-  limit: number | undefined;
-  isLastPage: boolean | undefined;
+  size?: number;
+  limit?: number;
+  isLastPage?: boolean;
   values!: T[];
 }
 
 export class PullRequest {
   id!: number;
-  version: number | undefined;
+  version?: number;
   title!: string;
+  description?: string;
   state!: PullRequestState;
   open!: boolean;
   closed!: boolean;
@@ -59,6 +60,8 @@ export class PullRequest {
   participants!: PullRequestParticipant[];
   properties!: Properties;
   links!: Links;
+
+  fromRef!: { repository: { name: string, links: Links } };
 }
 
 export class Properties {
