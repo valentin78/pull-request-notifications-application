@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   created: PullRequest[];
   reviewing: PullRequest[];
   participant: PullRequest[];
+  isSettingsValid!: boolean;
 
   constructor(
     private bitbucketService: BitbucketService,
@@ -28,6 +29,13 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    const settings = this.dataService.getExtensionSettings();
+    this.isSettingsValid = settings?.bitbucket?.isValid() || false;
+    if (!this.isSettingsValid) {
+      return;
+    }
+
     this.readPullRequestData(undefined);
 
     this.backgroundService.dataProcessed

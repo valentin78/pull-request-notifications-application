@@ -13,7 +13,6 @@ import {PullRequestComponent} from './components/pull-request-view/pull-request.
 import {UserComponent} from './components/user/user.component';
 import {PullRequestStateComponent} from './components/pull-request-state/pull-request-state.component';
 import {NotificationService} from './services/notification.service';
-import {Guard} from './services/guard.service';
 import {BackgroundPageComponent} from './components/background-page/background-page.component';
 import {BackgroundService} from './services/background.service';
 
@@ -39,8 +38,7 @@ export let AppInjector: Injector;
     DataService,
     BitbucketService,
     NotificationService,
-    BackgroundService,
-    Guard
+    BackgroundService
   ],
   bootstrap: [AppComponent]
 })

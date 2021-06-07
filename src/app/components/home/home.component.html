@@ -1,4 +1,4 @@
-<div class="home">
+<div class="home" *ngIf="isSettingsValid; else noSettings">
   <div class="summary">
     <span class="refresh" (click)="onRefresh()">
       <i class="icon icon-redo2" title="refresh"></i>
@@ -50,3 +50,9 @@
     </div>
   </div>
 </div>
+
+<ng-template #noSettings>
+  <div class="no-settings">
+    <h2>Extension <a target="_blank" href="#options">settings</a> are missing</h2>
+  </div>
+</ng-template>
