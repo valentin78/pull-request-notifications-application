@@ -1,7 +1,7 @@
 @import "src/variables";
 
 .container {
-  padding: 2px 0;
+  padding: $pr-control-distance 0;
   border-top: 1px solid $border-color;
 
   &:hover {
@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  margin-bottom: 2px;
+  margin-bottom: $pr-control-distance;
   overflow-x: hidden;
 }
 
