@@ -1,3 +1,5 @@
+@import "src/variables";
+
 .home {
   display: flex;
   flex-flow: column nowrap;
@@ -13,7 +15,7 @@
   display: flex;
   align-items: center;
   height: 25px;
-  background-color: #2d333b;
+  background-color: $background-color;
   padding-left: 3px;
   color: #CDD9E5B2;
 }

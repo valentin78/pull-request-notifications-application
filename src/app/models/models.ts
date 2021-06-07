@@ -61,7 +61,8 @@ export class PullRequest {
   properties!: Properties;
   links!: Links;
 
-  fromRef!: { repository: { name: string, links: Links } };
+  fromRef!: PullRequestReference;
+  toRef!: PullRequestReference;
 }
 
 export class Properties {
@@ -101,6 +102,11 @@ export class PullRequestReviewer extends PullRequestParticipant {
 }
 
 export class PullRequestAuthor extends PullRequestParticipant {
+}
+
+export class PullRequestReference {
+  displayId!: string;
+  repository!: { name: string, links: Links };
 }
 
 export class NotificationOptions {

@@ -1,0 +1,10 @@
+@import "src/variables";
+
+.container {
+  background-color: #0052CC;
+  color: white;
+  border-radius: $pr-control-border-radius;
+  padding: 0 3px 0 3px;
+  font-weight: 700;
+  margin-right: $pr-control-distance;
+}

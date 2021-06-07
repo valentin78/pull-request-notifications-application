@@ -5,7 +5,7 @@
   border-top: 1px solid $border-color;
 
   &:hover {
-    background-color: #2D333BC1;
+    background-color: $background-color;
   }
 }
 
@@ -14,14 +14,15 @@
   //align-items: flex-start; /* vertical alignment */
   flex-flow: row nowrap;
   justify-content: flex-start; /* horizontal alignment */
-  margin: 0 5px;
+  margin: 0 $pr-control-distance;
 }
 
 .data {
   display: flex;
   flex-flow: column nowrap;
   justify-content: left;
-  margin-right: 5px;
+  margin-right: $pr-control-distance;
+  max-width: 400px;
 }
 
 .self-url {
@@ -29,6 +30,7 @@
   align-items: center;
   white-space: nowrap;
   margin-bottom: 2px;
+  overflow-x: hidden;
 }
 
 .status-bar {
@@ -36,7 +38,7 @@
   flex-flow: row nowrap;
 
   & > * {
-    padding: 2px;
+    padding: 2px 3px;
   }
 }
 
@@ -50,9 +52,9 @@
 .pr-status {
   background-color: #0052CC;
   color: white;
-  border-radius: 3px;
+  border-radius: $pr-control-border-radius;
   font-weight: 700;
-  margin-right: 5px;
+  margin-right: $pr-control-distance;
 }
 
 .pr-can-be-merged {
@@ -65,8 +67,16 @@
 
 .comments {
   color: rgb(0, 102, 68);
-  border-radius: 3px;
+  border-radius: $pr-control-border-radius;
   font-weight: 700;
-  margin-right: 5px;
+  margin-right: $pr-control-distance;
   background-color: rgb(227, 252, 239)
+}
+
+.to-ref {
+  border: 1px solid $border-color;
+  border-radius: $pr-control-border-radius;
+  color: orange;
+  background-color: $background-color;
+  margin-right: $pr-control-distance;
 }

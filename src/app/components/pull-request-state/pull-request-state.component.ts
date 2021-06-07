@@ -4,7 +4,7 @@ import {PullRequestState} from '../../models/enums';
 @Component({
   selector: 'app-pull-request-state',
   templateUrl: './pull-request-state.component.html',
-  styleUrls: ['./pull-request-state.component.css']
+  styleUrls: ['./pull-request-state.component.scss']
 })
 export class PullRequestStateComponent implements OnInit {
 

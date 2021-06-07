@@ -64,6 +64,7 @@ export class OptionsComponent implements OnInit {
     forkJoin([bitbucketPromise, slackPromise])
       .subscribe(_ => {
         this.settings.bitbucket = this.bitbucketSettings;
+        
         this.settings.notifications.slack = this.enableSlackNotifications
           ? this.slackSettings
           : undefined;

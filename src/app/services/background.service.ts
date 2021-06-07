@@ -42,7 +42,7 @@ export class BackgroundService {
         this.handleResponse(PullRequestRole.Participant, participant);
 
         this.notificationService.setBadge({
-          message: `${authored.length}/${reviewing.length}/${participant.length}`,
+          message: `${authored.length + reviewing.length + participant.length}`,
           color: 'green',
           title: `authored: ${authored.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${processingTime.toLocaleTimeString()}`
         });
@@ -79,7 +79,7 @@ export class BackgroundService {
         // todo: perform deep event processing
         // - check if comment is mine or not
         //
-        debugger;
+
         this.notificationService.sendNotification(
           {
             action: PullRequestAction.Comment,
@@ -90,6 +90,8 @@ export class BackgroundService {
 
   // run only for REVIEWING or PARTICIPANT role
   reviewNewPullRequests(before: PullRequest[], now: PullRequest[]) {
+    // todo: don't send notification if pr was claimed by myself
+    // if activity user is me and "action": "UPDATED" and addedReviewers includes my user
     now
       .filter(b => !before.some(n => n.id === b.id))
       .forEach(b => {
@@ -99,7 +101,6 @@ export class BackgroundService {
             pullRequest: b
           });
       });
-
   }
 
   reviewMissingPullRequests(before: PullRequest[], now: PullRequest[]) {

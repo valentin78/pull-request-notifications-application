@@ -52,13 +52,12 @@ export class NotificationService {
       let messageOptions: SlackMessageOptions;
       switch (options.action) {
         case PullRequestAction.Created:
-          messageOptions = this.buildNewPullRequestMessage(slackSettings.memberId, options.pullRequest);
+          messageOptions = this.buildNewPullRequestMessage(
+            slackSettings.memberId, options.pullRequest, 'You have a new pull request');
           break;
         case PullRequestAction.Comment:
-          messageOptions = {
-            channel: slackSettings.memberId,
-            text: 'new comment(s) added'
-          };
+          messageOptions = this.buildNewPullRequestMessage(
+            slackSettings.memberId, options.pullRequest, 'New comment(s) added');
           break;
         default:
           messageOptions = {
@@ -102,16 +101,16 @@ export class NotificationService {
     }
   }
 
-  buildNewPullRequestMessage(channel: string, data: PullRequest): SlackMessageOptions {
+  buildNewPullRequestMessage(channel: string, data: PullRequest, title: string): SlackMessageOptions {
     return {
       channel: channel,
-      text: `You have a new pull request`,
+      text: title,
       blocks: [
         {
           'type': 'section',
           'text': {
             'type': 'mrkdwn',
-            'text': `You have a new pull request: *<${data.links.self[0].href}|${data.title}>*`
+            'text': `${title}: *<${data.links.self[0].href}|${data.title}>*`
           }
         },
         {
@@ -121,7 +120,11 @@ export class NotificationService {
           'type': 'section',
           'text': {
             'type': 'mrkdwn',
-            'text': `*Description:*\n${data.description || '<empty>'}\n*Comments:* ${data.properties.commentCount || 0}\n*Repository:* <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>`
+            'text':
+              `*Description:*${data.description ? ('\n' + data.description) : ''}\n` +
+              `*Comments:* ${data.properties.commentCount || ''}\n` +
+              `*Ref*: \`${data.fromRef.displayId}\` > \`${data.toRef.displayId}\`\n` +
+              `*Repository:* <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>`
           }
         },
         {

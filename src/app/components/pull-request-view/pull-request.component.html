@@ -9,10 +9,15 @@
 
         <span class="pr-status"
               [class.pr-can-be-merged]="canBeMerged"
-              [class.pr-has-conflicts]="hasConflicts"
-              title="status">{{pullRequest.state}}</span>
+              [attr.title]="hasConflicts ? 'code conflicts' : ''"
+              [class.pr-has-conflicts]="hasConflicts">
+          {{pullRequest.state}}
+          <i *ngIf="hasConflicts" class="icon icon-warning"></i>
+        </span>
 
         <span title="created date">{{pullRequest.createdDate | date}}</span>
+
+        <span class="to-ref" title="destination branch">{{pullRequest.toRef.displayId}}</span>
 
         <span class="comments" *ngIf="commentsCount" title="{{commentsCount}} comment(s)">
           {{commentsCount}}
