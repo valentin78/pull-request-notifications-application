@@ -53,11 +53,11 @@ export class NotificationService {
       switch (options.action) {
         case PullRequestAction.Created:
           messageOptions = this.buildNewPullRequestMessage(
-            slackSettings.memberId, options.pullRequest, 'You have a new pull request');
+            slackSettings.memberId, options.pullRequest, ':pull_request: You have a new pull request');
           break;
         case PullRequestAction.Comment:
           messageOptions = this.buildNewPullRequestMessage(
-            slackSettings.memberId, options.pullRequest, 'New comment(s) added');
+            slackSettings.memberId, options.pullRequest, ':memo: New comment(s) added');
           break;
         default:
           messageOptions = {

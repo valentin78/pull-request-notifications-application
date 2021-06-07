@@ -9,12 +9,12 @@
     <div class="title">
       <h3>
         <i style="margin-right: 2px;" class="icon icon-user"></i>
-        Authored
-        <span *ngIf="authored">&nbsp;| {{authored.length}}</span>
+        Created
+        <span *ngIf="created">&nbsp;| {{created.length}}</span>
       </h3>
     </div>
-    <div *ngIf="authored" class="list">
-      <div *ngFor="let pr of authored">
+    <div *ngIf="created" class="list">
+      <div *ngFor="let pr of created">
         <app-pull-request [pullRequest]="pr" [showAuthorAvatar]="false"></app-pull-request>
       </div>
     </div>

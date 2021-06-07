@@ -12,7 +12,7 @@ import {BackgroundService} from '../../services/background.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  authored: PullRequest[];
+  created: PullRequest[];
   reviewing: PullRequest[];
   participant: PullRequest[];
 
@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
     private dataService: DataService,
     private backgroundService: BackgroundService) {
 
-    this.authored = [];
+    this.created = [];
     this.reviewing = [];
     this.participant = [];
   }
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
   }
 
   readPullRequestData(role?: PullRequestRole) {
-    this.authored = this.dataService.getPullRequests(PullRequestRole.Author);
+    this.created = this.dataService.getPullRequests(PullRequestRole.Author);
     this.reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
     this.participant = this.dataService.getPullRequests(PullRequestRole.Participant);
   }

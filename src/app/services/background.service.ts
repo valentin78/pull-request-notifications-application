@@ -33,18 +33,18 @@ export class BackgroundService {
     this.bitbucketService
       .getAllPullRequests(PullRequestState.Open)
       .subscribe(data => {
-        const authored = data.values.filter(v => v.author.user.name === settings.bitbucket?.username);
+        const created = data.values.filter(v => v.author.user.name === settings.bitbucket?.username);
         const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === settings.bitbucket?.username));
         const participant = data.values.filter(v => v.participants.some(r => r.user.name === settings.bitbucket?.username));
 
-        this.handleResponse(PullRequestRole.Author, authored);
+        this.handleResponse(PullRequestRole.Author, created);
         this.handleResponse(PullRequestRole.Reviewer, reviewing);
         this.handleResponse(PullRequestRole.Participant, participant);
 
         this.notificationService.setBadge({
-          message: `${authored.length + reviewing.length + participant.length}`,
+          message: `${created.length + reviewing.length + participant.length}`,
           color: 'green',
-          title: `authored: ${authored.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${processingTime.toLocaleTimeString()}`
+          title: `created: ${created.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${processingTime.toLocaleTimeString()}`
         });
 
         this.dataProcessed.emit();
