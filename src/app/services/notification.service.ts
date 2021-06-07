@@ -3,7 +3,7 @@ import {DataService} from './data.service';
 import {SlackClient, SlackMessageOptions} from './slackClient';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-import {NotificationOptions, PullRequest} from '../models/models';
+import {NotificationOptions} from '../models/models';
 import {PullRequestAction} from '../models/enums';
 
 @Injectable()
@@ -49,23 +49,7 @@ export class NotificationService {
     if (extensionSettings.notifications.slack) {
       const slackSettings = extensionSettings.notifications.slack;
       let slackClient = new SlackClient(slackSettings.token);
-      let messageOptions: SlackMessageOptions;
-      switch (options.action) {
-        case PullRequestAction.Created:
-          messageOptions = this.buildNewPullRequestMessage(
-            slackSettings.memberId, options.pullRequest, ':pull_request: You have a new pull request');
-          break;
-        case PullRequestAction.Comment:
-          messageOptions = this.buildNewPullRequestMessage(
-            slackSettings.memberId, options.pullRequest, ':memo: New comment(s) added');
-          break;
-        default:
-          messageOptions = {
-            channel: slackSettings.memberId,
-            text: `something happened: ${options.action}`
-          };
-          break;
-      }
+      let messageOptions = this.buildPullRequestSlackMessage(slackSettings.memberId, options);
 
       slackClient
         .postMessage(messageOptions)
@@ -101,9 +85,28 @@ export class NotificationService {
     }
   }
 
-  buildNewPullRequestMessage(channel: string, data: PullRequest, title: string): SlackMessageOptions {
-    return {
-      channel: channel,
+  private buildPullRequestSlackMessage(memberId: string, options: NotificationOptions): SlackMessageOptions {
+
+    let title = '';
+    let data = options.pullRequest;
+
+    switch (options.action) {
+      case PullRequestAction.Comment:
+        title = `:memo: @${options.comment?.author.name} added new comment(s)`;
+        break;
+      case PullRequestAction.Created:
+        title = `:pull_request: @${options.pullRequest.author.user.name} created a new pull request`;
+        break;
+      case PullRequestAction.Approved:
+        title = ':white_check_mark: Your pull request approved';
+        break;
+      default:
+        title = `something happened: ${options.action}`;
+        break;
+    }
+
+    let message = {
+      channel: memberId,
       text: title,
       blocks: [
         {
@@ -138,5 +141,19 @@ export class NotificationService {
         }
       ]
     };
+
+    if (options.action == PullRequestAction.Comment) {
+      message.blocks.splice(1, 0, {
+        'type': 'context',
+        'elements': [
+          {
+            'type': 'mrkdwn',
+            'text': `\`\`\`${options.comment?.text}\`\`\``
+          }
+        ]
+      });
+    }
+
+    return message;
   }
 }

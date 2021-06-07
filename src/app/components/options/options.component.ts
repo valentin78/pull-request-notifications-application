@@ -64,7 +64,8 @@ export class OptionsComponent implements OnInit {
     forkJoin([bitbucketPromise, slackPromise])
       .subscribe(_ => {
         this.settings.bitbucket = this.bitbucketSettings;
-        
+        this.settings.bitbucket.userId = _[0].id;
+
         this.settings.notifications.slack = this.enableSlackNotifications
           ? this.slackSettings
           : undefined;
@@ -89,14 +90,14 @@ export class OptionsComponent implements OnInit {
       });
   }
 
-  showMessage(message: string){
+  showMessage(message: string) {
     this.statusMessage = message;
     setTimeout(() => {
       this.statusMessage = undefined;
     }, 2000);
   }
 
-  showError(error: string){
+  showError(error: string) {
     this.errorMessage = error;
     setTimeout(() => {
       this.errorMessage = undefined;

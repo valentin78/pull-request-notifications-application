@@ -1,4 +1,4 @@
-import {PullRequestAction, PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
+import {BitbucketCommentAction, PullRequestAction, PullRequestActivityAction, PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
 
 export class ExtensionSettings {
   bitbucket?: BitbucketSettings = new BitbucketSettings(undefined);
@@ -20,9 +20,10 @@ export class SlackSettings {
 }
 
 export class BitbucketSettings {
-  url: string | undefined;
-  username: string | undefined;
-  token: string | undefined;
+  url?: string;
+  username?: string;
+  userId?: number;
+  token?: string;
 
   constructor(data?: BitbucketSettings) {
     if (data) {
@@ -63,6 +64,28 @@ export class PullRequest {
 
   fromRef!: PullRequestReference;
   toRef!: PullRequestReference;
+}
+
+export class PullRequestActivity {
+  id!: number;
+  createdDate!: number;
+  user!: BitbucketUser;
+  action!: PullRequestActivityAction;
+  addedReviewers?: BitbucketUser[];
+  removedReviewers?: BitbucketUser[];
+  commentAction?: BitbucketCommentAction;
+  comment?: BitbucketComment;
+}
+
+export class BitbucketComment {
+  id!: number;
+  author!: BitbucketUser;
+  text!: string;
+  // createdDate!: number;
+  updatedDate!: number;
+
+  // thread / replies
+  comments?: BitbucketComment[];
 }
 
 export class Properties {
@@ -106,10 +129,22 @@ export class PullRequestAuthor extends PullRequestParticipant {
 
 export class PullRequestReference {
   displayId!: string;
-  repository!: { name: string, links: Links };
+  repository!: BitbucketRepository;
+}
+
+export class BitbucketRepository {
+  name!: string;
+  links!: Links;
+  project!: BitbucketProject;
+  slug!: string;
+}
+
+export class BitbucketProject {
+  key!: string;
 }
 
 export class NotificationOptions {
   action!: PullRequestAction;
   pullRequest!: PullRequest;
+  comment?: BitbucketComment;
 }

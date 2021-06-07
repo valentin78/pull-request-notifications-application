@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {BitbucketService} from './bitbucket.service';
-import {PullRequestAction, PullRequestRole, PullRequestState} from '../models/enums';
-import {PullRequest} from '../models/models';
+import {BitbucketCommentAction, PullRequestAction, PullRequestActivityAction, PullRequestRole, PullRequestState} from '../models/enums';
+import {ExtensionSettings, PullRequest} from '../models/models';
 import {DataService} from './data.service';
 import {NotificationService} from './notification.service';
 
@@ -10,6 +10,8 @@ export class BackgroundService {
   timer?: number;
   interval: number;
   public dataProcessed!: EventEmitter<PullRequestRole>;
+  private settings!: ExtensionSettings;
+  private lastRunningTime!: number;
 
   constructor(
     private dataService: DataService,
@@ -21,8 +23,10 @@ export class BackgroundService {
   }
 
   doWork() {
-    const settings = this.dataService.getExtensionSettings();
-    if (!settings.bitbucket?.isValid()) {
+    let runningTime = Date.now();
+    this.settings = this.dataService.getExtensionSettings();
+    this.lastRunningTime = this.dataService.getLastRunningTimestamp();
+    if (!this.settings.bitbucket?.isValid()) {
       console.log('setup bitbucket settings first...');
       this.notificationService.setBadge({message: '404', color: 'red', title: 'missing settings'});
       return;
@@ -33,9 +37,9 @@ export class BackgroundService {
     this.bitbucketService
       .getAllPullRequests(PullRequestState.Open)
       .subscribe(data => {
-        const created = data.values.filter(v => v.author.user.name === settings.bitbucket?.username);
-        const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === settings.bitbucket?.username));
-        const participant = data.values.filter(v => v.participants.some(r => r.user.name === settings.bitbucket?.username));
+        const created = data.values.filter(v => v.author.user.name === this.settings.bitbucket?.username);
+        const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === this.settings.bitbucket?.username));
+        const participant = data.values.filter(v => v.participants.some(r => r.user.name === this.settings.bitbucket?.username));
 
         this.handleResponse(PullRequestRole.Author, created);
         this.handleResponse(PullRequestRole.Reviewer, reviewing);
@@ -47,6 +51,7 @@ export class BackgroundService {
           title: `created: ${created.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${processingTime.toLocaleTimeString()}`
         });
 
+        this.dataService.saveLastRunningTimestamp(runningTime);
         this.dataProcessed.emit();
       });
   }
@@ -64,7 +69,7 @@ export class BackgroundService {
         this.reviewMissingPullRequests(before, values);
         break;
       case PullRequestRole.Participant:
-        this.reviewNewPullRequests(before, values);
+        //this.reviewNewPullRequests(before, values);
         break;
     }
 
@@ -73,32 +78,64 @@ export class BackgroundService {
 
   // run for pull requests with any role
   reviewCommentsCount(before: PullRequest[], now: PullRequest[]) {
-    before
-      .filter(b => now.some(n => n.id === b.id && n.properties.commentCount !== b.properties.commentCount))
-      .forEach(b => {
-        // todo: perform deep event processing
-        // - check if comment is mine or not
-        //
+    now
+      .filter(n => before.some(b => b.id === n.id && b.properties.commentCount !== n.properties.commentCount))
+      .forEach(n => {
+        this.bitbucketService
+          .getPullRequestActivities(n.fromRef.repository.project.key, n.fromRef.repository.slug, n.id)
+          .subscribe(data => {
+            let comments = data.values.filter(a =>
+              a.action === PullRequestActivityAction.Commented
+              // check if it's a new comment
+              && a.commentAction === BitbucketCommentAction.Added
+              // make sure it's not my comment
+              && (
+                a.comment?.author.id !== this.settings?.bitbucket?.userId
+                // check for first-level replies, todo: add recursion to go deeper
+                || a.comment?.comments?.some(cc =>
+                  cc.updatedDate >= this.lastRunningTime
+                  && cc.author.id !== this.settings?.bitbucket?.userId)
+              )
+              // check if action occurred after last running time
+              && a.createdDate >= this.lastRunningTime
+            );
 
-        this.notificationService.sendNotification(
-          {
-            action: PullRequestAction.Comment,
-            pullRequest: b
+            if (comments.length > 0) {
+              this.notificationService.sendNotification(
+                {
+                  action: PullRequestAction.Comment,
+                  pullRequest: n,
+                  comment: comments[0].comment
+                });
+            }
           });
       });
   }
 
   // run only for REVIEWING or PARTICIPANT role
   reviewNewPullRequests(before: PullRequest[], now: PullRequest[]) {
-    // todo: don't send notification if pr was claimed by myself
-    // if activity user is me and "action": "UPDATED" and addedReviewers includes my user
     now
       .filter(b => !before.some(n => n.id === b.id))
-      .forEach(b => {
-        this.notificationService.sendNotification(
-          {
-            action: PullRequestAction.Created,
-            pullRequest: b
+      .forEach(n => {
+        this.bitbucketService
+          .getPullRequestActivities(n.fromRef.repository.project.key, n.fromRef.repository.slug, n.id)
+          .subscribe(data => {
+            let isTrueReviewer = data.values.some(a =>
+              a.action === PullRequestActivityAction.Updated
+              // check if action occurred after last running time
+              && a.createdDate >= this.lastRunningTime
+              // make sure activity wasn't generated by myself
+              && a.user.id !== this.settings?.bitbucket?.userId
+              // get activities where I was added as a reviewer
+              && a.addedReviewers?.some(r => r.id === this.settings?.bitbucket?.userId));
+
+            if (isTrueReviewer) {
+              this.notificationService.sendNotification(
+                {
+                  action: PullRequestAction.Created,
+                  pullRequest: n
+                });
+            }
           });
       });
   }
@@ -109,6 +146,7 @@ export class BackgroundService {
       .forEach(b => {
         // todo: check missing PR, was it merged / declined ?
       });
+  }
 
   }
 }

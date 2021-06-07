@@ -18,3 +18,16 @@ export enum PullRequestAction {
   Comment = 'comment',
   Created = 'created'
 }
+
+export enum PullRequestActivityAction {
+  Opened = 'OPENED',
+  Approved = 'APPROVED',
+  Updated = 'UPDATED',
+  Rescoped = 'RESCOPED',
+  Commented = 'COMMENTED'
+}
+
+
+export enum BitbucketCommentAction {
+  Added = 'ADDED'
+}

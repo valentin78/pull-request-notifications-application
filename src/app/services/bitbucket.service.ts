@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BitbucketResponse, BitbucketUser, ExtensionSettings, PullRequest} from '../models/models';
+import {BitbucketResponse, BitbucketUser, ExtensionSettings, PullRequest, PullRequestActivity} from '../models/models';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {DataService} from './data.service';
@@ -45,11 +45,14 @@ export class BitbucketService {
       );
   }
 
-  getPullRequestActivities(projectKey: string, repositorySlug: string, pullRequestId: number) {
-    return this.http.get(
-      `${this.settings.bitbucket?.url}/rest/api/latest/projects/${projectKey}/repos/${repositorySlug}/pull-requests/${pullRequestId}/activities?limit=100`,
-      {headers: this.headers}
-    );
+  getPullRequestActivities(projectKey: string, repositorySlug: string, pullRequestId: number)
+    : Observable<BitbucketResponse<PullRequestActivity>> {
+    return this.http
+      .get(
+        `${this.settings.bitbucket?.url}/rest/api/latest/projects/${projectKey}/repos/${repositorySlug}/pull-requests/${pullRequestId}/activities?limit=100`,
+        {headers: this.headers}
+      )
+      .pipe(map(data => data as BitbucketResponse<PullRequestActivity>));
   }
 }
 
