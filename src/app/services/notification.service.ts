@@ -35,6 +35,9 @@ export class NotificationService {
               case PullRequestAction.Created:
                 body = 'new pull request created';
                 break;
+              case PullRequestAction.Approved:
+                body = 'pull request approved';
+                break;
             }
 
             const notification = new Notification(options.pullRequest.title, {

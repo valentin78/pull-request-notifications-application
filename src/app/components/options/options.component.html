@@ -26,17 +26,16 @@
       <input type="number" min="1" max="120" style="width: 50px;" [(ngModel)]="settings.refreshIntervalInMinutes">
       <span>, in minutes</span>
     </div>
-
-    <div class="options-item" style="display: none">
-      <span>Notification type:</span>
-      <select>
-        <option value="all">ALL</option>
-        <option value="mentions" title="Notify only about comments where user is mentioned (even in replies)">Mentions only</option>
-      </select>
-    </div>
   </div>
   <div class="options-list">
     <h3>Notifications</h3>
+    <div class="options-item" style="display: none;">
+      <span>Events:</span>
+      <select>
+        <option value="all" title="New PRs and all comments">ALL</option>
+        <option value="mentions" title="Notify only about comments where user is mentioned">Mentions only</option>
+      </select>
+    </div>
     <div class="options-item">
       <span>Browser</span>
       <input type="checkbox" [(ngModel)]="settings.notifications.browser">

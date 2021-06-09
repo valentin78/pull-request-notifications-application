@@ -56,15 +56,30 @@ export class BackgroundService {
       });
   }
 
+  /*
+  Rules:
+    + New PR for review was added
+    - Created PR was Approved
+    + Comment added to a created / reviewing / participating PR (todo: check only for mentions)
+    - Code conflict detected in the created / reviewing PR
+    - Code conflict fixed in the created / reviewing PR
+    - Created / reviewing PR was declined / removed
+    - Created PR was merged
+   */
+
   handleResponse(role: PullRequestRole, values: PullRequest[]) {
     const before = this.dataService.getPullRequests(role);
+
+    // todo: store notified PRs somewhere to avoid spamming
 
     this.reviewCommentsCount(before, values);
     switch (role) {
       case PullRequestRole.Author:
+        this.reviewPullRequestApprovals(before, values);
         this.reviewMissingPullRequests(before, values);
         break;
       case PullRequestRole.Reviewer:
+        // todo: check if code conflicts were fixed
         this.reviewNewPullRequests(before, values);
         this.reviewMissingPullRequests(before, values);
         break;
@@ -148,5 +163,20 @@ export class BackgroundService {
       });
   }
 
+  reviewPullRequestApprovals(before: PullRequest[], now: PullRequest[]) {
+    now
+      .filter(n => before.some(b =>
+        b.id === n.id
+        // before nobody approved this pr
+        && !b.reviewers.some(r => r.approved)
+        // now somebody approved this pr
+        && n.reviewers.some(r => r.approved)))
+      .forEach(n => {
+        this.notificationService.sendNotification(
+          {
+            action: PullRequestAction.Approved,
+            pullRequest: n
+          });
+      });
   }
 }

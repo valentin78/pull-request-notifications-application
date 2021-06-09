@@ -16,7 +16,8 @@ export enum PullRequestStatus {
 
 export enum PullRequestAction {
   Comment = 'comment',
-  Created = 'created'
+  Created = 'created',
+  Approved = 'approved'
 }
 
 export enum PullRequestActivityAction {
