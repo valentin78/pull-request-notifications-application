@@ -15,16 +15,16 @@
   display: flex;
   align-items: center;
   height: 25px;
-  background-color: #EBEBEB;
+  background-color: $background-color;
   padding-left: 3px;
-  color: #000;
+  color: $role-title-color;
 }
 
-.list {
-  & > div:nth-child(even):not(hover) {
-    background-color: rgba(105, 105, 105, .1);
-  }
-}
+//.list {
+//  & > div:nth-child(even):not(hover) {
+//    background-color: #1c202559;
+//  }
+//}
 
 .summary {
   display: flex;
