@@ -1,6 +1,7 @@
 <div class="home" *ngIf="isSettingsValid; else noSettings">
   <div class="summary">
     <span class="refresh" (click)="onRefresh()">
+      refresh list
       <i class="icon icon-redo2" title="refresh"></i>
     </span>
   </div>
@@ -39,7 +40,7 @@
     <div class="title">
       <h3>
         <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
-        Participant
+        Participating
         <span *ngIf="participant">&nbsp;| {{participant.length}}</span>
       </h3>
     </div>

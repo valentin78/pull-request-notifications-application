@@ -11,7 +11,7 @@ export class SlackClient {
     this.http = AppInjector.get(HttpClient);
   }
 
-  private getHeaders(token?: string): HttpHeaders | { [p: string]: string | string[] } {
+  private static getHeaders(token?: string): HttpHeaders | { [p: string]: string | string[] } {
     return {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json; charset=utf-8'
@@ -22,14 +22,14 @@ export class SlackClient {
     return this.http.post(
       `${this.slackApiUrl}/auth.test`,
       undefined,
-      {headers: this.getHeaders(token)});
+      {headers: SlackClient.getHeaders(token)});
   }
 
   postMessage(options: SlackMessageOptions) {
     return this.http.post(
       `${this.slackApiUrl}/chat.postMessage`,
       options,
-      {headers: this.getHeaders(this.token)});
+      {headers: SlackClient.getHeaders(this.token)});
   }
 }
 

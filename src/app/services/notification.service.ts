@@ -95,7 +95,7 @@ export class NotificationService {
     }
   }
 
-  private static buildPullRequestSlackMessage(memberId: string, options: NotificationOptions): SlackMessageOptions {
+  public static buildPullRequestSlackMessage(memberId: string, options: NotificationOptions): SlackMessageOptions {
     let title: string;
     let data = options.pullRequest;
 
