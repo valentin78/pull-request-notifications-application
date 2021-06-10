@@ -1,12 +1,11 @@
-<div class="container" *ngIf="pullRequest" data-id="{{pullRequest.id}}">
+<div class="container" *ngIf="pullRequest" data-id="{{pullRequest.id}}" (click)="navigateTo(selfUrl)">
   <div class="content">
     <div class="data">
       <span class="self-url">
-        <app-user *ngIf="showAuthorAvatar" [user]="pullRequest.author.user" [size]="14"></app-user>
-        <a href="{{selfUrl}}" target="_blank">{{pullRequest.title}}</a>
+        <app-user class="user" *ngIf="showAuthorAvatar" [user]="pullRequest.author.user" [size]="14"></app-user>
+        <span class="title" [ngClass]="{'conflicts': hasConflicts, 'can-be-merged': canBeMerged}">{{pullRequest.title}}</span>
       </span>
       <div class="status-bar">
-
         <span class="pr-status"
               [class.pr-can-be-merged]="canBeMerged"
               [attr.title]="hasConflicts ? 'code conflicts' : ''"

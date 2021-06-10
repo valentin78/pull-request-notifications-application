@@ -23,6 +23,7 @@
             "assets": [
               "src/favicon.ico",
               "src/background.png",
+              "src/bitbucket512_rounded.png",
               "src/IcoMoon.ttf",
               "src/manifest.json"
             ],

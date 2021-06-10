@@ -29,4 +29,8 @@ export class PullRequestComponent implements OnInit {
 
     this.commentsCount = this.pullRequest.properties.commentCount || 0;
   }
+
+  navigateTo(url: string) {
+    window.open(url);
+  }
 }
