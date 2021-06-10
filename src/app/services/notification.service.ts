@@ -40,7 +40,7 @@ export class NotificationService {
                 break;
             }
 
-            const notification = new Notification(options.pullRequest.title, {
+            new Notification(options.pullRequest.title, {
               icon: 'favicon.ico',
               body: body
             });
@@ -50,9 +50,9 @@ export class NotificationService {
 
     // check if slack is enabled
     if (extensionSettings.notifications.slack) {
-      const slackSettings = extensionSettings.notifications.slack;
+      let slackSettings = extensionSettings.notifications.slack;
       let slackClient = new SlackClient(slackSettings.token);
-      let messageOptions = this.buildPullRequestSlackMessage(slackSettings.memberId, options);
+      let messageOptions = NotificationService.buildPullRequestSlackMessage(slackSettings.memberId, options);
 
       slackClient
         .postMessage(messageOptions)
@@ -88,14 +88,9 @@ export class NotificationService {
     }
   }
 
-  private buildPullRequestSlackMessage(memberId: string, options: NotificationOptions): SlackMessageOptions {
-
-    let title = '';
+  private static buildPullRequestSlackMessage(memberId: string, options: NotificationOptions): SlackMessageOptions {
+    let title: string;
     let data = options.pullRequest;
-    let spaceIndex = data.description?.indexOf(' ', 50) ?? 0;
-    let prDescription = (data.description?.length ?? 0 > 50) && spaceIndex > 50
-      ? (data.description?.substr(0, spaceIndex + 1)) + '...'
-      : data.description;
 
     switch (options.action) {
       case PullRequestAction.Comment:
@@ -112,58 +107,64 @@ export class NotificationService {
         break;
     }
 
-    let message = {
+    let message: SlackMessageOptions = {
       channel: memberId,
       text: title,
-      blocks: [
-        {
-          'type': 'section',
-          'text': {
-            'type': 'mrkdwn',
-            'text': `${title}: *<${data.links.self[0].href}|${data.title}>*`
-          }
-        },
-        {
-          'type': 'divider'
-        },
-        {
-          'type': 'section',
-          'text': {
-            'type': 'mrkdwn',
-            'text':
-              `*Description:*${prDescription ? ('\n' + prDescription) : ''}\n` +
-              `*Repository:* <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>`
-          }
-        },
-        {
-          'type': 'context',
-          'elements': [
-            {
-              'text':
-                `*${new Date(data.createdDate).toDateString()}*` +
-                ` | <${data.author.user.links?.self[0].href}|${data.author.user.displayName}>` +
-                ` | <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>` +
-                ` | \`${data.toRef.displayId}\`` +
-                `${data.properties.commentCount ? (` :memo:${data.properties.commentCount}`) : ''}`,
-              'type': 'mrkdwn'
-            }
-          ]
-        }
-      ]
+      blocks: []
     };
 
+    // add title
+    message.blocks?.push({
+      'type': 'section',
+      'text': {
+        'type': 'mrkdwn',
+        'text': `${title}: *<${data.links.self[0].href}|${data.title}>*`
+      }
+    });
+
+    // add comment
     if (options.action == PullRequestAction.Comment) {
-      message.blocks.splice(1, 0, {
-        'type': 'context',
-        'elements': [
-          {
-            'type': 'mrkdwn',
-            'text': `\`\`\`${options.comment?.text}\`\`\``
-          }
-        ]
+      message.blocks?.push({
+        'type': 'section',
+        'text': {
+          'type': 'mrkdwn',
+          'text': `_${options.comment?.text}_`
+        }
       });
     }
 
+    // add description
+    if (data.description?.length) {
+      let spaceIndex = data.description.indexOf(' ', 50);
+      let prDescription = data.description.length > 50 && spaceIndex > 50
+        ? (data.description.substr(0, spaceIndex + 1)) + '...'
+        : data.description;
+      message.blocks?.push({
+        'type': 'section',
+        'text': {
+          'type': 'mrkdwn',
+          'text': `*Description:*\n${prDescription}\n`
+        }
+      });
+    }
+
+    // add context
+    message.blocks?.push({
+      'type': 'context',
+      'elements': [
+        {
+          'text':
+            `*${new Date(data.createdDate).toDateString()}*` +
+            ` | <${data.author.user.links?.self[0].href}|${data.author.user.displayName}>` +
+            ` | <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>` +
+            ` | \`${data.toRef.displayId}\`` +
+            `${data.properties.commentCount ? (` :memo:${data.properties.commentCount}`) : ''}`,
+          'type': 'mrkdwn'
+        }
+      ]
+    });
+
+    message.blocks?.push({'type': 'divider'});
     return message;
   }
 }
