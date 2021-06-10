@@ -37,7 +37,8 @@ jobs:
       - name: yarn install and run build
         # Runs a set of commands using the runners shell
         run: |
-          npm install yarn
+          # npm install yarn
+          # todo: delete lock file
           yarn install
           yarn run build:prod
       #- name: Push Build to Releases
