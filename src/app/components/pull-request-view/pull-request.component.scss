@@ -1,53 +1,75 @@
 @import "src/variables";
 
 .container {
-  padding: $pr-control-distance 0;
+  padding: $pr-control-distance 3px;
   border-top: 1px solid $border-color;
+  cursor: pointer;
 
   &:hover {
     background-color: $background-color;
   }
-}
 
-.content {
-  display: flex;
-  //align-items: flex-start; /* vertical alignment */
-  flex-flow: row nowrap;
-  justify-content: flex-start; /* horizontal alignment */
-  margin: 0 $pr-control-distance;
-}
+  .content {
+    display: flex;
+    //align-items: flex-start; /* vertical alignment */
+    flex-flow: row nowrap;
+    justify-content: space-between; /* horizontal alignment */
+    margin: 0 $pr-control-distance;
 
-.data {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: left;
-  margin-right: $pr-control-distance;
-  max-width: 400px;
-}
 
-.self-url {
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  margin-bottom: $pr-control-distance;
-  overflow-x: hidden;
-}
+    .data {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: left;
+      margin-right: $pr-control-distance;
+      max-width: 400px;
 
-.status-bar {
-  display: flex;
-  flex-flow: row nowrap;
 
-  & > * {
-    padding: 2px 3px;
+      .self-url {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        margin-bottom: $pr-control-distance;
+        overflow-x: hidden;
+
+        .user {
+          margin-right: 5px;
+        }
+
+        a {
+          color: #fff;
+          text-decoration: none;
+          font-size: 1.2em;
+          display: inline-block;
+          padding: 5px 0;
+
+          &.conflicts {
+            color: rgb(255, 139, 0);
+          }
+
+          &.can-be-merged {
+            color: rgb(0, 135, 90);
+          }
+        }
+      }
+
+      .status-bar {
+        display: flex;
+        flex-flow: row nowrap;
+
+        & > * {
+          padding: 2px 3px;
+        }
+      }
+    }
+
+    .reviewers {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center; /* vertical alignment */
+    }
   }
 }
-
-.reviewers {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center; /* vertical alignment */
-}
-
 
 .pr-status {
   background-color: #0052CC;
