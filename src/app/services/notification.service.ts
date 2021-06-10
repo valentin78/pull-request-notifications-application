@@ -92,13 +92,17 @@ export class NotificationService {
 
     let title = '';
     let data = options.pullRequest;
+    let spaceIndex = data.description?.indexOf(' ', 50) ?? 0;
+    let prDescription = (data.description?.length ?? 0 > 50) && spaceIndex > 50
+      ? (data.description?.substr(0, spaceIndex + 1)) + '...'
+      : data.description;
 
     switch (options.action) {
       case PullRequestAction.Comment:
-        title = `:memo: @${options.comment?.author.name} added new comment(s)`;
+        title = `:memo: @${options.comment?.author.name} added new comment`;
         break;
       case PullRequestAction.Created:
-        title = `:pull_request: @${options.pullRequest.author.user.name} created a new pull request`;
+        title = `:pull_request: @${options.pullRequest.author.user.name} assigned a new pull request`;
         break;
       case PullRequestAction.Approved:
         title = ':white_check_mark: Your pull request approved';
@@ -127,9 +131,7 @@ export class NotificationService {
           'text': {
             'type': 'mrkdwn',
             'text':
-              `*Description:*${data.description ? ('\n' + data.description) : ''}\n` +
-              `*Comments:* ${data.properties.commentCount || ''}\n` +
-              `*Ref*: \`${data.fromRef.displayId}\` > \`${data.toRef.displayId}\`\n` +
+              `*Description:*${prDescription ? ('\n' + prDescription) : ''}\n` +
               `*Repository:* <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>`
           }
         },
@@ -137,7 +139,12 @@ export class NotificationService {
           'type': 'context',
           'elements': [
             {
-              'text': `*${new Date(data.createdDate).toDateString()}* | <${data.author.user.links?.self[0].href}|${data.author.user.displayName}>`,
+              'text':
+                `*${new Date(data.createdDate).toDateString()}*` +
+                ` | <${data.author.user.links?.self[0].href}|${data.author.user.displayName}>` +
+                ` | <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>` +
+                ` | \`${data.toRef.displayId}\`` +
+                `${data.properties.commentCount ? (` :memo:${data.properties.commentCount}`) : ''}`,
               'type': 'mrkdwn'
             }
           ]
