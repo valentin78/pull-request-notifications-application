@@ -12,7 +12,7 @@ export class PullRequestComponent implements OnInit {
   @Input() showAuthorAvatar: boolean = true;
 
   selfUrl!: string;
-  canBeMerged!: boolean;
+  approved!: boolean;
   hasConflicts!: boolean;
   commentsCount!: number;
 
@@ -24,8 +24,8 @@ export class PullRequestComponent implements OnInit {
       this.selfUrl = this.pullRequest.links.self[0].href;
     }
 
-    // this.canBeMerged = this.pullRequest.reviewers.some(r => r.approved);
-    this.hasConflicts = this.pullRequest.properties.mergeResult.outcome !== 'CLEAN';
+    this.approved = this.pullRequest.reviewers.some(r => r.approved);
+    this.hasConflicts = this.pullRequest.properties.mergeResult.outcome !== 'CLEAN'; // CONFLICTED
 
     this.commentsCount = this.pullRequest.properties.commentCount || 0;
   }

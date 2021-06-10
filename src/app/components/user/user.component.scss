@@ -1,3 +1,4 @@
+@import "/src/variables";
 .container {
   position: relative;
 }
@@ -39,7 +40,7 @@
     vertical-align: bottom;
     overflow: hidden;
     pointer-events: none;
-    color: rgb(0, 135, 90);
+    color: $pr-approved-color;
     fill: white;
   }
 }
