@@ -30,34 +30,29 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
       - name: Node ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}      
+          node-version: ${{ matrix.node-version }}
+
       - name: yarn install and run build
         # Runs a set of commands using the runners shell
         run: |
           # npm install yarn
           # todo: delete lock file
           yarn install
-          yarn run build:prod
-          
-          
+          yarn run build:prod          
+      
+      #create new tag only on push event
       - name: Bump version and push tag
         id: tag_version
+        if: ${{ github.event_name == 'push' }}
         uses: mathieudutour/github-tag-action@v5.5
         with:
-          github_token: ${{ secrets.TOKEN }}
-      
-      #- name: Create a GitHub release
-      #  uses: actions/create-release@v1
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      #  with:
-      #    tag_name: ${{ steps.tag_version.outputs.new_tag }}
-      #    release_name: Release ${{ steps.tag_version.outputs.new_tag }}
-      #    body: ${{ steps.tag_version.outputs.changelog }}          
+          github_token: ${{ secrets.TOKEN }}      
           
+      #create new release only on push event
       - name: Push Build to Releases
         if: ${{ github.event_name == 'push' }}
         uses: ncipollo/release-action@v1
