@@ -22,7 +22,8 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
+              "src/background.png",
+              "src/IcoMoon.ttf",
               "src/manifest.json"
             ],
             "styles": [
