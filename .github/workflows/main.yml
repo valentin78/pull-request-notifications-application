@@ -47,3 +47,4 @@ jobs:
           artifacts: "dist/bitbucket-notifications/*"
           token: ${{ secrets.TOKEN }}
           commit: master
+          tag: 0.1.0
