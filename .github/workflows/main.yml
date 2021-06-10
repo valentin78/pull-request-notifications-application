@@ -42,9 +42,9 @@ jobs:
           yarn install
           yarn run build:prod
       - name: Push Build to Releases
+        if: ${{ github.event_name == 'push' }}
         uses: ncipollo/release-action@v1
         with:
           artifacts: "dist/bitbucket-notifications/*"
           token: ${{ secrets.TOKEN }}
           commit: master
-          tag: 0.1.0
