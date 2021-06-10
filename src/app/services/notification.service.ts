@@ -21,6 +21,13 @@ export class NotificationService {
   }
 
   sendNotification(options: NotificationOptions) {
+
+    // skip notification if it is snoozed for this PR
+    let snoozeSettings = this.dataService.getNotificationSnoozeSettings();
+    if (snoozeSettings.includes(options.pullRequest.id)) {
+      return;
+    }
+
     let extensionSettings = this.dataService.getExtensionSettings();
 
     if (extensionSettings.notifications.browser) {

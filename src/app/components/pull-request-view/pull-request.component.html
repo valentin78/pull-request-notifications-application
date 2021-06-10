@@ -1,7 +1,7 @@
-<div class="container" *ngIf="pullRequest" data-id="{{pullRequest.id}}" (click)="navigateTo(selfUrl)">
+<div class="container" *ngIf="pullRequest" data-id="{{pullRequest.id}}">
   <div class="content">
     <div class="data">
-      <span class="self-url">
+      <span class="self-url" (click)="navigateTo(selfUrl)">
         <app-user class="user" *ngIf="showAuthorAvatar" [user]="pullRequest.author.user" [size]="14"></app-user>
         <span class="title" [ngClass]="{'conflicts': hasConflicts, 'approved': approved}">{{pullRequest.title}}</span>
       </span>
@@ -23,6 +23,8 @@
           {{commentsCount}}
           <i class="icon icon-bubble"></i>
         </span>
+
+        <app-snooze-notification [id]="pullRequest.id"></app-snooze-notification>
 
       </div>
     </div>

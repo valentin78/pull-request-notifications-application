@@ -1,0 +1,7 @@
+<i
+  data-id="{{id}}"
+  class="content icon icon-alarm"
+  [class.snoozed]="snoozed"
+  [title]="(snoozed ? 'un-snooze' : 'snooze') + ' notifications'"
+  (click)="onSnoozeToggle()">
+</i>

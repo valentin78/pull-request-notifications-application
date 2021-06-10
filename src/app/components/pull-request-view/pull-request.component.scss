@@ -3,7 +3,6 @@
 .container {
   padding: $pr-control-distance 3px;
   border-top: 1px solid $border-color;
-  cursor: pointer;
 
   &:hover {
     background-color: $background-color-hover;
@@ -29,6 +28,7 @@
         white-space: nowrap;
         margin-bottom: $pr-control-distance;
         overflow-x: hidden;
+        cursor: pointer;
 
         .user {
           margin-right: 5px;
@@ -53,6 +53,7 @@
       .status-bar {
         display: flex;
         flex-flow: row nowrap;
+        align-items: center;
 
         & > * {
           padding: 2px 3px;

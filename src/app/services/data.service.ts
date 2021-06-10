@@ -8,6 +8,7 @@ export class DataService {
   private keys = {
     settings: 'bitbucket-notifications.settings',
     lastRunningTime: 'bitbucket-notifications.last-running-time',
+    snoozeSettings: 'bitbucket-notifications.snooze-settings',
     pullRequests: 'bitbucket-notifications.pull-requests'
   };
 
@@ -36,6 +37,14 @@ export class DataService {
 
   saveLastRunningTimestamp(timestamp: number) {
     return window.localStorage.setItem(this.keys.lastRunningTime, JSON.stringify(timestamp));
+  }
+
+  getNotificationSnoozeSettings(): number[] {
+    return JSON.parse(window.localStorage.getItem(this.keys.snoozeSettings) as string) || [];
+  }
+
+  saveNotificationSnoozeSettings(settings: number[]) {
+    return window.localStorage.setItem(this.keys.snoozeSettings, JSON.stringify(settings));
   }
 }
 

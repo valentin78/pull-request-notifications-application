@@ -15,6 +15,7 @@ import {PullRequestStateComponent} from './components/pull-request-state/pull-re
 import {NotificationService} from './services/notification.service';
 import {BackgroundPageComponent} from './components/background-page/background-page.component';
 import {BackgroundService} from './services/background.service';
+import {SnoozeNotificationComponent} from './components/snooze-notification/snooze-notification.component';
 
 export let AppInjector: Injector;
 
@@ -26,7 +27,8 @@ export let AppInjector: Injector;
     PullRequestComponent,
     UserComponent,
     PullRequestStateComponent,
-    BackgroundPageComponent
+    BackgroundPageComponent,
+    SnoozeNotificationComponent
   ],
   imports: [
     BrowserModule,
