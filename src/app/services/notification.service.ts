@@ -2,14 +2,15 @@ import {Injectable} from '@angular/core';
 import {DataService} from './data.service';
 import {SlackClient, SlackMessageOptions} from './slackClient';
 import {catchError} from 'rxjs/operators';
-import {throwError} from 'rxjs';
-import {NotificationOptions} from '../models/models';
+import {of, throwError} from 'rxjs';
+import {NotificationOptions, PullRequestIssue} from '../models/models';
 import {PullRequestAction} from '../models/enums';
+import {BitbucketService} from './bitbucket.service';
 
 @Injectable()
 export class NotificationService {
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private bitbucketService: BitbucketService) {
   }
 
   private requestPermission(): Promise<NotificationPermission> {
@@ -59,21 +60,29 @@ export class NotificationService {
     if (extensionSettings.notifications.slack) {
       let slackSettings = extensionSettings.notifications.slack;
       let slackClient = new SlackClient(slackSettings.token);
-      let messageOptions = NotificationService.buildPullRequestSlackMessage(slackSettings.memberId, options);
 
-      slackClient
-        .postMessage(messageOptions)
-        .pipe(
-          catchError((error: any) => {
-            this.setBadge({title: error.error, color: 'red', message: 'slack'});
-            return throwError(error);
-          }))
-        .subscribe((data: any) => {
-          if (!data.ok) {
-            console.log(data);
-            this.setBadge({title: data.error, color: 'red', message: 'slack'});
-            throw data.error;
-          }
+      // todo: pull connected issues from:
+      let pr = options.pullRequest;
+      this.bitbucketService
+        .getPullRequestIssues(pr.fromRef.repository.project.key, pr.fromRef.repository.slug, pr.id)
+        .pipe(catchError(() => of([])))
+        .subscribe(issues => {
+          let messageOptions = NotificationService.buildPullRequestSlackMessage(slackSettings.memberId, options, issues);
+
+          slackClient
+            .postMessage(messageOptions)
+            .pipe(
+              catchError((error: any) => {
+                this.setBadge({title: error.error, color: 'red', message: 'slack'});
+                return throwError(error);
+              }))
+            .subscribe((data: any) => {
+              if (!data.ok) {
+                console.log(data);
+                this.setBadge({title: data.error, color: 'red', message: 'slack'});
+                throw data.error;
+              }
+            });
         });
     }
   }
@@ -95,7 +104,7 @@ export class NotificationService {
     }
   }
 
-  public static buildPullRequestSlackMessage(memberId: string, options: NotificationOptions): SlackMessageOptions {
+  public static buildPullRequestSlackMessage(memberId: string, options: NotificationOptions, issues: PullRequestIssue[]): SlackMessageOptions {
     let title: string;
     let data = options.pullRequest;
 
@@ -151,6 +160,17 @@ export class NotificationService {
         'text': {
           'type': 'mrkdwn',
           'text': `*Description:*\n${prDescription}\n`
+        }
+      });
+    }
+
+    // add issues
+    if (issues.length) {
+      message.blocks?.push({
+        'type': 'section',
+        'text': {
+          'type': 'mrkdwn',
+          'text': `*Issues:* ${issues.map(i => `<${i.url}|${i.key}>`).join(', ')}`
         }
       });
     }

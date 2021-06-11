@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BitbucketResponse, BitbucketUser, ExtensionSettings, PullRequest, PullRequestActivity} from '../models/models';
+import {BitbucketResponse, BitbucketUser, ExtensionSettings, PullRequest, PullRequestActivity, PullRequestIssue} from '../models/models';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {DataService} from './data.service';
@@ -53,6 +53,15 @@ export class BitbucketService {
         {headers: this.headers}
       )
       .pipe(map(data => data as BitbucketResponse<PullRequestActivity>));
+  }
+
+  getPullRequestIssues(projectKey: string, repositorySlug: string, pullRequestId: number)
+    : Observable<PullRequestIssue[]> {
+    return this.http
+      .get(
+        `${this.settings.bitbucket?.url}/rest/jira/latest/projects/${projectKey}/repos/${repositorySlug}/pull-requests/${pullRequestId}/issues?limit=100`,
+        {headers: this.headers}
+      ).pipe(map(data => data as PullRequestIssue[]));
   }
 }
 

@@ -143,6 +143,11 @@ export class BitbucketProject {
   key!: string;
 }
 
+export class PullRequestIssue {
+  key!: string;
+  url!: string;
+}
+
 export class NotificationOptions {
   action!: PullRequestAction;
   pullRequest!: PullRequest;
