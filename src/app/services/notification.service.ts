@@ -151,10 +151,17 @@ export class NotificationService {
 
     // add description
     if (data.description?.length) {
-      let spaceIndex = data.description.indexOf(' ', 50);
-      let prDescription = data.description.length > 50 && spaceIndex > 50
-        ? (data.description.substr(0, spaceIndex + 1)) + '...'
-        : data.description;
+      let prDescription: string;
+      if (options.action === PullRequestAction.Created) {
+        // use full description for just created PR
+        prDescription = data.description;
+      } else {
+        let spaceIndex = data.description.indexOf(' ', 50);
+        prDescription = data.description.length > 50 && spaceIndex > 50
+          ? (data.description.substr(0, spaceIndex + 1)) + '...'
+          : data.description;
+      }
+
       message.blocks?.push({
         'type': 'section',
         'text': {
@@ -181,10 +188,10 @@ export class NotificationService {
       'elements': [
         {
           'text':
-            `*${new Date(data.createdDate).toDateString()}*` +
-            ` | <${data.author.user.links?.self[0].href}|${data.author.user.displayName}>` +
+            `*PR created by <${data.author.user.links?.self[0].href}|${data.author.user.displayName}>` +
+            ` at ${new Date(data.createdDate).toDateString()}*` +
             ` | <${data.fromRef.repository.links?.self[0].href}|${data.fromRef.repository.name}>` +
-            ` | \`${data.toRef.displayId}\`` +
+            ` \`${data.toRef.displayId}\`` +
             `${data.properties.commentCount ? (` :memo:${data.properties.commentCount}`) : ''}`,
           'type': 'mrkdwn'
         }
