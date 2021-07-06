@@ -1,5 +1,13 @@
 @import "src/variables";
 
+.url {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .container {
   padding: $pr-control-distance 3px;
   border-top: 1px solid $border-color;
@@ -28,7 +36,6 @@
         white-space: nowrap;
         margin-bottom: $pr-control-distance;
         overflow-x: hidden;
-        cursor: pointer;
 
         .user {
           margin-right: 5px;

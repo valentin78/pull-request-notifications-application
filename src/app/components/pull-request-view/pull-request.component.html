@@ -1,7 +1,7 @@
 <div class="container" *ngIf="pullRequest" data-id="{{pullRequest.id}}">
   <div class="content">
     <div class="data">
-      <span class="self-url" (click)="navigateTo(selfUrl)">
+      <span class="self-url url" (click)="navigateTo(selfUrl)">
         <app-user class="user" *ngIf="showAuthorAvatar" [user]="pullRequest.author.user" [size]="14"></app-user>
         <span class="title" [ngClass]="{'conflicts': hasConflicts, 'approved': approved}">{{pullRequest.title}}</span>
       </span>
@@ -16,6 +16,8 @@
         </span>
 
         <span title="created date">{{pullRequest.createdDate | date}}</span>
+
+        <span class="to-ref url" (click)="navigateTo(pullRequest.fromRef.repository.links.self[0].href)">{{pullRequest.fromRef.repository.name}}</span>
 
         <span class="to-ref" title="destination branch">{{pullRequest.toRef.displayId}}</span>
 
