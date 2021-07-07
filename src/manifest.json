@@ -2,10 +2,13 @@
   "manifest_version": 2,
   "name": "Bitbucket Notifications",
   "version": "0.1",
-  "description": "Bitbucket Notifications",
+  "description": "Extension to send notifications for bitbucket pull-request events. Tested on bitbucket server.",
+  "icons": {
+    "64": "assets/icons/icon64.png",
+    "512": "assets/icons/icon512.png"
+  },
   "browser_action": {
-    "default_icon": "/bitbucket512_rounded.png",
-    "default_popup": "/index.html"
+    "default_popup": "index.html"
   },
   "options_ui": {
     "page": "/index.html#options",
