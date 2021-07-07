@@ -20,6 +20,7 @@ export class SnoozeNotificationComponent implements OnInit {
   }
 
   onSnoozeToggle() {
+    // todo: add snooze ttl 1/2/3/5/8 hours or disable
     let settings = this.dataService.getNotificationSnoozeSettings();
     if (this.snoozed) {
       this.dataService.saveNotificationSnoozeSettings(settings.filter(id => id !== this.id));

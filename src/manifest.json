@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Bitbucket Notifications",
-  "version": "1.0",
+  "version": "0.1",
   "description": "Bitbucket Notifications",
   "browser_action": {
     "default_icon": "/bitbucket512_rounded.png",
@@ -17,6 +17,7 @@
   },
   "permissions": [
     "background",
+    "clipboardWrite",
     "alarms",
     "notifications",
     "https://*/*",

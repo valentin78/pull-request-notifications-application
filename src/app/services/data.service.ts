@@ -13,38 +13,38 @@ export class DataService {
   };
 
   getExtensionSettings(): ExtensionSettings {
-    let settings = JSON.parse(window.localStorage.getItem(this.keys.settings) as string);
+    let settings = JSON.parse(localStorage.getItem(this.keys.settings) as string);
 
     return new ExtensionSettings(settings);
   }
 
   saveExtensionSettings(settings: ExtensionSettings) {
-    window.localStorage.setItem(this.keys.settings, JSON.stringify(settings));
+    localStorage.setItem(this.keys.settings, JSON.stringify(settings));
   }
 
   getPullRequests(role: PullRequestRole): PullRequest[] {
-    return JSON.parse(window.localStorage.getItem(`${this.keys.pullRequests}.${role}`) as string) || [];
+    return JSON.parse(localStorage.getItem(`${this.keys.pullRequests}.${role}`) as string) || [];
   }
 
   savePullRequests(role: PullRequestRole, values: PullRequest[]) {
-    window.localStorage.setItem(`${this.keys.pullRequests}.${role}`, JSON.stringify(values));
+    localStorage.setItem(`${this.keys.pullRequests}.${role}`, JSON.stringify(values));
   }
 
   getLastRunningTimestamp(): number {
     // return now - 1h, if last running time is not available
-    return JSON.parse(window.localStorage.getItem(this.keys.lastRunningTime) as string) || (Date.now() - 60 * 60 * 1000);
+    return JSON.parse(localStorage.getItem(this.keys.lastRunningTime) as string) || (Date.now() - 60 * 60 * 1000);
   }
 
   saveLastRunningTimestamp(timestamp: number) {
-    return window.localStorage.setItem(this.keys.lastRunningTime, JSON.stringify(timestamp));
+    return localStorage.setItem(this.keys.lastRunningTime, JSON.stringify(timestamp));
   }
 
   getNotificationSnoozeSettings(): number[] {
-    return JSON.parse(window.localStorage.getItem(this.keys.snoozeSettings) as string) || [];
+    return JSON.parse(localStorage.getItem(this.keys.snoozeSettings) as string) || [];
   }
 
   saveNotificationSnoozeSettings(settings: number[]) {
-    return window.localStorage.setItem(this.keys.snoozeSettings, JSON.stringify(settings));
+    return localStorage.setItem(this.keys.snoozeSettings, JSON.stringify(settings));
   }
 }
 

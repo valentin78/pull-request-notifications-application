@@ -5,6 +5,7 @@ import {forkJoin, of, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 import {SlackClient} from '../../services/slackClient';
+import {BackgroundService} from '../../services/background.service';
 
 @Component({
   selector: 'app-options',
@@ -23,7 +24,8 @@ export class OptionsComponent implements OnInit {
 
   constructor(
     private settingsService: DataService,
-    private bitbucketService: BitbucketService) {
+    private bitbucketService: BitbucketService,
+    private backgroundService: BackgroundService) {
     this.settings = settingsService.getExtensionSettings();
 
     this.enableSlackNotifications = !!this.settings.notifications.slack;
@@ -70,6 +72,10 @@ export class OptionsComponent implements OnInit {
           ? this.slackSettings
           : undefined;
         this.settingsService.saveExtensionSettings(this.settings);
+
+        // fetch data
+        this.backgroundService.doWork();
+
         this.showMessage('saved!');
       });
   }
