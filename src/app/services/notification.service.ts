@@ -46,6 +46,15 @@ export class NotificationService {
               case PullRequestActivityAction.Approved:
                 body = 'pull request approved';
                 break;
+              case PullRequestActivityAction.Merged:
+                body = 'pull request merged';
+                break;
+              case PullRequestActivityAction.Declined:
+                body = 'pull request declined';
+                break;
+              case PullRequestActivityAction.Removed:
+                body = 'pull request removed';
+                break;
             }
 
             new Notification(options.pullRequest.title, {
@@ -123,10 +132,13 @@ export class NotificationService {
         title = `:merged: @${options.activity?.user.name} merged pull request`;
         break;
       case PullRequestActivityAction.Declined:
-        title = `:_: @${options.activity?.user.name} declined pull request`;
+        title = `:heavy_multiplication_x: @${options.activity?.user.name} declined pull request`;
+        break;
+      case PullRequestActivityAction.Removed:
+        title = `:x: pull request was removed`;
         break;
       default:
-        title = `something happened: ${options.action}`;
+        title = `something happened with pull request: ${options.action}`;
         break;
     }
 

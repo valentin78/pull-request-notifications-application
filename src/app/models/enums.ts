@@ -27,7 +27,10 @@ export enum PullRequestActivityAction {
   Rescoped = 'RESCOPED',
   Commented = 'COMMENTED',
   Merged = 'MERGED',
-  Declined = 'DECLINED'
+  Declined = 'DECLINED',
+
+  // virtual activity
+  Removed = 'REMOVED'
 }
 
 
