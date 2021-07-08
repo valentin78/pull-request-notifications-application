@@ -25,5 +25,6 @@
     "notifications",
     "https://*/*",
     "https://slack.com/api/*"
-  ]
+  ],
+  "content_security_policy":"style-src 'self' 'unsafe-inline'; img-src 'self' https:; connect-src https:; script-src-attr 'self' 'unsafe-inline'; default-src 'self';"
 }
