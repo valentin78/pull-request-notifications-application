@@ -7,14 +7,21 @@
   & > div {
     padding-left: 10px;
   }
+
+  & > .title {
+    background-color: $title-background-color;
+
+    & > img {
+      height: 32px;
+    }
+  }
 }
 
 .title {
   display: flex;
   align-items: center;
 
-  & > img {
-    height: 30px;
+  & > img, i {
     margin-right: 5px;
   }
 }
@@ -22,6 +29,10 @@
 .options-list {
   padding: 0 10px 10px;
   border-top: 1px solid $border-color;
+
+  .title > img {
+    height: 16px;
+  }
 }
 
 .options-item {
@@ -39,7 +50,7 @@
   align-items: center;
 }
 
-.slack-settings{
+.slack-settings {
   background-color: #2f363e;
   border-top: 1px solid;
 }

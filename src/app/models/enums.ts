@@ -14,12 +14,6 @@ export enum PullRequestStatus {
   Unapproved = 'UNAPPROVED'
 }
 
-export enum PullRequestAction {
-  Comment = 'comment',
-  Created = 'created',
-  Approved = 'approved'
-}
-
 export enum PullRequestActivityAction {
   Opened = 'OPENED',
   Approved = 'APPROVED',
@@ -32,7 +26,6 @@ export enum PullRequestActivityAction {
   // virtual activity
   Removed = 'REMOVED'
 }
-
 
 export enum BitbucketCommentAction {
   Added = 'ADDED'

@@ -1,11 +1,61 @@
 <div class="container">
   <div class="title">
-    <img src="favicon.ico" alt=""/>
+    <img src="assets/icons/icon64.png" alt=""/>
     <h2>Extension settings</h2>
   </div>
 
   <div class="options-list">
-    <h3>Bitbucket</h3>
+    <h3>General</h3>
+    <div class="options-item">
+      <span>Refresh interval:</span>
+      <input type="number" min="1" max="120" style="width: 50px;" [(ngModel)]="settings.refreshIntervalInMinutes">
+      <span>, in minutes</span>
+    </div>
+  </div>
+
+  <div class="options-list">
+    <div class="title">
+      <i class="icon icon-bell"></i>
+      <h3>Notifications</h3>
+    </div>
+    <div class="options-item" style="display: none;">
+      <span>Events:</span>
+      <select>
+        <option value="all" title="New PRs and all comments">ALL</option>
+        <option value="mentions" title="Notify only about comments where user is mentioned">Mentions only</option>
+      </select>
+    </div>
+    <div class="options-item">
+      <span>Browser</span>
+      <input type="checkbox" [(ngModel)]="settings.notifications.browser">
+      <i>send push notifications</i>
+    </div>
+    <div class="options-item">
+      <span>Slack</span>
+      <input type="checkbox" [(ngModel)]="enableSlackNotifications">
+      <i>send notifications in slack</i>
+    </div>
+    <div class="slack-settings" *ngIf="enableSlackNotifications">
+      <div class="options-item">
+        <span style="align-self: flex-start">Token:</span>
+        <textarea cols="52" rows="2" placeholder="Bot User OAuth Token" [(ngModel)]="slackSettings.token"></textarea>
+        <i class="icon icon-question" style="align-self: start;margin-left: 5px;"
+           title="Bot User OAuth Token of slack application"></i>
+      </div>
+      <div class="options-item">
+        <span>Channel:</span>
+        <input type="text" size="8" placeholder="member id" pattern=".+" [(ngModel)]="slackSettings.memberId">
+        <i>&nbsp;your slack profile > more > copy member id</i>
+        <input type="button" style="margin-left: 20px;" value="test" (click)="onSlackTest()">
+      </div>
+    </div>
+  </div>
+
+  <div class="options-list">
+    <div class="title">
+      <img src="assets/icons/bitbucket64.png" alt=""/>
+      <h3>Bitbucket</h3>
+    </div>
     <div class="options-item">
       <span>URL:</span>
       <input type="text" size="50" placeholder="bitbucket url" pattern="^https?://" [(ngModel)]="bitbucketSettings.url">
@@ -20,45 +70,8 @@
       <span>Token:</span>
       <input type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="bitbucketSettings.token">
     </div>
+  </div>
 
-    <div class="options-item">
-      <span>Refresh interval:</span>
-      <input type="number" min="1" max="120" style="width: 50px;" [(ngModel)]="settings.refreshIntervalInMinutes">
-      <span>, in minutes</span>
-    </div>
-  </div>
-  <div class="options-list">
-    <h3>Notifications</h3>
-    <div class="options-item" style="display: none;">
-      <span>Events:</span>
-      <select>
-        <option value="all" title="New PRs and all comments">ALL</option>
-        <option value="mentions" title="Notify only about comments where user is mentioned">Mentions only</option>
-      </select>
-    </div>
-    <div class="options-item">
-      <span>Browser</span>
-      <input type="checkbox" [(ngModel)]="settings.notifications.browser">
-      <i>send browser notifications</i>
-    </div>
-    <div class="options-item">
-      <span>Slack</span>
-      <input type="checkbox" [(ngModel)]="enableSlackNotifications">
-      <i>send notifications in slack</i>
-    </div>
-    <div class="slack-settings" *ngIf="enableSlackNotifications">
-      <div class="options-item">
-        <span style="align-self: flex-start">Token:</span>
-        <textarea cols="52" rows="2" placeholder="Bot User OAuth Token" [(ngModel)]="slackSettings.token"></textarea>
-      </div>
-      <div class="options-item">
-        <span>Channel:</span>
-        <input type="text" size="8" placeholder="member id" pattern=".+" [(ngModel)]="slackSettings.memberId">
-        <i>&nbsp;your slack profile > more > copy member id</i>
-        <input type="button" style="margin-left: 20px;" value="test" (click)="onSlackTest()">
-      </div>
-    </div>
-  </div>
   <div class="controls">
     <button (click)="onSave()">Save</button>
     <span style="margin-left: 10px;" *ngIf="statusMessage">{{statusMessage}}</span>
