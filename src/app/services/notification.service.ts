@@ -4,8 +4,8 @@ import {SlackClient, SlackMessageOptions} from './slackClient';
 import {catchError} from 'rxjs/operators';
 import {of, throwError} from 'rxjs';
 import {NotificationOptions, PullRequestIssue} from '../models/models';
-import {PullRequestAction} from '../models/enums';
 import {BitbucketService} from './bitbucket.service';
+import {PullRequestActivityAction} from '../models/enums';
 
 @Injectable()
 export class NotificationService {
@@ -37,13 +37,13 @@ export class NotificationService {
           if (permission === 'granted') {
             let body = '';
             switch (options.action) {
-              case PullRequestAction.Comment:
+              case PullRequestActivityAction.Commented:
                 body = 'comment(s) added';
                 break;
-              case PullRequestAction.Created:
+              case PullRequestActivityAction.Opened:
                 body = 'new pull request created';
                 break;
-              case PullRequestAction.Approved:
+              case PullRequestActivityAction.Approved:
                 body = 'pull request approved';
                 break;
             }
@@ -108,15 +108,22 @@ export class NotificationService {
     let title: string;
     let data = options.pullRequest;
 
+    // todo: move :reaction: names to settings
     switch (options.action) {
-      case PullRequestAction.Comment:
+      case PullRequestActivityAction.Commented:
         title = `:memo: @${options.comment?.author.name} added new comment`;
         break;
-      case PullRequestAction.Created:
+      case PullRequestActivityAction.Opened:
         title = `:pull_request: @${options.pullRequest.author.user.name} assigned a new pull request`;
         break;
-      case PullRequestAction.Approved:
+      case PullRequestActivityAction.Approved:
         title = ':white_check_mark: Your pull request approved';
+        break;
+      case PullRequestActivityAction.Merged:
+        title = `:merged: @${options.activity?.user.name} merged pull request`;
+        break;
+      case PullRequestActivityAction.Declined:
+        title = `:_: @${options.activity?.user.name} declined pull request`;
         break;
       default:
         title = `something happened: ${options.action}`;
@@ -139,7 +146,7 @@ export class NotificationService {
     });
 
     // add comment
-    if (options.action == PullRequestAction.Comment) {
+    if (options.action == PullRequestActivityAction.Commented) {
       message.blocks?.push({
         'type': 'section',
         'text': {
@@ -152,7 +159,7 @@ export class NotificationService {
     // add description
     if (data.description?.length) {
       let prDescription: string;
-      if (options.action === PullRequestAction.Created) {
+      if (options.action === PullRequestActivityAction.Opened) {
         // use full description for just created PR
         prDescription = data.description;
       } else {

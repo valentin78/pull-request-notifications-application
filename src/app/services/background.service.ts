@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {BitbucketService} from './bitbucket.service';
-import {BitbucketCommentAction, PullRequestAction, PullRequestActivityAction, PullRequestRole, PullRequestState} from '../models/enums';
+import {BitbucketCommentAction, PullRequestActivityAction, PullRequestRole, PullRequestState} from '../models/enums';
 import {ExtensionSettings, PullRequest} from '../models/models';
 import {DataService} from './data.service';
 import {NotificationService} from './notification.service';
@@ -167,7 +167,7 @@ export class BackgroundService {
             if (comments.length > 0) {
               this.notificationService.sendNotification(
                 {
-                  action: PullRequestAction.Comment,
+                  action: PullRequestActivityAction.Commented,
                   pullRequest: n,
                   comment: comments[0].comment
                 });
@@ -196,7 +196,7 @@ export class BackgroundService {
             if (isTrueReviewer) {
               this.notificationService.sendNotification(
                 {
-                  action: PullRequestAction.Created,
+                  action: PullRequestActivityAction.Opened,
                   pullRequest: n
                 });
             }
@@ -223,7 +223,7 @@ export class BackgroundService {
       .forEach(n => {
         this.notificationService.sendNotification(
           {
-            action: PullRequestAction.Approved,
+            action: PullRequestActivityAction.Approved,
             pullRequest: n
           });
       });

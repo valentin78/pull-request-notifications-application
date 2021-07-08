@@ -25,7 +25,9 @@ export enum PullRequestActivityAction {
   Approved = 'APPROVED',
   Updated = 'UPDATED',
   Rescoped = 'RESCOPED',
-  Commented = 'COMMENTED'
+  Commented = 'COMMENTED',
+  Merged = 'MERGED',
+  Declined = 'DECLINED'
 }
 
 

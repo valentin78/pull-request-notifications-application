@@ -1,4 +1,4 @@
-import {BitbucketCommentAction, PullRequestAction, PullRequestActivityAction, PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
+import {BitbucketCommentAction, PullRequestActivityAction, PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
 
 export class ExtensionSettings {
   bitbucket?: BitbucketSettings = new BitbucketSettings(undefined);
@@ -149,7 +149,8 @@ export class PullRequestIssue {
 }
 
 export class NotificationOptions {
-  action!: PullRequestAction;
+  action!: PullRequestActivityAction;
   pullRequest!: PullRequest;
   comment?: BitbucketComment;
+  activity?: PullRequestActivity;
 }
