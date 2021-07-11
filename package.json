@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:dev": "ng build --configuration development --base-href index.html",
+    "build": "ng build --configuration development --base-href index.html",
     "watch": "ng build --watch --configuration development --base-href index.html",
-    "build:prod": "ng build --base-href index.html"
+    "build:prod": "ng build --configuration production --base-href index.html",
+    "watch:prod": "ng build --watch --configuration production --base-href index.html"
   },
   "private": true,
   "dependencies": {
