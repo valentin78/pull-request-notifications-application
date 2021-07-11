@@ -22,9 +22,10 @@
     "background",
     "clipboardWrite",
     "alarms",
-    "notifications",
-    "https://*/*",
-    "https://slack.com/api/*"
+    "notifications"
+  ],
+  "optional_permissions": [
+    "https://*/*"
   ],
   "content_security_policy":"style-src 'self' 'unsafe-inline'; img-src 'self' https:; connect-src https:; script-src-attr 'self' 'unsafe-inline'; default-src 'self';"
 }

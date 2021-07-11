@@ -4,7 +4,7 @@ import {BitbucketService} from '../../services/bitbucket.service';
 import {forkJoin, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
-import {SlackClient} from '../../services/slackClient';
+import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
 
 class StatusMessage {
@@ -45,16 +45,42 @@ export class OptionsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  private showStatusMessage(msg: StatusMessage) {
-    console.debug('status message:', msg);
-        this.statusMessage = msg;
-        if (msg.hideAfter || 5000 > 0) {
-      setTimeout(() => this.statusMessage = undefined, msg.hideAfter || 5000);
-        }
+  onSave() {
+    this.requestPermissions((granted) => {
+      if (granted) {
+        this.saveSettings();
+      } else {
+        this.statusMessage$.next({message: 'permissions not allowed', type: 'error'});
+      }
+    });
   }
 
-  onSave() {
-    // let origins = [];
+  onSlackTest() {
+    let slackClient = new SlackClient(this.slackSettings.token);
+    slackClient
+      .postMessage({
+        'channel': this.slackSettings.memberId,
+        'text': 'hello'
+      })
+      .subscribe((data: any) => {
+        if (!data.ok) {
+          this.statusMessage$.next({type: 'error', message: data.error || 'wrong slack credentials'});
+        } else {
+          this.statusMessage$.next({message: 'message sent'});
+        }
+      });
+  }
+  
+  private showStatusMessage(msg: StatusMessage) {
+    console.debug('status message:', msg);
+    this.statusMessage = msg;
+    if (msg.hideAfter || 5000 > 0) {
+      setTimeout(() => this.statusMessage = undefined, msg.hideAfter || 5000);
+    }
+  }
+
+  // validate & save settings to local storage
+  private saveSettings() {
     this.statusMessage$.next({message: 'saving...', hideAfter: 0});
     const bitbucketPromise = this.bitbucketService
       .validateCredentials(this.bitbucketSettings.url, this.bitbucketSettings.token, this.bitbucketSettings.username)
@@ -97,20 +123,16 @@ export class OptionsComponent implements OnInit {
       });
   }
 
-  onSlackTest() {
-    let slackClient = new SlackClient(this.slackSettings.token);
-    slackClient
-      .postMessage({
-        'channel': this.slackSettings.memberId,
-        'text': 'hello'
-      })
-      .subscribe((data: any) => {
-        if (!data.ok) {
-          this.showError(data.error || 'wrong slack credentials');
-        } else {
-          this.showMessage('message sent');
-        }
-      });
+  // request permission to access bitbucket & slack hosts
+  private requestPermissions(callback: (granted: boolean) => void) {
+    let origins = [];
+    const bbHost = `${new URL(this.bitbucketSettings.url || '').origin}/*`;
+    origins.push(bbHost);
+    if (this.enableSlackNotifications) {
+      origins.push(`${SLACK_API_URL}/*`);
+    }
+
+    chrome.permissions.request({origins: origins}, (d) => callback(d));
   }
 }
 
