@@ -6,6 +6,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
+import {DisposableComponent} from '../../../core/disposable-component';
 
 class StatusMessage {
   message!: string;
@@ -18,7 +19,7 @@ class StatusMessage {
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss']
 })
-export class OptionsComponent implements OnInit {
+export class OptionsComponent extends DisposableComponent implements OnInit {
 
   settings: ExtensionSettings;
   statusMessage?: StatusMessage;
@@ -33,16 +34,18 @@ export class OptionsComponent implements OnInit {
     private settingsService: DataService,
     private bitbucketService: BitbucketService,
     private backgroundService: BackgroundService) {
+    super();
+
     this.settings = settingsService.getExtensionSettings();
 
     this.enableSlackNotifications = !!this.settings.notifications.slack;
     this.slackSettings = this.settings.notifications.slack || new SlackSettings();
     this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
-    this.statusMessage$ = new Subject<StatusMessage>();
-    this.statusMessage$.subscribe(msg => this.showStatusMessage(msg));
+    this.statusMessage$ = new Subject();
   }
 
   ngOnInit(): void {
+    this.statusMessage$.safeSubscribe(this, msg => this.showStatusMessage(msg));
   }
 
   onSave() {
@@ -62,7 +65,7 @@ export class OptionsComponent implements OnInit {
         'channel': this.slackSettings.memberId,
         'text': 'hello'
       })
-      .subscribe((data: any) => {
+      .safeSubscribe(this, (data: any) => {
         if (!data.ok) {
           this.statusMessage$.next({type: 'error', message: data.error || 'wrong slack credentials'});
         } else {
@@ -70,7 +73,7 @@ export class OptionsComponent implements OnInit {
         }
       });
   }
-  
+
   private showStatusMessage(msg: StatusMessage) {
     console.debug('status message:', msg);
     this.statusMessage = msg;

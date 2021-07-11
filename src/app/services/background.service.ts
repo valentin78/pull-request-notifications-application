@@ -1,11 +1,11 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BitbucketService} from './bitbucket.service';
 import {BitbucketCommentAction, PullRequestActivityAction, PullRequestRole, PullRequestState} from '../models/enums';
 import {ExtensionSettings, PullRequest} from '../models/models';
 import {DataService} from './data.service';
 import {NotificationService} from './notification.service';
 import {catchError} from 'rxjs/operators';
-import {of, throwError} from 'rxjs';
+import {of, Subject, throwError} from 'rxjs';
 import Alarm = chrome.alarms.Alarm;
 import {HttpErrorResponse} from '@angular/common/http';
 
@@ -15,7 +15,7 @@ let chr: any = chrome;
 @Injectable()
 export class BackgroundService {
   interval: number;
-  public dataProcessed!: EventEmitter<PullRequestRole>;
+  public dataProcessed$!: Subject<void>;
   private settings!: ExtensionSettings;
   private lastRunningTime!: number;
 
@@ -23,7 +23,7 @@ export class BackgroundService {
     private dataService: DataService,
     private bitbucketService: BitbucketService,
     private notificationService: NotificationService) {
-    this.dataProcessed = new EventEmitter<PullRequestRole>(true);
+    this.dataProcessed$ = new Subject();
     const settings = this.dataService.getExtensionSettings();
     this.interval = settings.refreshIntervalInMinutes;
   }
@@ -103,7 +103,7 @@ export class BackgroundService {
         });
 
         this.dataService.saveLastRunningTimestamp(runningTime);
-        this.dataProcessed.emit();
+        this.dataProcessed$.next();
       });
   }
 

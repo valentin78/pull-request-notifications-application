@@ -5,13 +5,14 @@ import {PullRequest} from '../../models/models';
 import {NotificationService} from '../../services/notification.service';
 import {DataService} from '../../services/data.service';
 import {BackgroundService} from '../../services/background.service';
+import {DisposableComponent} from '../../../core/disposable-component';
 
 @Component({
   selector: 'app-main',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent extends DisposableComponent implements OnInit {
   created: PullRequest[];
   reviewing: PullRequest[];
   participant: PullRequest[];
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit {
     private notificationService: NotificationService,
     private dataService: DataService,
     private backgroundService: BackgroundService) {
+    super();
 
     this.created = [];
     this.reviewing = [];
@@ -36,13 +38,13 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.readPullRequestData(undefined);
+    this.readPullRequestData();
 
-    this.backgroundService.dataProcessed
-      .subscribe(role => this.readPullRequestData(role));
+    // this is used only if new data were fetched during home screen preview
+    this.backgroundService.dataProcessed$.safeSubscribe(this, () => this.readPullRequestData());
   }
 
-  readPullRequestData(role?: PullRequestRole) {
+  readPullRequestData() {
     this.created = this.dataService.getPullRequests(PullRequestRole.Author);
     this.reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
     this.participant = this.dataService.getPullRequests(PullRequestRole.Participant);
