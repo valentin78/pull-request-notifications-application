@@ -1,5 +1,9 @@
 <div class="home" *ngIf="isSettingsValid; else noSettings">
   <div class="summary">
+    <span class="last-data-fetching-time" *ngIf="lastDataFetchingTimestamp">
+      last data fetching time:
+      <span style="font-style: initial;">{{lastDataFetchingTimestamp | date:dateFormat}}</span>
+    </span>
     <span class="refresh" (click)="onRefresh()">
       refresh list
       <i class="icon icon-redo2" title="refresh"></i>

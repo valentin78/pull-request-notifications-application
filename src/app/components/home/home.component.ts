@@ -18,6 +18,8 @@ export class HomeComponent extends DisposableComponent implements OnInit {
   reviewing: PullRequest[];
   participant: PullRequest[];
   isSettingsValid!: boolean;
+  lastDataFetchingTimestamp?: number;
+  dateFormat = 'dd MMM, y HH:mm:ss'; // todo: save to settings
 
   constructor(
     private bitbucketService: BitbucketService,
@@ -50,6 +52,7 @@ export class HomeComponent extends DisposableComponent implements OnInit {
     this.created = this.dataService.getPullRequests(PullRequestRole.Author);
     this.reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
     this.participant = this.dataService.getPullRequests(PullRequestRole.Participant);
+    this.lastDataFetchingTimestamp = this.dataService.getLastDataFetchingTimestamp();
 
     this.cd.markForCheck();
   }
