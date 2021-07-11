@@ -1,11 +1,17 @@
 import {BitbucketSettings, ExtensionSettings, SlackSettings} from '../../models/models';
 import {DataService} from '../../services/data.service';
 import {BitbucketService} from '../../services/bitbucket.service';
-import {forkJoin, of, throwError} from 'rxjs';
+import {forkJoin, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 import {SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
+
+class StatusMessage {
+  message!: string;
+  type?: 'info' | 'error';
+  hideAfter?: number;
+}
 
 @Component({
   selector: 'app-options',
@@ -15,12 +21,13 @@ import {BackgroundService} from '../../services/background.service';
 export class OptionsComponent implements OnInit {
 
   settings: ExtensionSettings;
-  statusMessage?: string;
-  errorMessage?: string;
+  statusMessage?: StatusMessage;
 
   enableSlackNotifications: boolean;
   slackSettings: SlackSettings;
   bitbucketSettings: BitbucketSettings;
+
+  private statusMessage$: Subject<StatusMessage>;
 
   constructor(
     private settingsService: DataService,
@@ -31,17 +38,28 @@ export class OptionsComponent implements OnInit {
     this.enableSlackNotifications = !!this.settings.notifications.slack;
     this.slackSettings = this.settings.notifications.slack || new SlackSettings();
     this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
+    this.statusMessage$ = new Subject<StatusMessage>();
+    this.statusMessage$.subscribe(msg => this.showStatusMessage(msg));
   }
 
   ngOnInit(): void {
   }
 
+  private showStatusMessage(msg: StatusMessage) {
+    console.debug('status message:', msg);
+        this.statusMessage = msg;
+        if (msg.hideAfter || 5000 > 0) {
+      setTimeout(() => this.statusMessage = undefined, msg.hideAfter || 5000);
+        }
+  }
+
   onSave() {
-    this.statusMessage = 'saving...';
+    // let origins = [];
+    this.statusMessage$.next({message: 'saving...', hideAfter: 0});
     const bitbucketPromise = this.bitbucketService
       .validateCredentials(this.bitbucketSettings.url, this.bitbucketSettings.token, this.bitbucketSettings.username)
       .pipe(catchError((error, _) => {
-        this.showError('wrong bitbucket credentials');
+        this.statusMessage$.next({type: 'error', message: 'wrong bitbucket credentials'});
         return throwError(error);
       }));
 
@@ -52,12 +70,11 @@ export class OptionsComponent implements OnInit {
         .pipe(
           tap((data: any) => {
             if (!data.ok) {
-              this.showError('wrong slack credentials');
               throw 'wrong slack credentials';
             }
           }),
           catchError((error, _) => {
-            this.showError('wrong slack credentials');
+            this.statusMessage$.next({type: 'error', message: 'wrong slack credentials'});
             return throwError(error);
           })
         )
@@ -76,7 +93,7 @@ export class OptionsComponent implements OnInit {
         // fetch data
         this.backgroundService.doWork();
 
-        this.showMessage('saved!');
+        this.statusMessage$.next({message: 'saved!'});
       });
   }
 
@@ -94,20 +111,6 @@ export class OptionsComponent implements OnInit {
           this.showMessage('message sent');
         }
       });
-  }
-
-  showMessage(message: string) {
-    this.statusMessage = message;
-    setTimeout(() => {
-      this.statusMessage = undefined;
-    }, 2000);
-  }
-
-  showError(error: string) {
-    this.errorMessage = error;
-    setTimeout(() => {
-      this.errorMessage = undefined;
-    }, 5000);
   }
 }
 

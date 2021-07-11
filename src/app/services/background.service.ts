@@ -63,7 +63,7 @@ export class BackgroundService {
         console.log(`interval changed from ${alarm.periodInMinutes} to ${newInterval}, restarting alarm...`);
 
         chr.alarms.create({periodInMinutes: settings.refreshIntervalInMinutes});
-        console.debug('alarm created');
+        console.debug('alarm interval changed');
       }
     });
   }
