@@ -3,7 +3,7 @@ import {DataService} from '../../services/data.service';
 import {BitbucketService} from '../../services/bitbucket.service';
 import {forkJoin, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
 import {DisposableComponent} from '../../../core/disposable-component';
@@ -33,7 +33,8 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
   constructor(
     private settingsService: DataService,
     private bitbucketService: BitbucketService,
-    private backgroundService: BackgroundService) {
+    private backgroundService: BackgroundService,
+    private cd: ChangeDetectorRef) {
     super();
 
     this.settings = settingsService.getExtensionSettings();
@@ -77,8 +78,12 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
   private showStatusMessage(msg: StatusMessage) {
     console.debug('status message:', msg);
     this.statusMessage = msg;
+    this.cd.detectChanges();
     if (msg.hideAfter || 5000 > 0) {
-      setTimeout(() => this.statusMessage = undefined, msg.hideAfter || 5000);
+      setTimeout(() => {
+        this.statusMessage = undefined;
+        this.cd.detectChanges();
+      }, msg.hideAfter || 5000);
     }
   }
 

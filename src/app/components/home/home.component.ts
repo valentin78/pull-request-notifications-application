@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BitbucketService} from '../../services/bitbucket.service';
 import {PullRequestRole} from '../../models/enums';
 import {PullRequest} from '../../models/models';
@@ -10,7 +10,8 @@ import {DisposableComponent} from '../../../core/disposable-component';
 @Component({
   selector: 'app-main',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent extends DisposableComponent implements OnInit {
   created: PullRequest[];
@@ -22,7 +23,8 @@ export class HomeComponent extends DisposableComponent implements OnInit {
     private bitbucketService: BitbucketService,
     private notificationService: NotificationService,
     private dataService: DataService,
-    private backgroundService: BackgroundService) {
+    private backgroundService: BackgroundService,
+    private cd: ChangeDetectorRef) {
     super();
 
     this.created = [];
@@ -48,6 +50,8 @@ export class HomeComponent extends DisposableComponent implements OnInit {
     this.created = this.dataService.getPullRequests(PullRequestRole.Author);
     this.reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
     this.participant = this.dataService.getPullRequests(PullRequestRole.Participant);
+
+    this.cd.markForCheck();
   }
 
   onRefresh() {
