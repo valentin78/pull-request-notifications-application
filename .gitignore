@@ -9,6 +9,13 @@
 
 # dependencies
 /node_modules
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
 
 # profiling files
 chrome-profiler-events*.json
@@ -43,5 +50,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-.yarn/
