@@ -22,7 +22,8 @@
     "background",
     "clipboardWrite",
     "alarms",
-    "notifications"
+    "notifications",
+    "https://slack.com/api/*"
   ],
   "optional_permissions": [
     "https://*/*"

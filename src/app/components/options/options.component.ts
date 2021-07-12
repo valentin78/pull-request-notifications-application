@@ -115,7 +115,7 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
       : of(null);
 
     forkJoin([bitbucketPromise, slackPromise])
-      .subscribe(_ => {
+      .safeSubscribe(this, _ => {
         this.settings.bitbucket = this.bitbucketSettings;
         this.settings.bitbucket.userId = _[0].id;
 
@@ -136,9 +136,6 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
     let origins = [];
     const bbHost = `${new URL(this.bitbucketSettings.url || '').origin}/*`;
     origins.push(bbHost);
-    if (this.enableSlackNotifications) {
-      origins.push(`${SLACK_API_URL}/*`);
-    }
 
     chrome.permissions.request({origins: origins}, (d) => callback(d));
   }
