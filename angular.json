@@ -26,9 +26,24 @@
               "src/IcoMoon.ttf",
               "src/manifest.json",
               {
-                "glob": "**/*",
+                "glob": "background.png",
                 "input": "src/assets/",
-                "output": "/assets/"
+                "output": "/"
+              },
+              {
+                "glob": "icon64.png",
+                "input": "src/assets/icons/",
+                "output": "/"
+              },
+              {
+                "glob": "icon512.png",
+                "input": "src/assets/icons/",
+                "output": "/"
+              },
+              {
+                "glob": "bitbucket64.png",
+                "input": "src/assets/icons/",
+                "output": "/"
               }
             ],
             "styles": [
