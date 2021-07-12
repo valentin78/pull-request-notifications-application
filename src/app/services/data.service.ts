@@ -6,10 +6,10 @@ import {PullRequestRole} from '../models/enums';
 export class DataService {
 
   private keys = {
-    settings: 'bitbucket-notifications.settings',
-    lastRunningTime: 'bitbucket-notifications.last-running-time',
-    snoozeSettings: 'bitbucket-notifications.snooze-settings',
-    pullRequests: 'bitbucket-notifications.pull-requests'
+    settings: 'pull-request-notifications.settings',
+    lastRunningTime: 'pull-request-notifications.last-running-time',
+    snoozeSettings: 'pull-request-notifications.snooze-settings',
+    pullRequests: 'pull-request-notifications.pull-requests'
   };
 
   getExtensionSettings(): ExtensionSettings {

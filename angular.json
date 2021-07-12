@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "bitbucket-notifications": {
+    "pull-request-notifications": {
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -12,7 +12,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/bitbucket-notifications",
+            "outputPath": "dist/pull-request-notifications",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -80,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "bitbucket-notifications:build:production"
+              "browserTarget": "pull-request-notifications:build:production"
             },
             "development": {
-              "browserTarget": "bitbucket-notifications:build:development"
+              "browserTarget": "pull-request-notifications:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -91,11 +91,11 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bitbucket-notifications:build"
+            "browserTarget": "pull-request-notifications:build"
           }
         }
       }
     }
   },
-  "defaultProject": "bitbucket-notifications"
+  "defaultProject": "pull-request-notifications"
 }

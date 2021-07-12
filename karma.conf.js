@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/bitbucket-notifications'),
+      dir: require('path').join(__dirname, './coverage/pull-request-notifications'),
       subdir: '.',
       reporters: [
         { type: 'html' },

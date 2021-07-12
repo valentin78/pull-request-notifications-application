@@ -2640,9 +2640,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bitbucket-notifications@workspace:.":
+"pull-request-notifications@workspace:.":
   version: 0.0.0-use.local
-  resolution: "bitbucket-notifications@workspace:."
+  resolution: "pull-request-notifications@workspace:."
   dependencies:
     "@angular-devkit/build-angular": ~12.0.2
     "@angular/animations": ~12.0.2
