@@ -2640,30 +2640,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pull-request-notifications@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "pull-request-notifications@workspace:."
-  dependencies:
-    "@angular-devkit/build-angular": ~12.0.2
-    "@angular/animations": ~12.0.2
-    "@angular/cli": ~12.0.2
-    "@angular/common": ~12.0.2
-    "@angular/compiler": ~12.0.2
-    "@angular/compiler-cli": ~12.0.2
-    "@angular/core": ~12.0.2
-    "@angular/forms": ~12.0.2
-    "@angular/platform-browser": ~12.0.2
-    "@angular/platform-browser-dynamic": ~12.0.2
-    "@angular/router": ~12.0.2
-    "@types/chrome": ^0.0.143
-    "@types/node": ^12.11.1
-    rxjs: ~6.6.0
-    tslib: ^2.1.0
-    typescript: ~4.2.3
-    zone.js: ~0.11.4
-  languageName: unknown
-  linkType: soft
-
 "bl@npm:^4.1.0":
   version: 4.1.0
   resolution: "bl@npm:4.1.0"
@@ -8013,6 +7989,30 @@ fsevents@~2.3.2:
   checksum: 92d47c6257456878bfa8190d76b84de69bcefdc129eeee3f9fe204c15fd08d35fe5b8627033f39b455e40a9375a1474b25ff4ab2c5448dd8c8f75da692d0f5b4
   languageName: node
   linkType: hard
+
+"pull-request-notifications@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "pull-request-notifications@workspace:."
+  dependencies:
+    "@angular-devkit/build-angular": ~12.0.2
+    "@angular/animations": ~12.0.2
+    "@angular/cli": ~12.0.2
+    "@angular/common": ~12.0.2
+    "@angular/compiler": ~12.0.2
+    "@angular/compiler-cli": ~12.0.2
+    "@angular/core": ~12.0.2
+    "@angular/forms": ~12.0.2
+    "@angular/platform-browser": ~12.0.2
+    "@angular/platform-browser-dynamic": ~12.0.2
+    "@angular/router": ~12.0.2
+    "@types/chrome": ^0.0.143
+    "@types/node": ^12.11.1
+    rxjs: ~6.6.0
+    tslib: ^2.1.0
+    typescript: ~4.2.3
+    zone.js: ~0.11.4
+  languageName: unknown
+  linkType: soft
 
 "pump@npm:^3.0.0":
   version: 3.0.0

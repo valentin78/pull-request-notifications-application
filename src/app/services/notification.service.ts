@@ -123,7 +123,7 @@ export class NotificationService {
         title = `:memo: @${options.comment?.author.name} added new comment`;
         break;
       case PullRequestActivityAction.Opened:
-        title = `:pull_request: @${options.pullRequest.author.user.name} assigned a new pull request`;
+        title = `:pull_request: @${options.pullRequest.author.user.name} assigned you a new pull request`;
         break;
       case PullRequestActivityAction.Approved:
         title = ':white_check_mark: Your pull request approved';
@@ -148,7 +148,8 @@ export class NotificationService {
       blocks: []
     };
 
-    // add title
+    // add title with PR link
+    // todo: use link to the comment for Commented action
     message.blocks?.push({
       'type': 'section',
       'text': {
@@ -169,17 +170,17 @@ export class NotificationService {
     }
 
     // add description
+    let descriptionMaxLength = 50;
     if (data.description?.length) {
       let prDescription: string;
       if (options.action === PullRequestActivityAction.Opened) {
-        // use full description for just created PR
-        prDescription = data.description;
-      } else {
-        let spaceIndex = data.description.indexOf(' ', 50);
-        prDescription = data.description.length > 50 && spaceIndex > 50
-          ? (data.description.substr(0, spaceIndex + 1)) + '...'
-          : data.description;
+        // use longer description for just created PR
+        descriptionMaxLength = 200;
       }
+      let spaceIndex = data.description.indexOf(' ', descriptionMaxLength);
+      prDescription = data.description.length > descriptionMaxLength && spaceIndex > descriptionMaxLength
+        ? (data.description.substr(0, spaceIndex + 1)) + '...'
+        : data.description;
 
       message.blocks?.push({
         'type': 'section',
