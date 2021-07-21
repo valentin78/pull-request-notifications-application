@@ -51,8 +51,8 @@
           overflow: hidden;
           text-overflow: ellipsis;
 
-          &.conflicts {
-            color: rgb(255, 139, 0);
+          &.conflicts, &.needs-work {
+            color: $pr-needs-work-color;
           }
         }
       }
@@ -83,14 +83,14 @@
   border-radius: $pr-control-border-radius;
   font-weight: 700;
   margin-right: $pr-control-distance;
-}
 
-.pr-approved {
-  background-color: $pr-approved-color;
-}
+  &.approved {
+    background-color: $pr-approved-color;
+  }
 
-.pr-has-conflicts {
-  background-color: rgb(255, 139, 0);
+  &.conflicts, &.needs-work {
+    background-color: $pr-needs-work-color;
+  }
 }
 
 .comments {
@@ -104,7 +104,7 @@
 .to-ref {
   border: 1px solid $border-color;
   border-radius: $pr-control-border-radius;
-  color: orange;
+  color: #ffc682;
   background-color: $pr-background-color-hover;
   margin-right: $pr-control-distance;
 }

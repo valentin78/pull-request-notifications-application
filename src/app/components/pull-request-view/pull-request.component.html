@@ -3,21 +3,23 @@
     <div class="data">
       <span class="self-url url" (click)="navigateTo(selfUrl)">
         <app-user class="user" *ngIf="showAuthorAvatar" [user]="pullRequest.author.user" [size]="14"></app-user>
-        <span class="title" [ngClass]="{'conflicts': hasConflicts, 'approved': approved}">{{pullRequest.title}}</span>
+        <span class="title" [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
+          {{pullRequest.title}}
+        </span>
       </span>
       <div class="status-bar">
         <span class="pr-status"
               [class.pr-can-be-merged]="approved"
-              [attr.title]="hasConflicts ? 'code conflicts' : approved ? 'approved' : ''"
-              [class.pr-approved]="approved"
-              [class.pr-has-conflicts]="hasConflicts">
-          {{pullRequest.state}}
+              [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
+          {{status}}
           <i *ngIf="hasConflicts" class="icon icon-warning"></i>
         </span>
 
         <span title="created date">{{pullRequest.createdDate | date}}</span>
 
-        <span class="to-ref url" (click)="navigateTo(pullRequest.fromRef.repository.links.self[0].href)">{{pullRequest.fromRef.repository.name}}</span>
+        <span class="to-ref url" (click)="navigateTo(pullRequest.fromRef.repository.links.self[0].href)">
+          {{pullRequest.fromRef.repository.name}}
+        </span>
 
         <span class="to-ref" title="destination branch">{{pullRequest.toRef.displayId}}</span>
 
@@ -27,7 +29,6 @@
         </span>
 
         <app-snooze-notification [id]="pullRequest.id"></app-snooze-notification>
-
       </div>
     </div>
     <div class="reviewers">
