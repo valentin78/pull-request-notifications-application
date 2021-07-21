@@ -247,6 +247,7 @@ export class BackgroundService {
       });
   }
 
+  // todo: handle PR status change approved/needs work
   reviewPullRequestApprovals(before: PullRequest[], now: PullRequest[]) {
     now
       .filter(n => before.some(b =>

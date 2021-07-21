@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BitbucketUser} from '../../models/models';
+import {PullRequestStatus} from '../../models/enums';
 
 @Component({
   selector: 'app-user',
@@ -8,11 +9,19 @@ import {BitbucketUser} from '../../models/models';
 })
 export class UserComponent implements OnInit {
   @Input() user!: BitbucketUser;
-  @Input() approved?: boolean;
+  @Input() status?: PullRequestStatus;
   @Input() size: number = 30;
 
   title!: string;
   avatar!: string;
+
+  get approved(): boolean {
+    return this.status === PullRequestStatus.Approved;
+  }
+
+  get needsWork(): boolean {
+    return this.status === PullRequestStatus.NeedsWork;
+  }
 
   constructor() {
   }

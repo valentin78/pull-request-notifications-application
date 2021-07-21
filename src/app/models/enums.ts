@@ -11,7 +11,8 @@ export enum PullRequestState {
 
 export enum PullRequestStatus {
   Approved = 'APPROVED',
-  Unapproved = 'UNAPPROVED'
+  Unapproved = 'UNAPPROVED',
+  NeedsWork = 'NEEDS_WORK'
 }
 
 export enum PullRequestActivityAction {
