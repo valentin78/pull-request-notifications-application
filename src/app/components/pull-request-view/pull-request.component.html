@@ -3,13 +3,12 @@
     <div class="data">
       <span class="self-url url" (click)="navigateTo(selfUrl)">
         <app-user class="user" *ngIf="showAuthorAvatar" [user]="pullRequest.author.user" [size]="14"></app-user>
-        <span class="title" [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
-          {{pullRequest.title}}
-        </span>
+        <span class="title">{{pullRequest.title}}</span>
       </span>
       <div class="status-bar">
         <span class="pr-status"
               [class.pr-can-be-merged]="approved"
+              [title]=" hasConflicts ? 'conflicts detected' : ''"
               [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
           {{status}}
           <i *ngIf="hasConflicts" class="icon icon-warning"></i>

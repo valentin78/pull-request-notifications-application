@@ -50,10 +50,6 @@
           padding: 3px 0;
           overflow: hidden;
           text-overflow: ellipsis;
-
-          &.conflicts, &.needs-work {
-            color: $pr-needs-work-color;
-          }
         }
       }
 

@@ -35,7 +35,7 @@ export class PullRequestComponent implements OnInit {
       || this.hasConflicts && 'HAS CONFLICTS'
       || this.approved && 'APPROVED'
       || 'OPEN';
-    
+
     this.commentsCount = this.pullRequest.properties.commentCount || 0;
   }
 
