@@ -80,13 +80,16 @@ a {
   content: "\ea09";
 }
 
-.icon-alarm:before {
-  content: "\e950";
+.icon-volume-medium:before {
+  content: "\ea27";
+}
+
+.icon-volume-mute2:before {
+  content: "\ea2a";
 }
 
 // unused icons
 // -----------------------------------------------
-
 
 //.icon-home:before {
 //  content: "\e900";
@@ -408,6 +411,9 @@ a {
 //  content: "\e94f";
 //}
 //
+//.icon-alarm:before {
+//  content: "\e950";
+//}
 //.icon-stopwatch:before {
 //  content: "\e952";
 //}
@@ -1235,11 +1241,6 @@ a {
 //.icon-volume-high:before {
 //  content: "\ea26";
 //}
-//
-//.icon-volume-medium:before {
-//  content: "\ea27";
-//}
-//
 //.icon-volume-low:before {
 //  content: "\ea28";
 //}
@@ -1247,11 +1248,6 @@ a {
 //.icon-volume-mute:before {
 //  content: "\ea29";
 //}
-//
-//.icon-volume-mute2:before {
-//  content: "\ea2a";
-//}
-//
 //.icon-volume-increase:before {
 //  content: "\ea2b";
 //}

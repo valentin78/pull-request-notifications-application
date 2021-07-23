@@ -1,6 +1,7 @@
 <i
   data-id="{{id}}"
-  class="content icon icon-alarm"
+  class="content icon"
+  [ngClass]="snoozed ? 'icon-volume-mute2' : 'icon-volume-medium'"
   [class.snoozed]="snoozed"
   [title]="(snoozed ? 'enable' : 'snooze') + ' notifications'"
   (click)="onSnoozeToggle()">
