@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {PullRequest} from '../../models/models';
-import {PullRequestStatus} from '../../models/enums';
+import {BitbucketMergeResultOutcome, PullRequestStatus} from '../../models/enums';
 
 @Component({
   selector: 'app-pull-request',
@@ -29,7 +29,7 @@ export class PullRequestComponent implements OnInit {
 
     this.needsWork = this.pullRequest.reviewers.some(r => r.status === PullRequestStatus.NeedsWork);
     this.approved = !this.needsWork && this.pullRequest.reviewers.some(r => r.status === PullRequestStatus.Approved);
-    this.hasConflicts = this.pullRequest.properties.mergeResult.outcome !== 'CLEAN'; // CONFLICTED
+    this.hasConflicts = this.pullRequest.properties.mergeResult.outcome === BitbucketMergeResultOutcome.Conflicted;
 
     this.status = this.needsWork && 'NEEDS WORK'
       || this.hasConflicts && 'HAS CONFLICTS'

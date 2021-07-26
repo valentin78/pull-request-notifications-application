@@ -4,7 +4,7 @@ import {BitbucketService} from '../../services/bitbucket.service';
 import {forkJoin, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
+import {SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
 import {DisposableComponent} from '../../../core/disposable-component';
 

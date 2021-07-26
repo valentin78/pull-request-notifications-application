@@ -8,7 +8,6 @@
       <div class="status-bar">
         <span class="pr-status"
               [class.pr-can-be-merged]="approved"
-              [title]=" hasConflicts ? 'conflicts detected' : ''"
               [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
           {{status}}
           <i *ngIf="hasConflicts" class="icon icon-warning"></i>

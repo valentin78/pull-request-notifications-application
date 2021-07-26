@@ -25,9 +25,16 @@ export enum PullRequestActivityAction {
   Declined = 'DECLINED',
 
   // virtual activity
-  Removed = 'REMOVED'
+  Removed = 'REMOVED',
+  NeedsWork = 'NEEDS_WORK',
+  Conflicted = 'CONFLICTED'
 }
 
 export enum BitbucketCommentAction {
   Added = 'ADDED'
+}
+
+export enum BitbucketMergeResultOutcome {
+  Conflicted = 'CONFLICTED',
+  Clean = 'CLEAN'
 }
