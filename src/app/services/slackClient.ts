@@ -39,23 +39,26 @@ export class SlackClient {
 export class SlackMessageOptions {
   channel!: string;
   text?: string;
-  as_user?: boolean;
   attachments?: MessageAttachment[];
   blocks?: (KnownBlock | Block)[];
+
+  // as_user?: boolean;
   // if specified, as_user must be false
-  icon_emoji?: string;
+  // icon_emoji?: string;
   // if specified, as_user must be false
-  icon_url?: string;
+  // icon_url?: string;
   // Find and link channel names and usernames.
-  link_names?: boolean;
+  // link_names?: boolean;
+
   mrkdwn?: boolean;
   parse?: 'full' | 'none';
 
   // if specified, thread_ts must be set
-  reply_broadcast?: boolean;
-  thread_ts?: string;
-  unfurl_links?: boolean;
-  unfurl_media?: boolean;
+  // reply_broadcast?: boolean;
+  // thread_ts?: string;
+  // unfurl_links?: boolean;
+  // unfurl_media?: boolean;
+
   // if specified, as_user must be false
   username?: string;
 }
