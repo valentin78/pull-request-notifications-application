@@ -16,7 +16,7 @@ let chr: any = chrome;
 @Injectable()
 export class BackgroundService {
   interval: number;
-  public dataProcessed$!: Subject<void>;
+  private dataProcessed$!: Subject<void>;
   private settings!: ExtensionSettings;
   private lastDataFetchingTimestamp!: number;
 
@@ -27,6 +27,10 @@ export class BackgroundService {
     this.dataProcessed$ = new Subject();
     const settings = this.dataService.getExtensionSettings();
     this.interval = settings.refreshIntervalInMinutes;
+  }
+
+  public get dataProcessed() {
+    return this.dataProcessed$.asObservable();
   }
 
   setupAlarms() {

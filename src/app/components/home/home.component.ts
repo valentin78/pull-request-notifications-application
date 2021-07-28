@@ -45,16 +45,29 @@ export class HomeComponent extends DisposableComponent implements OnInit {
     this.readPullRequestData();
 
     // this is used only if new data were fetched during home screen preview
-    this.backgroundService.dataProcessed$.safeSubscribe(this, () => this.readPullRequestData());
+    this.backgroundService.dataProcessed.safeSubscribe(this, () => this.readPullRequestData());
   }
 
   readPullRequestData() {
-    this.created = this.dataService.getPullRequests(PullRequestRole.Author);
-    this.reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
-    this.participant = this.dataService.getPullRequests(PullRequestRole.Participant);
+    const created = this.dataService.getPullRequests(PullRequestRole.Author);
+    const reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
+    const participant = this.dataService.getPullRequests(PullRequestRole.Participant);
+
+    this.created = created.sort(this.sortPullRequests);
+    this.reviewing = reviewing.sort(this.sortPullRequests);
+    this.participant = participant.sort(this.sortPullRequests);
     this.lastDataFetchingTimestamp = this.dataService.getLastDataFetchingTimestamp();
 
     this.cd.markForCheck();
+  }
+
+  private sortPullRequests(a: PullRequest, b: PullRequest): number {
+    return a.title.localeCompare(b.title);
+
+    // const buildCompareValue = (pr: PullRequest) => `${pr.fromRef.repository.name} ${pr.fromRef.displayId}`;
+    // const aValue = buildCompareValue(a);
+    // const bValue = buildCompareValue(b);
+    // return aValue.localeCompare(bValue);
   }
 
   onRefresh() {
