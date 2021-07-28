@@ -1,15 +1,48 @@
-import {BitbucketCommentAction, PullRequestActivityAction, PullRequestRole, PullRequestState, PullRequestStatus} from './enums';
+import {
+  BitbucketCommentAction,
+  PullRequestActivityAction,
+  PullRequestRole,
+  PullRequestState,
+  PullRequestStatus
+} from './enums';
 
 export class ExtensionSettings {
-  bitbucket?: BitbucketSettings = new BitbucketSettings(undefined);
+  bitbucket?: BitbucketSettings = new BitbucketSettings();
   refreshIntervalInMinutes: number = 1;
-  notifications: { browser: boolean, slack?: SlackSettings } = {browser: true};
+  notifications: NotificationSettings = new NotificationSettings();
 
   constructor(data?: ExtensionSettings) {
     if (data) {
       Object.assign(this, data, {
-        bitbucket: new BitbucketSettings(data.bitbucket)
+        bitbucket: new BitbucketSettings(data.bitbucket),
+        notifications: new NotificationSettings(data.notifications)
       });
+    }
+  }
+}
+
+export class NotificationSettings {
+  browser = true;
+  slack?: SlackSettings;
+  events: NotificationEvents = new NotificationEvents();
+
+  constructor(data?: NotificationSettings) {
+    if (data) {
+      Object.assign(this, data, {
+        events: new NotificationEvents(data.events)
+      });
+    }
+  }
+}
+
+export class NotificationEvents {
+  pullRequestCreated = true;
+  pullRequestStateChanged = true;
+  commentAdded = true;
+
+  constructor(data?: NotificationEvents) {
+    if (data) {
+      Object.assign(this, data);
     }
   }
 }

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {DataService} from './data.service';
 import {SlackClient, SlackMessageOptions} from './slackClient';
 import {catchError} from 'rxjs/operators';
-import {of, throwError} from 'rxjs';
+import {from, Observable, of, throwError} from 'rxjs';
 import {NotificationOptions, PullRequestIssue} from '../models/models';
 import {BitbucketService} from './bitbucket.service';
 import {PullRequestActivityAction} from '../models/enums';
@@ -14,12 +14,12 @@ export class NotificationService {
   constructor(private dataService: DataService, private bitbucketService: BitbucketService) {
   }
 
-  private requestPermission(): Promise<NotificationPermission> {
+  public requestPermission(): Observable<NotificationPermission> {
     if (Notification.permission !== 'denied') {
-      return Notification.requestPermission();
+      return from(Notification.requestPermission());
     }
 
-    return new Promise<NotificationPermission>(() => Notification.permission);
+    return of(Notification.permission);
   }
 
   sendNotification(options: NotificationOptions) {
@@ -34,7 +34,7 @@ export class NotificationService {
 
     if (extensionSettings.notifications.browser) {
       this.requestPermission()
-        .then(permission => {
+        .subscribe(permission => {
           if (permission === 'granted') {
             let body = GetWindowsNotificationBody(options.action);
 

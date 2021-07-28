@@ -7,6 +7,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
 import {DisposableComponent} from '../../../core/disposable-component';
+import {NotificationService} from '../../services/notification.service';
 
 class StatusMessage {
   message!: string;
@@ -24,6 +25,7 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
   settings: ExtensionSettings;
   statusMessage?: StatusMessage;
 
+  enableBrowserNotifications: boolean;
   enableSlackNotifications: boolean;
   slackSettings: SlackSettings;
   bitbucketSettings: BitbucketSettings;
@@ -34,11 +36,13 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
     private settingsService: DataService,
     private bitbucketService: BitbucketService,
     private backgroundService: BackgroundService,
+    private notificationService: NotificationService,
     private cd: ChangeDetectorRef) {
     super();
 
     this.settings = settingsService.getExtensionSettings();
 
+    this.enableBrowserNotifications = !!this.settings.notifications.browser;
     this.enableSlackNotifications = !!this.settings.notifications.slack;
     this.slackSettings = this.settings.notifications.slack || new SlackSettings();
     this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
@@ -138,6 +142,37 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
     origins.push(bbHost);
 
     chrome.permissions.request({origins: origins}, (d) => callback(d));
+  }
+
+  onEnableBrowserNotifications(event: MouseEvent) {
+    if (!this.enableBrowserNotifications) {
+      this.notificationService
+        .requestPermission()
+        .subscribe(permission => {
+          console.debug('permission:', permission);
+          if (permission === 'granted') {
+            this.settings.notifications.browser = true;
+          } else {
+            this.enableBrowserNotifications = false;
+            this.settings.notifications.browser = false;
+          }
+        });
+    } else {
+      this.settings.notifications.browser = false;
+    }
+  }
+
+  onBrowserNotificationTest() {
+    this.notificationService
+      .requestPermission()
+      .subscribe(permission => {
+        if (permission === 'granted') {
+          new Notification('test', {
+            icon: 'icon64.png',
+            body: 'hello'
+          });
+        }
+      });
   }
 }
 

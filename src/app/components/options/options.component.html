@@ -27,8 +27,12 @@
     </div>
     <div class="options-item">
       <span>Browser</span>
-      <input type="checkbox" [(ngModel)]="settings.notifications.browser">
+      <input type="checkbox" (click)="onEnableBrowserNotifications($event)" [(ngModel)]="enableBrowserNotifications">
       <i>send push notifications</i>
+      <span *ngIf="enableBrowserNotifications" class="test-browser-notification"
+            title="test browser notification" (click)="onBrowserNotificationTest()">
+        test
+        <i class="icon icon-bubble"></i></span>
     </div>
     <div class="options-item">
       <span>Slack</span>
