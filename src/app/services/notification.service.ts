@@ -6,6 +6,7 @@ import {of, throwError} from 'rxjs';
 import {NotificationOptions, PullRequestIssue} from '../models/models';
 import {BitbucketService} from './bitbucket.service';
 import {PullRequestActivityAction} from '../models/enums';
+import {GetSlackNotificationTitle, GetWindowsNotificationBody} from '../other/notification.titles';
 
 @Injectable()
 export class NotificationService {
@@ -35,27 +36,7 @@ export class NotificationService {
       this.requestPermission()
         .then(permission => {
           if (permission === 'granted') {
-            let body = '';
-            switch (options.action) {
-              case PullRequestActivityAction.Commented:
-                body = 'comment(s) added';
-                break;
-              case PullRequestActivityAction.Opened:
-                body = 'new pull request created';
-                break;
-              case PullRequestActivityAction.Approved:
-                body = 'pull request approved';
-                break;
-              case PullRequestActivityAction.Merged:
-                body = 'pull request merged';
-                break;
-              case PullRequestActivityAction.Declined:
-                body = 'pull request declined';
-                break;
-              case PullRequestActivityAction.Removed:
-                body = 'pull request removed';
-                break;
-            }
+            let body = GetWindowsNotificationBody(options.action);
 
             new Notification(options.pullRequest.title, {
               icon: 'favicon.ico',
@@ -114,33 +95,8 @@ export class NotificationService {
   }
 
   public static buildPullRequestSlackMessage(memberId: string, options: NotificationOptions, issues: PullRequestIssue[]): SlackMessageOptions {
-    let title: string;
+    let title = GetSlackNotificationTitle(options);
     let data = options.pullRequest;
-
-    // todo: move :reaction: names to settings
-    switch (options.action) {
-      case PullRequestActivityAction.Commented:
-        title = `:memo: @${options.comment?.author.name} added new comment`;
-        break;
-      case PullRequestActivityAction.Opened:
-        title = `:pull_request: @${options.pullRequest.author.user.name} assigned you a new pull request`;
-        break;
-      case PullRequestActivityAction.Approved:
-        title = ':white_check_mark: Your pull request approved';
-        break;
-      case PullRequestActivityAction.Merged:
-        title = `:merged: @${options.activity?.user.name} merged pull request`;
-        break;
-      case PullRequestActivityAction.Declined:
-        title = `:heavy_multiplication_x: @${options.activity?.user.name} declined pull request`;
-        break;
-      case PullRequestActivityAction.Removed:
-        title = `:x: pull request was removed`;
-        break;
-      default:
-        title = `something happened with pull request: ${options.action}`;
-        break;
-    }
 
     let message: SlackMessageOptions = {
       channel: memberId,
