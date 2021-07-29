@@ -42,7 +42,7 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
 
     this.settings = settingsService.getExtensionSettings();
 
-    this.enableBrowserNotifications = !!this.settings.notifications.browser;
+    this.enableBrowserNotifications = this.settings.notifications.browser;
     this.enableSlackNotifications = !!this.settings.notifications.slack;
     this.slackSettings = this.settings.notifications.slack || new SlackSettings();
     this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
@@ -163,16 +163,7 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
   }
 
   onBrowserNotificationTest() {
-    this.notificationService
-      .requestPermission()
-      .subscribe(permission => {
-        if (permission === 'granted') {
-          new Notification('test', {
-            icon: 'icon64.png',
-            body: 'hello'
-          });
-        }
-      });
+    this.notificationService.sendBrowserNotification('test', 'hello', 'https://www.mozilla.org')
   }
 }
 

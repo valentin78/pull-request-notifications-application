@@ -37,7 +37,7 @@ export function GetSlackNotificationTitle(options: NotificationOptions): string 
   return title;
 }
 
-export function GetWindowsNotificationBody(action: PullRequestActivityAction) {
+export function GetWindowsNotificationBody(action: PullRequestActivityAction): string {
   let body;
   switch (action) {
     case PullRequestActivityAction.Commented:
@@ -63,6 +63,9 @@ export function GetWindowsNotificationBody(action: PullRequestActivityAction) {
       break;
     case PullRequestActivityAction.Conflicted:
       body = 'pull request got code conflicts';
+      break;
+    default:
+      body = `an action taken over pull request: ${action}`;
       break;
   }
 
