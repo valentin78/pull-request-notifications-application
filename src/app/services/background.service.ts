@@ -131,7 +131,7 @@ export class BackgroundService {
     this.reviewCommentsCount(before, values);
     switch (role) {
       case PullRequestRole.Author:
-        this.reviewPullRequestApprovals(before, values);
+        this.reviewPullRequestStateChanged(before, values);
         this.reviewMissingPullRequests(before, values);
         break;
       case PullRequestRole.Reviewer:
@@ -152,6 +152,9 @@ export class BackgroundService {
    * @tutorial Make sense to run it for PRs with any role
    */
   reviewCommentsCount(before: PullRequest[], now: PullRequest[]) {
+    if (!this.settings.notifications.events.commentAdded) {
+      return;
+    }
     now
       .filter(n => before.some(b => b.id === n.id && b.properties.commentCount !== n.properties.commentCount))
       .forEach(n => {
@@ -179,6 +182,10 @@ export class BackgroundService {
    * @tutorial Make sense to run it only for PRs with REVIEWER or PARTICIPANT role
    */
   reviewNewPullRequests(before: PullRequest[], now: PullRequest[]) {
+    if (!this.settings.notifications.events.pullRequestCreated) {
+      return;
+    }
+
     now
       .filter(b => !before.some(n => n.id === b.id))
       .forEach(n => {
@@ -204,6 +211,10 @@ export class BackgroundService {
    * @tutorial Make sense to run it for PRs with AUTHOR or REVIEWER role
    */
   reviewMissingPullRequests(before: PullRequest[], now: PullRequest[]) {
+    if (!this.settings.notifications.events.pullRequestStateChanged) {
+      return;
+    }
+
     before
       .filter(b => !now.some(n => n.id === b.id))
       .forEach(b => {
@@ -241,10 +252,14 @@ export class BackgroundService {
   }
 
   /**
-   * Check if pull request was approved or flagged as needs-work.
+   * Check if pull request was approved or flagged as needs-work or got code conflicts.
    * @tutorial Make sense to run it only for PRs with AUTHOR role
    */
-  reviewPullRequestApprovals(before: PullRequest[], now: PullRequest[]) {
+  reviewPullRequestStateChanged(before: PullRequest[], now: PullRequest[]) {
+    if (!this.settings.notifications.events.pullRequestStateChanged) {
+      return;
+    }
+
     now
       .map(n => {
         const b = before.find(i => i.id === n.id);

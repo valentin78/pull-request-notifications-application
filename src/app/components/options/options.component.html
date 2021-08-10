@@ -8,7 +8,7 @@
     <h3>General</h3>
     <div class="options-item">
       <span>Refresh interval:</span>
-      <input type="number" min="1" max="120" style="width: 40px;" [(ngModel)]="settings.refreshIntervalInMinutes">
+      <input type="number" min="1" max="90" style="width: 30px;" [(ngModel)]="settings.refreshIntervalInMinutes">
       <span>, in minutes</span>
     </div>
   </div>
@@ -51,6 +51,21 @@
         <input type="text" size="8" placeholder="member id" pattern=".+" [(ngModel)]="slackSettings.memberId">
         <i>&nbsp;your slack profile > more > copy member id</i>
         <input type="button" style="margin-left: 20px;" value="test" (click)="onSlackTest()">
+      </div>
+    </div>
+    <div class="options-sub-item-list">
+      <span class="title">Send notifications for events:</span>
+      <div class="options-item">
+        <input type="checkbox" [(ngModel)]="settings.notifications.events.pullRequestCreated">
+        New pull request created
+      </div>
+      <div class="options-item">
+        <input type="checkbox" [(ngModel)]="settings.notifications.events.pullRequestStateChanged">
+        Pull request state has changed (approved / needs work / conflicted / merged / declined / removed)
+      </div>
+      <div class="options-item">
+        <input type="checkbox" [(ngModel)]="settings.notifications.events.commentAdded">
+        New comments added
       </div>
     </div>
   </div>

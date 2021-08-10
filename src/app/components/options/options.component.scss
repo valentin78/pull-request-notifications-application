@@ -35,6 +35,16 @@
   }
 }
 
+.options-sub-item-list {
+  margin-top: 8px;
+
+  .title {
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 5px 0;
+  }
+}
+
 .options-item {
   display: flex;
   padding: 2px 0;
