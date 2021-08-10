@@ -4,7 +4,7 @@ import {BitbucketService} from '../../services/bitbucket.service';
 import {forkJoin, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {SlackClient} from '../../services/slackClient';
+import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
 import {DisposableComponent} from '../../../core/disposable-component';
 import {NotificationService} from '../../services/notification.service';
@@ -65,16 +65,25 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
 
   onSlackTest() {
     let slackClient = new SlackClient(this.slackSettings.token);
-    slackClient
-      .postMessage({
-        'channel': this.slackSettings.memberId,
-        'text': 'hello'
-      })
-      .safeSubscribe(this, (data: any) => {
-        if (!data.ok) {
-          this.statusMessage$.next({type: 'error', message: data.error || 'wrong slack credentials'});
+
+    chrome.permissions.request(
+      {origins: [`${SLACK_API_URL}/*`]},
+      (granted) => {
+        if (granted) {
+          slackClient
+            .postMessage({
+              'channel': this.slackSettings.memberId,
+              'text': 'hello'
+            })
+            .safeSubscribe(this, (data: any) => {
+              if (!data.ok) {
+                this.statusMessage$.next({type: 'error', message: data.error || 'wrong slack credentials'});
+              } else {
+                this.statusMessage$.next({message: 'message sent'});
+              }
+            });
         } else {
-          this.statusMessage$.next({message: 'message sent'});
+          this.statusMessage$.next({message: 'permissions not allowed', type: 'error'});
         }
       });
   }
@@ -141,6 +150,10 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
     const bbHost = `${new URL(this.bitbucketSettings.url || '').origin}/*`;
     origins.push(bbHost);
 
+    if (this.enableSlackNotifications) {
+      origins.push(`${SLACK_API_URL}/*`);
+    }
+
     chrome.permissions.request({origins: origins}, (d) => callback(d));
   }
 
@@ -163,7 +176,7 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
   }
 
   onBrowserNotificationTest() {
-    this.notificationService.sendBrowserNotification('test', 'hello', 'https://www.mozilla.org')
+    this.notificationService.sendBrowserNotification('test', 'hello', 'https://www.mozilla.org');
   }
 }
 

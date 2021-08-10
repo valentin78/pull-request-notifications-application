@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Pull Request Notifications",
-  "version": "0.1.12",
-  "description": "Extension to send notifications for bitbucket pull-request events. Tested on bitbucket server.",
+  "version": "0.1.13",
+  "description": "Display notifications for Bitbucket pull requests.",
   "icons": {
     "64": "icon64.png",
     "512": "icon512.png"
@@ -20,10 +20,8 @@
   },
   "permissions": [
     "background",
-    "clipboardWrite",
     "alarms",
-    "notifications",
-    "https://slack.com/api/*"
+    "notifications"
   ],
   "optional_permissions": [
     "https://*/*"
