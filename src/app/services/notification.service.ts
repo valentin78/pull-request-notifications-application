@@ -60,7 +60,6 @@ export class NotificationService {
       let slackSettings = extensionSettings.notifications.slack;
       let slackClient = new SlackClient(slackSettings.token);
 
-      // todo: pull connected issues from:
       let pr = options.pullRequest;
       this.bitbucketService
         .getPullRequestIssues(pr.fromRef.repository.project.key, pr.fromRef.repository.slug, pr.id)

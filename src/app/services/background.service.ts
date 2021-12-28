@@ -84,7 +84,7 @@ export class BackgroundService {
     this.lastDataFetchingTimestamp = this.dataService.getLastDataFetchingTimestamp();
     if (!this.settings.bitbucket?.isValid()) {
       console.log('setup bitbucket settings first...');
-      this.notificationService.setBadge({message: '404', color: 'red', title: 'missing settings'});
+      this.notificationService.setBadge({message: '404', color: 'red', title: 'settings are missing'});
       return;
     }
 
