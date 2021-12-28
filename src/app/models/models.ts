@@ -122,7 +122,7 @@ export class BitbucketComment {
 }
 
 export class Properties {
-  mergeResult!: MergeResult;
+  mergeResult?: MergeResult;
   commentCount?: number;
 }
 

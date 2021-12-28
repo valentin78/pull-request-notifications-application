@@ -53,8 +53,8 @@ export function CommentRule(a: PullRequestActivity, lastDataFetchingTimestamp: n
  * pr merge result moved to conflicted state
  */
 export function ConflictedRule(before: PullRequest, now: PullRequest) {
-  return before.properties.mergeResult.outcome !== BitbucketMergeResultOutcome.Conflicted
-    && now.properties.mergeResult.outcome === BitbucketMergeResultOutcome.Conflicted;
+  return before.properties.mergeResult?.outcome !== BitbucketMergeResultOutcome.Conflicted
+    && now.properties.mergeResult?.outcome === BitbucketMergeResultOutcome.Conflicted;
 }
 
 /**

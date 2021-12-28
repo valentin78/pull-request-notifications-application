@@ -29,7 +29,7 @@ export class PullRequestComponent implements OnInit {
 
     this.needsWork = this.pullRequest.reviewers.some(r => r.status === PullRequestStatus.NeedsWork);
     this.approved = !this.needsWork && this.pullRequest.reviewers.some(r => r.status === PullRequestStatus.Approved);
-    this.hasConflicts = this.pullRequest.properties.mergeResult.outcome === BitbucketMergeResultOutcome.Conflicted;
+    this.hasConflicts = this.pullRequest.properties.mergeResult?.outcome === BitbucketMergeResultOutcome.Conflicted;
 
     this.status = this.needsWork && 'NEEDS WORK'
       || this.hasConflicts && 'HAS CONFLICTS'
