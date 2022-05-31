@@ -2,7 +2,7 @@ import {PullRequestActivityAction} from '../models/enums';
 import {NotificationOptions} from '../models/models';
 
 export function GetSlackNotificationTitle(options: NotificationOptions): string {
-  // todo: move :reaction: names to settings
+  // todo: move :reaction: emoji names to settings
   let title;
   switch (options.action) {
     case PullRequestActivityAction.Commented:
@@ -12,7 +12,7 @@ export function GetSlackNotificationTitle(options: NotificationOptions): string 
       title = `:pull_request: @${options.pullRequest.author.user.name} assigned you a new pull request`;
       break;
     case PullRequestActivityAction.Approved:
-      title = ':white_check_mark: Your pull request approved';
+      title = `:white_check_mark: @${options.activity?.user.name} approved your pull request`;
       break;
     case PullRequestActivityAction.Merged:
       title = `:merged: @${options.activity?.user.name} merged pull request`;
