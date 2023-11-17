@@ -157,19 +157,21 @@ export class BackgroundService {
     }
     now
       .filter(n => before.some(b => b.id === n.id && b.properties.commentCount !== n.properties.commentCount))
-      .forEach(n => {
+      .forEach(pr => {
         this.bitbucketService
-          .getPullRequestActivities(n.fromRef.repository.project.key, n.fromRef.repository.slug, n.id)
+          .getPullRequestActivities(pr.fromRef.repository.project.key, pr.fromRef.repository.slug, pr.id)
           .subscribe(data => {
             let comments = data.values
               .filter(a => CommentRule(a, this.lastDataFetchingTimestamp, this.settings?.bitbucket?.userId));
 
             if (comments.length > 0) {
+              // todo: add comments info to PR to display comments feed on UI
+
               // todo: comments[0].comment is a wrong value if rule matched on reply
               this.notificationService.sendNotification(
                 {
                   action: PullRequestActivityAction.Commented,
-                  pullRequest: n,
+                  pullRequest: pr,
                   comment: comments[0].comment
                 });
             }
