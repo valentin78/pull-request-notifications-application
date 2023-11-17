@@ -112,5 +112,7 @@
       }
     }
   },
-  "defaultProject": "pull-request-notifications"
+  "cli": {
+    "analytics": false
+  }
 }
