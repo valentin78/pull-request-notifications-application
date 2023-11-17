@@ -95,10 +95,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "pull-request-notifications:build:production"
+              "buildTarget": "pull-request-notifications:build:production"
             },
             "development": {
-              "browserTarget": "pull-request-notifications:build:development"
+              "buildTarget": "pull-request-notifications:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -106,7 +106,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "pull-request-notifications:build"
+            "buildTarget": "pull-request-notifications:build"
           }
         }
       }
