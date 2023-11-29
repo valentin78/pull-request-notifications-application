@@ -1,11 +1,9 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {BitbucketService} from '../../services/bitbucket.service';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {PullRequestRole} from '../../models/enums';
 import {PullRequest} from '../../models/models';
-import {NotificationService} from '../../services/notification.service';
 import {DataService} from '../../services/data.service';
 import {BackgroundService} from '../../services/background.service';
-import {DisposableComponent} from '../../../core/disposable-component';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-main',
@@ -13,7 +11,7 @@ import {DisposableComponent} from '../../../core/disposable-component';
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent extends DisposableComponent implements OnInit {
+export class HomeComponent implements OnInit {
   created: PullRequest[];
   reviewing: PullRequest[];
   participant: PullRequest[];
@@ -21,21 +19,18 @@ export class HomeComponent extends DisposableComponent implements OnInit {
   lastDataFetchingTimestamp?: number;
   dateFormat = 'dd MMM, y HH:mm:ss'; // todo: save to settings
 
-  constructor(
-    private bitbucketService: BitbucketService,
-    private notificationService: NotificationService,
-    private dataService: DataService,
-    private backgroundService: BackgroundService,
-    private cd: ChangeDetectorRef) {
-    super();
+  private dataService = inject(DataService);
+  private backgroundService = inject(BackgroundService);
+  private cd = inject(ChangeDetectorRef);
+  private _destroyRef = inject(DestroyRef);
 
+  constructor() {
     this.created = [];
     this.reviewing = [];
     this.participant = [];
   }
 
   ngOnInit(): void {
-
     const settings = this.dataService.getExtensionSettings();
     this.isSettingsValid = settings?.bitbucket?.isValid() || false;
     if (!this.isSettingsValid) {
@@ -45,7 +40,9 @@ export class HomeComponent extends DisposableComponent implements OnInit {
     this.readPullRequestData();
 
     // this is used only if new data were fetched during home screen preview
-    this.backgroundService.dataProcessed.safeSubscribe(this, () => this.readPullRequestData());
+    this.backgroundService.dataProcessed
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => this.readPullRequestData());
   }
 
   readPullRequestData() {

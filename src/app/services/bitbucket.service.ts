@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {BitbucketResponse, BitbucketUser, PullRequest, PullRequestActivity, PullRequestIssue} from '../models/models';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -8,14 +8,15 @@ import {map} from 'rxjs/operators';
 
 @Injectable()
 export class BitbucketService {
-  private get settings (){
+  private http = inject(HttpClient);
+  private dataService = inject(DataService);
+
+  private get settings() {
     return this.dataService.getExtensionSettings();
   }
 
-  private get headers (){
+  private get headers() {
     return {'Authorization': `Bearer + ${this.settings.bitbucket?.token}`};
-  }
-  constructor(private http: HttpClient, private dataService: DataService) {
   }
 
   validateCredentials(url?: string, token?: string, userSlug?: string): Observable<BitbucketUser> {

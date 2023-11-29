@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DataService} from './data.service';
 import {SlackClient} from './slackClient';
 import {catchError} from 'rxjs/operators';
@@ -10,8 +10,8 @@ import {SlackNotificationBuilder} from '../other/slack-notification.builder';
 
 @Injectable()
 export class NotificationService {
-  constructor(private dataService: DataService, private bitbucketService: BitbucketService) {
-  }
+  private dataService = inject(DataService);
+  private bitbucketService = inject(BitbucketService);
 
   public requestPermission(): Observable<NotificationPermission> {
     if (Notification.permission !== 'denied') {
@@ -55,7 +55,7 @@ export class NotificationService {
       this.sendBrowserNotification(options.pullRequest.title, body, options.pullRequest.links.self[0].href);
     }
 
-    // check if slack is enabled
+    // check if Slack is enabled
     if (extensionSettings.notifications.slack) {
       let slackSettings = extensionSettings.notifications.slack;
       let slackClient = new SlackClient(slackSettings.token);

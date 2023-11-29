@@ -3,11 +3,11 @@ import {DataService} from '../../services/data.service';
 import {BitbucketService} from '../../services/bitbucket.service';
 import {forkJoin, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
-import {DisposableComponent} from '../../../core/disposable-component';
 import {NotificationService} from '../../services/notification.service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 class StatusMessage {
   message!: string;
@@ -20,7 +20,7 @@ class StatusMessage {
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss']
 })
-export class OptionsComponent extends DisposableComponent implements OnInit {
+export class OptionsComponent implements OnInit {
 
   settings: ExtensionSettings;
   statusMessage?: StatusMessage;
@@ -32,13 +32,14 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
 
   private statusMessage$: Subject<StatusMessage>;
 
+  private _destroyRef = inject(DestroyRef);
+
   constructor(
     private settingsService: DataService,
     private bitbucketService: BitbucketService,
     private backgroundService: BackgroundService,
     private notificationService: NotificationService,
     private cd: ChangeDetectorRef) {
-    super();
 
     this.settings = settingsService.getExtensionSettings();
 
@@ -50,7 +51,9 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.statusMessage$.safeSubscribe(this, msg => this.showStatusMessage(msg));
+    this.statusMessage$
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(msg => this.showStatusMessage(msg));
   }
 
   onSave() {
@@ -75,7 +78,8 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
               'channel': this.slackSettings.memberId,
               'text': 'hello'
             })
-            .safeSubscribe(this, (data: any) => {
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe((data: any) => {
               if (!data.ok) {
                 this.statusMessage$.next({type: 'error', message: data.error || 'wrong slack credentials'});
               } else {
@@ -128,7 +132,8 @@ export class OptionsComponent extends DisposableComponent implements OnInit {
       : of(null);
 
     forkJoin([bitbucketPromise, slackPromise])
-      .safeSubscribe(this, _ => {
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(_ => {
         this.settings.bitbucket = this.bitbucketSettings;
         this.settings.bitbucket.userId = _[0].id;
 
