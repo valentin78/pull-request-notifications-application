@@ -94,7 +94,8 @@
   border-radius: $pr-control-border-radius;
   font-weight: 700;
   margin-right: $pr-control-distance;
-  background-color: rgb(227, 252, 239)
+  background-color: rgb(227, 252, 239);
+  cursor: pointer;
 }
 
 .to-ref {

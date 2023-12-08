@@ -21,7 +21,7 @@
 
         <span class="to-ref" title="destination branch">{{pullRequest.toRef.displayId}}</span>
 
-        <span class="comments" *ngIf="commentsCount" title="{{commentsCount}} comment(s)">
+        <span class="comments" *ngIf="commentsCount" title="{{commentsTooltip}}" (click)="onDisplayComments($event)">
           {{commentsCount}}
           <i class="icon icon-bubble"></i>
         </span>
