@@ -97,6 +97,7 @@ export class PullRequest {
 
   fromRef!: PullRequestReference;
   toRef!: PullRequestReference;
+  comments?: PullRequestActivity[];
 }
 
 export class PullRequestActivity {

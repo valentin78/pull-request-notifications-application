@@ -4,8 +4,8 @@ import {PullRequestActivityAction, PullRequestRole, PullRequestState} from '../m
 import {ExtensionSettings, PullRequest} from '../models/models';
 import {DataService} from './data.service';
 import {NotificationService} from './notification.service';
-import {catchError} from 'rxjs/operators';
-import {of, Subject, throwError} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {forkJoin, from, of, Subject, throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ApprovedRule, CommentRule, ConflictedRule, MergedOrDeclinedRule, NeedsWorkRule, ReviewerRule} from './bitbucket-pr-rules';
 import Alarm = chrome.alarms.Alarm;
@@ -142,7 +142,61 @@ export class BackgroundService {
         break;
     }
 
+    // fetch comments
+    this.fetchComments(before, values)
+      .subscribe(_ => {
         this.dataService.savePullRequests(role, values);
+      });
+  }
+
+  fetchComments(before: PullRequest[], now: PullRequest[]) {
+    const updatedPrs = now.filter(n => {
+      const found = before.find(b => b.id === n.id);
+      return !found && n.properties.commentCount || found && found.properties.commentCount !== n.properties.commentCount;
+    });
+
+    if (updatedPrs.length === 0) {
+      const empty: any = [];
+      return of(empty);
+    }
+
+    const requests = from(updatedPrs)
+      .pipe(
+        switchMap((pr) =>
+          this.bitbucketService
+            .getPullRequestActivities(pr.fromRef.repository.project.key, pr.fromRef.repository.slug, pr.id)
+            .pipe(
+              map(data => {
+                // add comments info to PR to display comments feed on UI
+                let comments = data.values
+                  .filter(a => a.action === PullRequestActivityAction.Commented)
+                  .filter(a => pr.comments?.some(c => c.id === a.id) !== true);
+
+                pr.comments = (pr.comments ?? []).concat(comments).sort((a, b) => a.createdDate - b.createdDate);
+
+                // // check if it's not a new PR
+                // // for the new PRs we get another notification
+                // if (before.some(b => b.id === pr.id)) {
+                //   let newComments = data.values
+                //     .filter(a => CommentRule(a, this.lastDataFetchingTimestamp, this.settings?.bitbucket?.userId));
+                //
+                //   // check if there are new comments
+                //   if (newComments.length > 0) {
+                //     // todo: comments[0].comment is a wrong value if rule matched on reply
+                //     this.notificationService.sendNotification(
+                //       {
+                //         action: PullRequestActivityAction.Commented,
+                //         pullRequest: pr,
+                //         comment: newComments[0].comment
+                //       });
+                //   }
+                // }
+
+                return {pr: pr, activities: data};
+              })))
+      );
+
+    return forkJoin([requests]);
   }
 
   /**
@@ -153,6 +207,7 @@ export class BackgroundService {
     if (!this.settings.notifications.events.commentAdded) {
       return;
     }
+
     now
       .filter(n => before.some(b => b.id === n.id && b.properties.commentCount !== n.properties.commentCount))
       .forEach(pr => {
