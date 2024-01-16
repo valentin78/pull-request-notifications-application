@@ -12,7 +12,11 @@ export function GetSlackNotificationTitle(options: NotificationOptions): string 
       title = `:pull_request: @${options.pullRequest.author.user.name} assigned you a new pull request`;
       break;
     case PullRequestActivityAction.Approved:
-      title = `:white_check_mark: @${options.activity?.user.name} approved your pull request`;
+      const users = options.pullRequest.reviewers
+        .filter(r => r.approved)
+        .map(a => `@${a.user.name}`)
+        .join(', ');
+      title = `:white_check_mark: ${users} approved your pull request`;
       break;
     case PullRequestActivityAction.Merged:
       title = `:merged: @${options.activity?.user.name} merged pull request`;
