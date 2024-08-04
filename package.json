@@ -1,32 +1,15 @@
 {
   "name": "pull-request-notifications",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration development --base-href index.html",
     "watch": "ng build --watch --configuration development --base-href index.html",
     "build:prod": "ng build --configuration production --base-href index.html",
-    "watch:prod": "ng build --watch --configuration production --base-href index.html",
-    "start:electron": "npm run build:prod && ELECTRON_DISABLE_SECURITY_WARNINGS=true electron .",
-    "make:dir": "electron-builder --dir",
-    "make:dist": "electron-builder"
-  },
-  "build": {
-    "appId": "pull-requests-viewer",
-    "electronLanguages": [
-      "en-US"
-    ],
-    "files": [
-      "!node_modules",
-      "main.js",
-      "assets/**/*",
-      "dist/browser/**/*"
-    ],
-    "asar": true
+    "watch:prod": "ng build --watch --configuration production --base-href index.html"
   },
   "private": true,
-  "main": "main.js",
   "dependencies": {
     "@angular/animations": "^17.0.3",
     "@angular/common": "^17.0.3",
@@ -37,7 +20,6 @@
     "@angular/platform-browser-dynamic": "^17.0.3",
     "@angular/router": "^17.0.3",
     "@types/chrome": "^0.0.143",
-    "ngx-electron": "^2.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.14.2"
@@ -47,8 +29,6 @@
     "@angular/cli": "^17.0.1",
     "@angular/compiler-cli": "^17.0.3",
     "@types/node": "^12.11.1",
-    "electron": "^31.3.1",
-    "electron-builder": "^24.13.3",
     "typescript": "~5.2.2"
   }
 }

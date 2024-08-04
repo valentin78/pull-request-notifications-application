@@ -92,8 +92,6 @@
   </div>
 
   <div class="controls">
-    <button [routerLink]="['..']">Back</button>
-    &nbsp;
     <button (click)="onSave()">Save</button>
     <span *ngIf="statusMessage" style="margin-left: 10px;"
           [style]="{color: statusMessage.type === 'error' ? '#b92c2c' : 'default'}">{{statusMessage.message}}</span>

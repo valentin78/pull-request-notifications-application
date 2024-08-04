@@ -1,65 +1,63 @@
-@if (isSettingsValid) {
-  <div class="home">
-    <div class="summary">
+<div class="home" *ngIf="isSettingsValid; else noSettings">
+  <div class="summary">
     <span class="last-data-fetching-time" *ngIf="lastDataFetchingTimestamp">
       last data fetching time:
-      <span style="font-style: initial;">{{ lastDataFetchingTimestamp | date:dateFormat }}</span>
+      <span style="font-style: initial;">{{lastDataFetchingTimestamp | date:dateFormat}}</span>
     </span>
-      <span class="refresh" (click)="onRefresh()">
+    <span class="refresh" (click)="onRefresh()">
       refresh list
       <i class="icon icon-redo2" title="refresh"></i>
     </span>
-    </div>
+  </div>
 
-    <div class="role">
-      <div class="title">
-        <h3>
-          <i style="margin-right: 2px;" class="icon icon-user"></i>
-          Created
-          <span *ngIf="created">&nbsp;| {{ created.length }}</span>
-        </h3>
-      </div>
-      <div *ngIf="created" class="list">
-        <div *ngFor="let pr of created">
-          <app-pull-request [pullRequest]="pr" [showAuthorAvatar]="false"></app-pull-request>
-        </div>
-      </div>
+  <div class="role">
+    <div class="title">
+      <h3>
+        <i style="margin-right: 2px;" class="icon icon-user"></i>
+        Created
+        <span *ngIf="created">&nbsp;| {{created.length}}</span>
+      </h3>
     </div>
-
-    <div class="role">
-      <div class="title">
-        <h3>
-          <i style="margin-right: 2px;" class="icon icon-git"></i>
-          Reviewing
-          <span *ngIf="reviewing">&nbsp;| {{ reviewing.length }}</span>
-        </h3>
-      </div>
-      <div *ngIf="reviewing" class="list">
-        <div *ngFor="let pr of reviewing">
-          <app-pull-request [pullRequest]="pr"></app-pull-request>
-        </div>
-      </div>
-    </div>
-
-    <div class="role">
-      <div class="title">
-        <h3>
-          <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
-          Participating
-          <span *ngIf="participant">&nbsp;| {{ participant.length }}</span>
-        </h3>
-      </div>
-      <div *ngIf="participant" class="list">
-        <div *ngFor="let pr of participant">
-          <app-pull-request [pullRequest]="pr"></app-pull-request>
-        </div>
+    <div *ngIf="created" class="list">
+      <div *ngFor="let pr of created">
+        <app-pull-request [pullRequest]="pr" [showAuthorAvatar]="false"></app-pull-request>
       </div>
     </div>
   </div>
-} @else {
+
+  <div class="role">
+    <div class="title">
+      <h3>
+        <i style="margin-right: 2px;" class="icon icon-git"></i>
+        Reviewing
+        <span *ngIf="reviewing">&nbsp;| {{reviewing.length}}</span>
+      </h3>
+    </div>
+    <div *ngIf="reviewing" class="list">
+      <div *ngFor="let pr of reviewing">
+        <app-pull-request [pullRequest]="pr"></app-pull-request>
+      </div>
+    </div>
+  </div>
+
+  <div class="role">
+    <div class="title">
+      <h3>
+        <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
+        Participating
+        <span *ngIf="participant">&nbsp;| {{participant.length}}</span>
+      </h3>
+    </div>
+    <div *ngIf="participant" class="list">
+      <div *ngFor="let pr of participant">
+        <app-pull-request [pullRequest]="pr"></app-pull-request>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noSettings>
   <div class="no-settings">
-    <h2>Please set extension <a [routerLink]="['options']">settings</a></h2>
+    <h2>Please set extension <a target="_blank" href="#options">settings</a></h2>
   </div>
-}
-
-
+</ng-template>

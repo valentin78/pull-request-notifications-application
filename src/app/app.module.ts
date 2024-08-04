@@ -1,5 +1,6 @@
 import {Injector, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app/app.component';
 import {OptionsComponent} from './components/options/options.component';

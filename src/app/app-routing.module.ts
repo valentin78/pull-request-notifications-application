@@ -7,8 +7,7 @@ import {BackgroundPageComponent} from './components/background-page/background-p
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
-    pathMatch: "full"
+    component: HomeComponent
   },
   {
     path: 'options',
