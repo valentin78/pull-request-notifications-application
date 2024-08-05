@@ -31,24 +31,27 @@ export class HomeComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    const settings = await this.dataService.getExtensionSettings();
-    this.isSettingsValid = settings?.bitbucket?.isValid() || false;
-    if (!this.isSettingsValid) {
-      return;
-    }
+    await this.dataService.getExtensionSettings().then(async settings => {
+      this.isSettingsValid = settings?.bitbucket?.isValid() || false;
+      if (!this.isSettingsValid) {
+        return;
+      }
 
-    await this.readPullRequestData();
+      await this.readPullRequestData();
 
-    // this is used only if new data were fetched during home screen preview
-    this.backgroundService.dataProcessed
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe(() => this.readPullRequestData());
+      // this is used only if new data were fetched during home screen preview
+      this.backgroundService.dataProcessed.pipe(
+        takeUntilDestroyed(this._destroyRef)
+      ).subscribe(async () => await this.readPullRequestData());
+    });
   }
 
   async readPullRequestData() {
     const created = await this.dataService.getPullRequests(PullRequestRole.Author);
     const reviewing = await this.dataService.getPullRequests(PullRequestRole.Reviewer);
     const participant = await this.dataService.getPullRequests(PullRequestRole.Participant);
+
+    console.log('!!!!', created);
 
     this.created = created.sort(this.sortPullRequests);
     this.reviewing = reviewing.sort(this.sortPullRequests);
@@ -67,8 +70,8 @@ export class HomeComponent implements OnInit {
     // return aValue.localeCompare(bValue);
   }
 
-  onRefresh() {
-    this.backgroundService.doWork();
+  async onRefresh() {
+    await this.backgroundService.doWork();
   }
 }
 

@@ -1,9 +1,14 @@
 // https://www.electronjs.org/docs/latest/tutorial/installation
 
-const {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage} = require('electron')
-const url = require("url");
-const path = require("path");
-const storage = require('electron-json-storage');
+import {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage} from 'electron';
+import url from "url";
+import path from "path";
+import {fileURLToPath} from 'url';
+
+import Store from 'electron-store';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let mainWindow, tray;
 
@@ -11,8 +16,8 @@ const assetsFolder = './assets/icons';
 const windowIcoPath = path.join(__dirname, assetsFolder, `/icon64.png`);
 const windowIco = nativeImage.createFromPath(windowIcoPath)
 
-const settingsFolder = path.join(app.getPath('userData'), `/settings`);
-storage.setDataPath(settingsFolder)
+//const settingsFolder = path.join(app.getPath('userData'), `/settings`);
+//storage.setDataPath(settingsFolder)
 
 const loadUrlAsync = async (fragment) => {
   await mainWindow.loadURL(
@@ -112,19 +117,16 @@ ipcMain.on('request-app-balloon', (event, message, iconType, title) => {
 });
 
 ipcMain.on("request-settings", (event, key) => {
-  console.log("[electron] got get-settings event ");
-  storage.get(key, (err, data) => {
-    console.log("[electron] read settings ", key, err, data);
-    event.sender.send("settings-data", err, data);
-  });
+  const store = new Store();
+  const value = store.get(key);
+  event.sender.send(`settings-data:${key}`, value);
 });
 
 
 ipcMain.on("set-settings", (event, key, data) => {
-  console.log("[electron] got set-settings event ", key, data);
-  storage.set(key, data, err => {
-    event.sender.send("set-settings-result", err);
-  });
+  const store = new Store();
+  store.set(key, data);
+  event.sender.send(`"set-settings:${key}`, true);
 });
 
 /*

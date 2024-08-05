@@ -13,9 +13,9 @@ export class ApplicationService {
         // send request to load settings
         this._electronService.ipcRenderer.send('request-settings', key);
         // wait for response
-        this._electronService.ipcRenderer.once('settings-data', (ev, error, data: any) => {
-          if (error) reject(error)
-          else resolve(data);
+        this._electronService.ipcRenderer.once(`settings-data:${key}`, (ev, data: any) => {
+          console.log('settings-data: ', key, data)
+          resolve(data);
         });
       });
 
@@ -32,9 +32,8 @@ export class ApplicationService {
         // send request to load settings
         this._electronService.ipcRenderer.send('set-settings', key, data);
         // wait for response
-        this._electronService.ipcRenderer.once('set-settings-result', (ev, error) => {
-          if (error) reject(error)
-          else resolve(data);
+        this._electronService.ipcRenderer.once(`set-settings:${key}`, (ev, result) => {
+          if (result) resolve(data);
         });
       });
 

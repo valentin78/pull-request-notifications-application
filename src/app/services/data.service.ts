@@ -11,14 +11,15 @@ export class DataService {
   private _applicationService = inject(ApplicationService);
 
   private _keys = {
-    settings: 'pull-request-notifications.settings',
-    lastRunningTime: 'pull-request-notifications.last-running-time',
-    snoozeSettings: 'pull-request-notifications.snooze-settings',
-    pullRequests: 'pull-request-notifications.pull-requests'
+    settings: 'settings',
+    lastRunningTime: 'last-running-time',
+    snoozeSettings: 'snooze-settings',
+    pullRequests: 'pull-requests'
   };
 
-  private async loadDataByGet(key: string): Promise<any> {
-    return await this._applicationService.getSettings(key);
+  private async loadDataByGet(key: string, defaultValue?: any): Promise<any> {
+    const value = await this._applicationService.getSettings(key);
+    return value ?? defaultValue;
   }
 
   private async storeDataByKey(key: string, data: any) {
@@ -35,16 +36,16 @@ export class DataService {
   }
 
   public async getPullRequests(role: PullRequestRole): Promise<PullRequest[]> {
-    return await this.loadDataByGet(`${this._keys.pullRequests}.${role}`) || [];
+    return await this.loadDataByGet(`${this._keys.pullRequests}_${role}`, []);
   }
 
   public async savePullRequests(role: PullRequestRole, values: PullRequest[]) {
-    await this.storeDataByKey(`${this._keys.pullRequests}.${role}`, values);
+    await this.storeDataByKey(`${this._keys.pullRequests}_${role}`, values);
   }
 
   public async getLastDataFetchingTimestamp(): Promise<number> {
     // return now - 1h, if last running time is not available
-    return await this.loadDataByGet(this._keys.lastRunningTime) || (Date.now() - 60 * 60 * 1000);
+    return await this.loadDataByGet(this._keys.lastRunningTime, Date.now() - 60 * 60 * 1000);
   }
 
   public async saveLastDataFetchingTimestamp(timestamp: number) {
@@ -52,7 +53,7 @@ export class DataService {
   }
 
   public async getNotificationSnoozeSettings(): Promise<number[]> {
-    return await this.loadDataByGet(this._keys.snoozeSettings) || [];
+    return await this.loadDataByGet(this._keys.snoozeSettings, []);
   }
 
   public async saveNotificationSnoozeSettings(settings: number[]) {

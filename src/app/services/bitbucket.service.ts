@@ -25,7 +25,7 @@ export class BitbucketService {
   private settings!: ExtensionSettings;
 
   private get headers() {
-    return {'Authorization': `Bearer + ${this.settings.bitbucket?.token}`};
+    return {'Authorization': `Bearer ${this.settings.bitbucket?.token}`};
   }
 
   validateCredentials(url?: string, token?: string, userSlug?: string): Observable<BitbucketUser> {

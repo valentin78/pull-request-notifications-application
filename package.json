@@ -1,6 +1,7 @@
 {
   "name": "pull-request-notifications",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -38,6 +39,7 @@
     "@angular/router": "^17.0.3",
     "@types/chrome": "^0.0.143",
     "electron-json-storage": "^4.6.0",
+    "electron-store": "^10.0.0",
     "ngx-electron": "^2.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
