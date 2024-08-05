@@ -7,10 +7,10 @@ import {ElectronService} from "ngx-electron";
 export class ApplicationService {
   private _electronService = inject(ElectronService);
 
-  public getSettings(): Promise<any> {
+  public getSettings(key: string): Promise<any> {
     return new Promise((resolve, reject) => {
       // send request to load settings
-      this._electronService.ipcRenderer.send('request-settings');
+      this._electronService.ipcRenderer.send('request-settings', key);
       // wait for response
       this._electronService.ipcRenderer.once('settings-data', (ev, error, data: any) => {
         if (error) reject(error)
@@ -22,7 +22,7 @@ export class ApplicationService {
   public setSettings(key: string, data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       // send request to load settings
-      this._electronService.ipcRenderer.send('set-settings');
+      this._electronService.ipcRenderer.send('set-settings', key, data);
       // wait for response
       this._electronService.ipcRenderer.once('set-settings-result', (ev, error) => {
         if (error) reject(error)

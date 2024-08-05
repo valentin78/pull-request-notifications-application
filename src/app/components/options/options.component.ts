@@ -1,4 +1,4 @@
-import {BitbucketSettings, BitbucketUser, ExtensionSettings, SlackSettings} from '../../models/models';
+import {BitbucketSettings, ExtensionSettings, SlackSettings} from '../../models/models';
 import {DataService} from '../../services/data.service';
 import {BitbucketService} from '../../services/bitbucket.service';
 import {forkJoin, of, Subject, throwError} from 'rxjs';
@@ -119,9 +119,8 @@ export class OptionsComponent implements OnInit {
       this.bitbucketSettings.username
     ).pipe(
       catchError((error, _) => {
-        return of({id: 0} as BitbucketUser); // todo
-        //this.statusMessage$.next({type: 'error', message: 'wrong bitbucket credentials'});
-        //return throwError(error);
+        this.statusMessage$.next({type: 'error', message: 'wrong bitbucket credentials'});
+        return throwError(error);
       })
     );
 
@@ -145,7 +144,7 @@ export class OptionsComponent implements OnInit {
       slackValidate$
     ]).pipe(
       takeUntilDestroyed(this._destroyRef)
-    ).subscribe(async ([bitbucketResult, slackResult]) => {
+    ).subscribe(async ([bitbucketResult, _]) => {
       this.settings.bitbucket = this.bitbucketSettings;
       this.settings.bitbucket.userId = bitbucketResult.id;
 

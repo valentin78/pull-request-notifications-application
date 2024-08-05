@@ -111,9 +111,10 @@ ipcMain.on('request-app-balloon', (event, message, iconType, title) => {
   });
 });
 
-ipcMain.on("request-settings", (event) => {
+ipcMain.on("request-settings", (event, key) => {
   console.log("[electron] got get-settings event ");
-  storage.getAll((err, data) => {
+  storage.get(key, (err, data) => {
+    console.log("[electron] read settings ", key, err, data);
     event.sender.send("settings-data", err, data);
   });
 });

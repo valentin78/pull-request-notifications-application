@@ -18,8 +18,7 @@ export class DataService {
   };
 
   private async loadDataByGet(key: string): Promise<any> {
-    const settings = await this._applicationService.getSettings();
-    return settings ? settings[key] : undefined;
+    return await this._applicationService.getSettings(key);
   }
 
   private async storeDataByKey(key: string, data: any) {
