@@ -1,4 +1,4 @@
-import {Injector, NgModule} from '@angular/core';
+import {importProvidersFrom, Injector, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app/app.component';
@@ -15,6 +15,7 @@ import {NotificationService} from './services/notification.service';
 import {BackgroundPageComponent} from './components/background-page/background-page.component';
 import {BackgroundService} from './services/background.service';
 import {SnoozeNotificationComponent} from './components/snooze-notification/snooze-notification.component';
+import {ElectronService, NgxElectronModule} from "ngx-electron";
 
 export let AppInjector: Injector;
 
@@ -39,7 +40,11 @@ export let AppInjector: Injector;
     DataService,
     BitbucketService,
     NotificationService,
-    BackgroundService
+    BackgroundService,
+    importProvidersFrom([
+      NgxElectronModule
+    ]),
+    ElectronService
   ],
   bootstrap: [AppComponent]
 })

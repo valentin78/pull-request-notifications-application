@@ -7,9 +7,18 @@ import {NotificationOptions} from '../models/models';
 import {BitbucketService} from './bitbucket.service';
 import {GetWindowsNotificationBody} from '../other/notification.titles';
 import {SlackNotificationBuilder} from '../other/slack-notification.builder';
+import {ElectronService} from "ngx-electron";
 
 @Injectable()
 export class NotificationService {
+  //private _electronService = inject(ElectronService);
+
+  constructor() {
+    /*setTimeout(() => {
+      this._electronService.ipcRenderer.send('request-app-balloon', 'message', 'info', 'title' ?? "Pull Request Notification");
+    }, 1000);*/
+  }
+
   private dataService = inject(DataService);
   private bitbucketService = inject(BitbucketService);
 
