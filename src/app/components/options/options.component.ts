@@ -22,13 +22,13 @@ class StatusMessage {
 })
 export class OptionsComponent implements OnInit {
 
-  settings: ExtensionSettings;
+  settings!: ExtensionSettings;
   statusMessage?: StatusMessage;
 
-  enableBrowserNotifications: boolean;
-  enableSlackNotifications: boolean;
-  slackSettings: SlackSettings;
-  bitbucketSettings: BitbucketSettings;
+  enableBrowserNotifications!: boolean;
+  enableSlackNotifications!: boolean;
+  slackSettings!: SlackSettings;
+  bitbucketSettings!: BitbucketSettings;
 
   private statusMessage$: Subject<StatusMessage>;
 
@@ -41,12 +41,13 @@ export class OptionsComponent implements OnInit {
     private notificationService: NotificationService,
     private cd: ChangeDetectorRef) {
 
-    this.settings = settingsService.getExtensionSettings();
-
-    this.enableBrowserNotifications = this.settings.notifications.browser;
-    this.enableSlackNotifications = !!this.settings.notifications.slack;
-    this.slackSettings = this.settings.notifications.slack || new SlackSettings();
-    this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
+    settingsService.getExtensionSettings().then(settings => {
+      this.settings = settings;
+      this.enableBrowserNotifications = this.settings.notifications.browser;
+      this.enableSlackNotifications = !!this.settings.notifications.slack;
+      this.slackSettings = this.settings.notifications.slack || new SlackSettings();
+      this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
+    })
     this.statusMessage$ = new Subject();
   }
 
@@ -69,27 +70,31 @@ export class OptionsComponent implements OnInit {
   onSlackTest() {
     let slackClient = new SlackClient(this.slackSettings.token);
 
-    chrome.permissions.request(
-      {origins: [`${SLACK_API_URL}/*`]},
-      (granted) => {
-        if (granted) {
-          slackClient
-            .postMessage({
-              'channel': this.slackSettings.memberId,
-              'text': 'hello'
-            })
-            .pipe(takeUntilDestroyed(this._destroyRef))
-            .subscribe((data: any) => {
-              if (!data.ok) {
-                this.statusMessage$.next({type: 'error', message: data.error || 'wrong slack credentials'});
-              } else {
-                this.statusMessage$.next({message: 'message sent'});
-              }
-            });
-        } else {
-          this.statusMessage$.next({message: 'permissions not allowed', type: 'error'});
-        }
-      });
+    const postMessage = () => {
+      slackClient
+        .postMessage({
+          'channel': this.slackSettings.memberId,
+          'text': 'hello'
+        })
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((data: any) => {
+          if (!data.ok) {
+            this.statusMessage$.next({type: 'error', message: data.error || 'wrong slack credentials'});
+          } else {
+            this.statusMessage$.next({message: 'message sent'});
+          }
+        });
+    }
+
+    if (chrome.permissions)
+      chrome.permissions.request(
+        {origins: [`${SLACK_API_URL}/*`]},
+        (granted) => {
+          if (granted) postMessage();
+          else
+            this.statusMessage$.next({message: 'permissions not allowed', type: 'error'});
+        });
+    else postMessage();
   }
 
   private showStatusMessage(msg: StatusMessage) {
@@ -122,16 +127,16 @@ export class OptionsComponent implements OnInit {
     let slackClient = new SlackClient();
     const slackValidate$ = this.enableSlackNotifications
       ? slackClient.testAuth(this.slackSettings.token).pipe(
-          tap((data: any) => {
-            if (!data.ok) {
-              throw new Error('wrong slack credentials');
-            }
-          }),
-          catchError((error: Error, _) => {
-            this.statusMessage$.next({type: 'error', message: error.message});
-            return throwError(error);
-          })
-        )
+        tap((data: any) => {
+          if (!data.ok) {
+            throw new Error('wrong slack credentials');
+          }
+        }),
+        catchError((error: Error, _) => {
+          this.statusMessage$.next({type: 'error', message: error.message});
+          return throwError(error);
+        })
+      )
       : of(null);
 
     forkJoin([
@@ -139,19 +144,19 @@ export class OptionsComponent implements OnInit {
       slackValidate$
     ]).pipe(
       takeUntilDestroyed(this._destroyRef)
-    ).subscribe(_ => {
-        this.settings.bitbucket = this.bitbucketSettings;
-        this.settings.bitbucket.userId = _[0].id;
+    ).subscribe(async _ => {
+      this.settings.bitbucket = this.bitbucketSettings;
+      this.settings.bitbucket.userId = _[0].id;
 
-        this.settings.notifications.slack = this.enableSlackNotifications
-          ? this.slackSettings
-          : undefined;
-        this.settingsService.saveExtensionSettings(this.settings);
+      this.settings.notifications.slack = this.enableSlackNotifications
+        ? this.slackSettings
+        : undefined;
+      await this.settingsService.saveExtensionSettings(this.settings);
 
-        // fetch data
-        this.backgroundService.doWork();
+      // fetch data
+      await this.backgroundService.doWork();
 
-        this.statusMessage$.next({message: 'saved!'});
+      this.statusMessage$.next({message: 'saved!'});
     });
   }
 
@@ -165,7 +170,10 @@ export class OptionsComponent implements OnInit {
       origins.push(`${SLACK_API_URL}/*`);
     }
 
-    chrome.permissions.request({origins: origins}, (d) => callback(d));
+    if (chrome.permissions)
+      chrome.permissions.request({origins: origins}, (d) => callback(d));
+    else
+      callback(true);
   }
 
   onEnableBrowserNotifications(event: MouseEvent) {

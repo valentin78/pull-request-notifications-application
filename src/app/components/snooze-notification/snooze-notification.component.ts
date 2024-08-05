@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {DataService} from '../../services/data.service';
 
 @Component({
@@ -7,29 +7,27 @@ import {DataService} from '../../services/data.service';
   styleUrls: ['./snooze-notification.component.scss']
 })
 export class SnoozeNotificationComponent implements OnInit {
-
-  snoozed!: boolean;
   @Input() id!: number;
 
-  constructor(private dataService: DataService) {
-  }
+  private dataService = inject(DataService)
 
-  ngOnInit(): void {
-    let settings = this.dataService.getNotificationSnoozeSettings();
+  protected snoozed!: boolean;
+
+  async ngOnInit(): Promise<void> {
+    let settings = await this.dataService.getNotificationSnoozeSettings();
     this.snoozed = settings.includes(this.id);
   }
 
-  onSnoozeToggle() {
+  async onSnoozeToggle() {
     // todo: add snooze ttl 1/2/3/5/8 hours or disable
-    let settings = this.dataService.getNotificationSnoozeSettings();
+    let settings = await this.dataService.getNotificationSnoozeSettings();
     if (this.snoozed) {
-      this.dataService.saveNotificationSnoozeSettings(settings.filter(id => id !== this.id));
+      await this.dataService.saveNotificationSnoozeSettings(settings.filter(id => id !== this.id));
       this.snoozed = false;
     } else {
       settings.push(this.id);
-      this.dataService.saveNotificationSnoozeSettings(settings);
+      await this.dataService.saveNotificationSnoozeSettings(settings);
       this.snoozed = true;
     }
   }
-
 }

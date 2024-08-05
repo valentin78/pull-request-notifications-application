@@ -1,101 +1,105 @@
-<div class="container">
-  <div class="title">
-    <img src="icon64.png" alt=""/>
-    <h2>Extension settings</h2>
-  </div>
-
-  <div class="options-list">
-    <h3>General</h3>
-    <div class="options-item">
-      <span>Refresh interval:</span>
-      <input type="number" min="1" max="90" style="width: 30px;" [(ngModel)]="settings.refreshIntervalInMinutes">
-      <span>, in minutes</span>
-    </div>
-  </div>
-
-  <div class="options-list">
+@if (settings) {
+  <div class="container">
     <div class="title">
-      <i class="icon icon-bell"></i>
-      <h3>Notifications</h3>
+      <img src="icon64.png" alt=""/>
+      <h2>Extension settings</h2>
     </div>
-    <div class="options-item" style="display: none;">
-      <span>Events:</span>
-      <select>
-        <option value="all" title="New PRs and all comments">ALL</option>
-        <option value="mentions" title="Notify only about comments where user is mentioned">Mentions only</option>
-      </select>
+
+    <div class="options-list">
+      <h3>General</h3>
+      <div class="options-item">
+        <span>Refresh interval:</span>
+        <input type="number" min="1" max="90" style="width: 30px;" [(ngModel)]="settings.refreshIntervalInMinutes">
+        <span>, in minutes</span>
+      </div>
     </div>
-    <div class="options-item">
-      <span>Browser</span>
-      <input type="checkbox" (click)="onEnableBrowserNotifications($event)" [(ngModel)]="enableBrowserNotifications">
-      <i>send push notifications</i>
-      <span *ngIf="enableBrowserNotifications" class="test-browser-notification"
-            title="test browser notification" (click)="onBrowserNotificationTest()">
+
+    <div class="options-list">
+      <div class="title">
+        <i class="icon icon-bell"></i>
+        <h3>Notifications</h3>
+      </div>
+      <div class="options-item" style="display: none;">
+        <span>Events:</span>
+        <select>
+          <option value="all" title="New PRs and all comments">ALL</option>
+          <option value="mentions" title="Notify only about comments where user is mentioned">Mentions only</option>
+        </select>
+      </div>
+      <div class="options-item">
+        <span>Browser</span>
+        <input type="checkbox" (click)="onEnableBrowserNotifications($event)" [(ngModel)]="enableBrowserNotifications">
+        <i>send push notifications</i>
+        <span *ngIf="enableBrowserNotifications" class="test-browser-notification"
+              title="test browser notification" (click)="onBrowserNotificationTest()">
         test
         <i class="icon icon-bubble"></i></span>
+      </div>
+      <div class="options-item">
+        <span>Slack</span>
+        <input type="checkbox" [(ngModel)]="enableSlackNotifications">
+        <i>send notifications in slack</i>
+      </div>
+      <div class="slack-settings" *ngIf="enableSlackNotifications">
+        <div class="options-item">
+          <span style="align-self: flex-start">Token:</span>
+          <textarea cols="52" rows="2" placeholder="Bot User OAuth Token" [(ngModel)]="slackSettings.token"></textarea>
+          <i class="icon icon-question" style="align-self: start;margin-left: 5px;"
+             title="Bot User OAuth Token of slack application"></i>
+        </div>
+        <div class="options-item">
+          <span>Channel:</span>
+          <input type="text" size="8" placeholder="member id" pattern=".+" [(ngModel)]="slackSettings.memberId">
+          <i>&nbsp;your slack profile > more > copy member id</i>
+          <input type="button" style="margin-left: 20px;" value="test" (click)="onSlackTest()">
+        </div>
+      </div>
+      <div class="options-sub-item-list">
+        <span class="title">Send notifications for events:</span>
+        <div class="options-item">
+          <input type="checkbox" [(ngModel)]="settings.notifications.events.pullRequestCreated">
+          New pull request created
+        </div>
+        <div class="options-item">
+          <input type="checkbox" [(ngModel)]="settings.notifications.events.pullRequestStateChanged">
+          Pull request state has changed (approved / needs work / conflicted / merged / declined / removed)
+        </div>
+        <div class="options-item">
+          <input type="checkbox" [(ngModel)]="settings.notifications.events.commentAdded">
+          New comments added
+        </div>
+      </div>
     </div>
-    <div class="options-item">
-      <span>Slack</span>
-      <input type="checkbox" [(ngModel)]="enableSlackNotifications">
-      <i>send notifications in slack</i>
+
+    <div class="options-list">
+      <div class="title">
+        <img src="bitbucket64.png" alt=""/>
+        <h3>Bitbucket</h3>
+      </div>
+      <div class="options-item">
+        <span>URL:</span>
+        <input type="text" size="50" placeholder="bitbucket url" pattern="^https?://"
+               [(ngModel)]="bitbucketSettings.url">
+      </div>
+
+      <div class="options-item">
+        <span>Username:</span>
+        <input type="text" size="50" placeholder="bitbucket username" pattern=".+"
+               [(ngModel)]="bitbucketSettings.username">
+      </div>
+
+      <div class="options-item">
+        <span>Token:</span>
+        <input type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="bitbucketSettings.token">
+      </div>
     </div>
-    <div class="slack-settings" *ngIf="enableSlackNotifications">
-      <div class="options-item">
-        <span style="align-self: flex-start">Token:</span>
-        <textarea cols="52" rows="2" placeholder="Bot User OAuth Token" [(ngModel)]="slackSettings.token"></textarea>
-        <i class="icon icon-question" style="align-self: start;margin-left: 5px;"
-           title="Bot User OAuth Token of slack application"></i>
-      </div>
-      <div class="options-item">
-        <span>Channel:</span>
-        <input type="text" size="8" placeholder="member id" pattern=".+" [(ngModel)]="slackSettings.memberId">
-        <i>&nbsp;your slack profile > more > copy member id</i>
-        <input type="button" style="margin-left: 20px;" value="test" (click)="onSlackTest()">
-      </div>
-    </div>
-    <div class="options-sub-item-list">
-      <span class="title">Send notifications for events:</span>
-      <div class="options-item">
-        <input type="checkbox" [(ngModel)]="settings.notifications.events.pullRequestCreated">
-        New pull request created
-      </div>
-      <div class="options-item">
-        <input type="checkbox" [(ngModel)]="settings.notifications.events.pullRequestStateChanged">
-        Pull request state has changed (approved / needs work / conflicted / merged / declined / removed)
-      </div>
-      <div class="options-item">
-        <input type="checkbox" [(ngModel)]="settings.notifications.events.commentAdded">
-        New comments added
-      </div>
+
+    <div class="controls">
+      <button [routerLink]="['..']">Back</button>
+      &nbsp;
+      <button (click)="onSave()">Save</button>
+      <span *ngIf="statusMessage" style="margin-left: 10px;"
+            [style]="{color: statusMessage.type === 'error' ? '#b92c2c' : 'default'}">{{ statusMessage.message }}</span>
     </div>
   </div>
-
-  <div class="options-list">
-    <div class="title">
-      <img src="bitbucket64.png" alt=""/>
-      <h3>Bitbucket</h3>
-    </div>
-    <div class="options-item">
-      <span>URL:</span>
-      <input type="text" size="50" placeholder="bitbucket url" pattern="^https?://" [(ngModel)]="bitbucketSettings.url">
-    </div>
-
-    <div class="options-item">
-      <span>Username:</span>
-      <input type="text" size="50" placeholder="bitbucket username" pattern=".+" [(ngModel)]="bitbucketSettings.username">
-    </div>
-
-    <div class="options-item">
-      <span>Token:</span>
-      <input type="text" size="50" placeholder="bitbucket token" pattern=".+" [(ngModel)]="bitbucketSettings.token">
-    </div>
-  </div>
-
-  <div class="controls">
-    <button [routerLink]="['..']">Back</button>
-    &nbsp;
-    <button (click)="onSave()">Save</button>
-    <span *ngIf="statusMessage" style="margin-left: 10px;"
-          [style]="{color: statusMessage.type === 'error' ? '#b92c2c' : 'default'}">{{statusMessage.message}}</span>
-  </div>
-</div>
+}

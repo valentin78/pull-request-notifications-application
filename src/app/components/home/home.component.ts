@@ -30,14 +30,14 @@ export class HomeComponent implements OnInit {
     this.participant = [];
   }
 
-  ngOnInit(): void {
-    const settings = this.dataService.getExtensionSettings();
+  async ngOnInit(): Promise<void> {
+    const settings = await this.dataService.getExtensionSettings();
     this.isSettingsValid = settings?.bitbucket?.isValid() || false;
     if (!this.isSettingsValid) {
       return;
     }
 
-    this.readPullRequestData();
+    await this.readPullRequestData();
 
     // this is used only if new data were fetched during home screen preview
     this.backgroundService.dataProcessed
@@ -45,15 +45,15 @@ export class HomeComponent implements OnInit {
       .subscribe(() => this.readPullRequestData());
   }
 
-  readPullRequestData() {
-    const created = this.dataService.getPullRequests(PullRequestRole.Author);
-    const reviewing = this.dataService.getPullRequests(PullRequestRole.Reviewer);
-    const participant = this.dataService.getPullRequests(PullRequestRole.Participant);
+  async readPullRequestData() {
+    const created = await this.dataService.getPullRequests(PullRequestRole.Author);
+    const reviewing = await this.dataService.getPullRequests(PullRequestRole.Reviewer);
+    const participant = await this.dataService.getPullRequests(PullRequestRole.Participant);
 
     this.created = created.sort(this.sortPullRequests);
     this.reviewing = reviewing.sort(this.sortPullRequests);
     this.participant = participant.sort(this.sortPullRequests);
-    this.lastDataFetchingTimestamp = this.dataService.getLastDataFetchingTimestamp();
+    this.lastDataFetchingTimestamp = await this.dataService.getLastDataFetchingTimestamp();
 
     this.cd.markForCheck();
   }

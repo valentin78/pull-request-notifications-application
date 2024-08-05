@@ -1,52 +1,63 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {ExtensionSettings, PullRequest} from '../models/models';
 import {PullRequestRole} from '../models/enums';
+import {ApplicationService} from "./application.service";
 
 /**
  * https://github.com/electron-userland/electron-json-storage
  */
 @Injectable()
 export class DataService {
-  private keys = {
+  private _applicationService = inject(ApplicationService);
+
+  private _keys = {
     settings: 'pull-request-notifications.settings',
     lastRunningTime: 'pull-request-notifications.last-running-time',
     snoozeSettings: 'pull-request-notifications.snooze-settings',
     pullRequests: 'pull-request-notifications.pull-requests'
   };
 
-  getExtensionSettings(): ExtensionSettings {
-    let settings = JSON.parse(localStorage.getItem(this.keys.settings) as string);
+  private async loadDataByGet(key: string): Promise<any> {
+    const settings = await this._applicationService.getSettings();
+    return settings ? settings[key] : undefined;
+  }
 
+  private async storeDataByKey(key: string, data: any) {
+    await this._applicationService.setSettings(key, data);
+  }
+
+  async getExtensionSettings(): Promise<ExtensionSettings> {
+    let settings = await this.loadDataByGet(this._keys.settings);
     return new ExtensionSettings(settings);
   }
 
-  saveExtensionSettings(settings: ExtensionSettings) {
-    localStorage.setItem(this.keys.settings, JSON.stringify(settings));
+  public async saveExtensionSettings(settings: ExtensionSettings) {
+    await this.storeDataByKey(this._keys.settings, settings);
   }
 
-  getPullRequests(role: PullRequestRole): PullRequest[] {
-    return JSON.parse(localStorage.getItem(`${this.keys.pullRequests}.${role}`) as string) || [];
+  public async getPullRequests(role: PullRequestRole): Promise<PullRequest[]> {
+    return await this.loadDataByGet(`${this._keys.pullRequests}.${role}`) || [];
   }
 
-  savePullRequests(role: PullRequestRole, values: PullRequest[]) {
-    localStorage.setItem(`${this.keys.pullRequests}.${role}`, JSON.stringify(values));
+  public async savePullRequests(role: PullRequestRole, values: PullRequest[]) {
+    await this.storeDataByKey(`${this._keys.pullRequests}.${role}`, values);
   }
 
-  getLastDataFetchingTimestamp(): number {
+  public async getLastDataFetchingTimestamp(): Promise<number> {
     // return now - 1h, if last running time is not available
-    return JSON.parse(localStorage.getItem(this.keys.lastRunningTime) as string) || (Date.now() - 60 * 60 * 1000);
+    return await this.loadDataByGet(this._keys.lastRunningTime) || (Date.now() - 60 * 60 * 1000);
   }
 
-  saveLastDataFetchingTimestamp(timestamp: number) {
-    return localStorage.setItem(this.keys.lastRunningTime, JSON.stringify(timestamp));
+  public async saveLastDataFetchingTimestamp(timestamp: number) {
+    return await this.storeDataByKey(this._keys.lastRunningTime, timestamp);
   }
 
-  getNotificationSnoozeSettings(): number[] {
-    return JSON.parse(localStorage.getItem(this.keys.snoozeSettings) as string) || [];
+  public async getNotificationSnoozeSettings(): Promise<number[]> {
+    return await this.loadDataByGet(this._keys.snoozeSettings) || [];
   }
 
-  saveNotificationSnoozeSettings(settings: number[]) {
-    return localStorage.setItem(this.keys.snoozeSettings, JSON.stringify(settings));
+  public async saveNotificationSnoozeSettings(settings: number[]) {
+    return await this.storeDataByKey(this._keys.snoozeSettings, settings);
   }
 }
 

@@ -7,18 +7,9 @@ import {NotificationOptions} from '../models/models';
 import {BitbucketService} from './bitbucket.service';
 import {GetWindowsNotificationBody} from '../other/notification.titles';
 import {SlackNotificationBuilder} from '../other/slack-notification.builder';
-import {ElectronService} from "ngx-electron";
 
 @Injectable()
 export class NotificationService {
-  //private _electronService = inject(ElectronService);
-
-  constructor() {
-    /*setTimeout(() => {
-      this._electronService.ipcRenderer.send('request-app-balloon', 'message', 'info', 'title' ?? "Pull Request Notification");
-    }, 1000);*/
-  }
-
   private dataService = inject(DataService);
   private bitbucketService = inject(BitbucketService);
 
@@ -51,14 +42,14 @@ export class NotificationService {
       });
   }
 
-  sendNotification(options: NotificationOptions) {
+  async sendNotification(options: NotificationOptions) {
     // skip notification if it is snoozed for this PR
-    let snoozeSettings = this.dataService.getNotificationSnoozeSettings();
+    let snoozeSettings = await this.dataService.getNotificationSnoozeSettings();
     if (snoozeSettings.includes(options.pullRequest.id)) {
       return;
     }
 
-    let extensionSettings = this.dataService.getExtensionSettings();
+    let extensionSettings = await this.dataService.getExtensionSettings();
     if (extensionSettings.notifications.browser) {
       let body = GetWindowsNotificationBody(options.action);
       this.sendBrowserNotification(options.pullRequest.title, body, options.pullRequest.links.self[0].href);

@@ -12,7 +12,7 @@ import Alarm = chrome.alarms.Alarm;
 
 @Injectable()
 export class BackgroundService {
-  interval: number;
+  interval!: number;
   private dataProcessed$!: Subject<void>;
   private settings!: ExtensionSettings;
   private lastDataFetchingTimestamp!: number;
@@ -23,8 +23,9 @@ export class BackgroundService {
 
   constructor() {
     this.dataProcessed$ = new Subject();
-    const settings = this.dataService.getExtensionSettings();
-    this.interval = settings.refreshIntervalInMinutes;
+    this.dataService.getExtensionSettings().then(settings => {
+      this.interval = settings.refreshIntervalInMinutes;
+    })
   }
 
   public get dataProcessed() {
@@ -57,10 +58,10 @@ export class BackgroundService {
   }
 
   private addAlarmListener() {
-    chrome.alarms.onAlarm.addListener((alarm: Alarm) => {
-      this.doWork();
+    chrome.alarms.onAlarm.addListener(async (alarm: Alarm) => {
+      await this.doWork();
 
-      const settings = this.dataService.getExtensionSettings();
+      const settings = await this.dataService.getExtensionSettings();
       const newInterval = settings.refreshIntervalInMinutes;
       if (settings.refreshIntervalInMinutes !== alarm.periodInMinutes) {
         console.log(`interval changed from ${alarm.periodInMinutes} to ${newInterval}, restarting alarm...`);
@@ -76,10 +77,10 @@ export class BackgroundService {
     chrome.browserAction.setBadgeText({text: message});
   }
 
-  doWork() {
+  async doWork() {
     let runningTime = Date.now();
-    this.settings = this.dataService.getExtensionSettings();
-    this.lastDataFetchingTimestamp = this.dataService.getLastDataFetchingTimestamp();
+    this.settings = await this.dataService.getExtensionSettings();
+    this.lastDataFetchingTimestamp = await this.dataService.getLastDataFetchingTimestamp();
     if (!this.settings.bitbucket?.isValid()) {
       console.log('setup bitbucket settings first...');
       this.notificationService.setBadge({message: '404', color: 'red', title: 'settings are missing'});
@@ -90,14 +91,14 @@ export class BackgroundService {
     const processingTime = new Date();
     this.bitbucketService
       .getAllPullRequests(PullRequestState.Open)
-      .subscribe(data => {
+      .subscribe(async data => {
         const created = data.values.filter(v => v.author.user.name === this.settings.bitbucket?.username);
         const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === this.settings.bitbucket?.username));
         const participant = data.values.filter(v => v.participants.some(r => r.user.name === this.settings.bitbucket?.username));
 
-        this.handleResponse(PullRequestRole.Author, created);
-        this.handleResponse(PullRequestRole.Reviewer, reviewing);
-        this.handleResponse(PullRequestRole.Participant, participant);
+        await this.handleResponse(PullRequestRole.Author, created);
+        await this.handleResponse(PullRequestRole.Reviewer, reviewing);
+        await this.handleResponse(PullRequestRole.Participant, participant);
 
         this.notificationService.setBadge({
           message: `${created.length + reviewing.length + participant.length}`,
@@ -105,7 +106,7 @@ export class BackgroundService {
           title: `created: ${created.length}\nreviewing: ${reviewing.length}\nparticipant: ${participant.length}\nlast update at ${processingTime.toLocaleTimeString()}`
         });
 
-        this.dataService.saveLastDataFetchingTimestamp(runningTime);
+        await this.dataService.saveLastDataFetchingTimestamp(runningTime);
         this.dataProcessed$.next();
       });
   }
@@ -120,8 +121,8 @@ export class BackgroundService {
     - Created / reviewing PR was declined / removed
     - Created PR was merged
    */
-  handleResponse(role: PullRequestRole, values: PullRequest[]) {
-    const before = this.dataService.getPullRequests(role);
+  async handleResponse(role: PullRequestRole, values: PullRequest[]) {
+    const before = await this.dataService.getPullRequests(role);
 
     // todo: store notified PRs somewhere to avoid spamming
     // todo: add rules to the settings, so user can select what he wants to be notified about
@@ -144,8 +145,8 @@ export class BackgroundService {
 
     // fetch comments
     this.fetchComments(before, values)
-      .subscribe(_ => {
-        this.dataService.savePullRequests(role, values);
+      .subscribe(async _ => {
+        await this.dataService.savePullRequests(role, values);
       });
   }
 

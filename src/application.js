@@ -3,12 +3,16 @@
 const {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage} = require('electron')
 const url = require("url");
 const path = require("path");
+const storage = require('electron-json-storage');
 
 let mainWindow, tray;
 
 const assetsFolder = './assets/icons';
 const windowIcoPath = path.join(__dirname, assetsFolder, `/icon64.png`);
 const windowIco = nativeImage.createFromPath(windowIcoPath)
+
+const settingsFolder = path.join(app.getPath('userData'), `/settings`);
+storage.setDataPath(settingsFolder)
 
 const loadUrlAsync = async (fragment) => {
   await mainWindow.loadURL(
@@ -41,7 +45,7 @@ async function createWindowAsync() {
   mainWindow.setMenu(null);
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('close', function (evt) {
     evt.preventDefault();
@@ -103,10 +107,24 @@ ipcMain.on('request-app-balloon', (event, message, iconType, title) => {
   tray.displayBalloon({
     title: title,
     iconType: iconType ?? 'info',
-    content: message
+    content: message,
   });
 });
 
+ipcMain.on("request-settings", (event) => {
+  console.log("[electron] got get-settings event ");
+  storage.getAll((err, data) => {
+    event.sender.send("settings-data", err, data);
+  });
+});
+
+
+ipcMain.on("set-settings", (event, key, data) => {
+  console.log("[electron] got set-settings event ", key, data);
+  storage.set(key, data, err => {
+    event.sender.send("set-settings-result", err);
+  });
+});
 
 /*
 app.setLoginItemSettings({

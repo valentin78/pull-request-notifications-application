@@ -1,5 +1,12 @@
 import {inject, Injectable} from '@angular/core';
-import {BitbucketResponse, BitbucketUser, PullRequest, PullRequestActivity, PullRequestIssue} from '../models/models';
+import {
+  BitbucketResponse,
+  BitbucketUser,
+  ExtensionSettings,
+  PullRequest,
+  PullRequestActivity,
+  PullRequestIssue
+} from '../models/models';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {DataService} from './data.service';
@@ -11,9 +18,11 @@ export class BitbucketService {
   private http = inject(HttpClient);
   private dataService = inject(DataService);
 
-  private get settings() {
-    return this.dataService.getExtensionSettings();
+  constructor() {
+    this.dataService.getExtensionSettings().then(settings => this.settings = settings);
   }
+
+  private settings!: ExtensionSettings;
 
   private get headers() {
     return {'Authorization': `Bearer + ${this.settings.bitbucket?.token}`};
