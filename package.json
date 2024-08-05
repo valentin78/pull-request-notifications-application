@@ -19,14 +19,14 @@
     ],
     "files": [
       "!node_modules",
-      "main.js",
-      "assets/**/*",
+      "src/application.js",
+      "src/assets/**/*",
       "dist/browser/**/*"
     ],
     "asar": true
   },
   "private": true,
-  "main": "main.js",
+  "main": "src/application.js",
   "dependencies": {
     "@angular/animations": "^17.0.3",
     "@angular/common": "^17.0.3",
@@ -37,6 +37,7 @@
     "@angular/platform-browser-dynamic": "^17.0.3",
     "@angular/router": "^17.0.3",
     "@types/chrome": "^0.0.143",
+    "electron-json-storage": "^4.6.0",
     "ngx-electron": "^2.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
@@ -46,6 +47,7 @@
     "@angular-devkit/build-angular": "^17.0.1",
     "@angular/cli": "^17.0.1",
     "@angular/compiler-cli": "^17.0.3",
+    "@types/electron-json-storage": "^4",
     "@types/node": "^12.11.1",
     "electron": "^31.3.1",
     "electron-builder": "^24.13.3",

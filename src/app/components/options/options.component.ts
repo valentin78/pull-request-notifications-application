@@ -107,33 +107,39 @@ export class OptionsComponent implements OnInit {
   // validate & save settings to local storage
   private saveSettings() {
     this.statusMessage$.next({message: 'saving...', hideAfter: 0});
-    const bitbucketPromise = this.bitbucketService
-      .validateCredentials(this.bitbucketSettings.url, this.bitbucketSettings.token, this.bitbucketSettings.username)
-      .pipe(catchError((error, _) => {
+
+    const bitbucketValidate$ = this.bitbucketService.validateCredentials(
+      this.bitbucketSettings.url,
+      this.bitbucketSettings.token,
+      this.bitbucketSettings.username
+    ).pipe(
+      catchError((error, _) => {
         this.statusMessage$.next({type: 'error', message: 'wrong bitbucket credentials'});
         return throwError(error);
-      }));
+      })
+    );
 
     let slackClient = new SlackClient();
-    const slackPromise = this.enableSlackNotifications
-      ? slackClient
-        .testAuth(this.slackSettings.token)
-        .pipe(
+    const slackValidate$ = this.enableSlackNotifications
+      ? slackClient.testAuth(this.slackSettings.token).pipe(
           tap((data: any) => {
             if (!data.ok) {
-              throw 'wrong slack credentials';
+              throw new Error('wrong slack credentials');
             }
           }),
-          catchError((error, _) => {
-            this.statusMessage$.next({type: 'error', message: 'wrong slack credentials'});
+          catchError((error: Error, _) => {
+            this.statusMessage$.next({type: 'error', message: error.message});
             return throwError(error);
           })
         )
       : of(null);
 
-    forkJoin([bitbucketPromise, slackPromise])
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe(_ => {
+    forkJoin([
+      bitbucketValidate$,
+      slackValidate$
+    ]).pipe(
+      takeUntilDestroyed(this._destroyRef)
+    ).subscribe(_ => {
         this.settings.bitbucket = this.bitbucketSettings;
         this.settings.bitbucket.userId = _[0].id;
 
@@ -146,7 +152,7 @@ export class OptionsComponent implements OnInit {
         this.backgroundService.doWork();
 
         this.statusMessage$.next({message: 'saved!'});
-      });
+    });
   }
 
   // request permission to access bitbucket & slack hosts

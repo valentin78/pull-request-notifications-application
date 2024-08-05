@@ -1,10 +1,12 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {ExtensionSettings, PullRequest} from '../models/models';
 import {PullRequestRole} from '../models/enums';
 
+/**
+ * https://github.com/electron-userland/electron-json-storage
+ */
 @Injectable()
 export class DataService {
-
   private keys = {
     settings: 'pull-request-notifications.settings',
     lastRunningTime: 'pull-request-notifications.last-running-time',

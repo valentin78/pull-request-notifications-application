@@ -27,7 +27,7 @@ export let AppInjector: Injector;
     UserComponent,
     PullRequestStateComponent,
     BackgroundPageComponent,
-    SnoozeNotificationComponent
+    SnoozeNotificationComponent,
   ],
   imports: [
     BrowserModule,

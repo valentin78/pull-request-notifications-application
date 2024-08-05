@@ -6,13 +6,14 @@ const path = require("path");
 
 let mainWindow, tray;
 
-const windowIcoPath = path.join(__dirname, `/assets/favicon.ico`);
+const assetsFolder = './assets/icons';
+const windowIcoPath = path.join(__dirname, assetsFolder, `/icon64.png`);
 const windowIco = nativeImage.createFromPath(windowIcoPath)
 
 const loadUrlAsync = async (fragment) => {
   await mainWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, `/dist/browser/index.html`),
+      pathname: path.join(__dirname, `../dist/browser/index.html`),
       protocol: "file:",
       slashes: true,
       hash: fragment
@@ -27,7 +28,7 @@ async function createWindowAsync() {
     icon: windowIco,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: false
     },
     show: false,
     closable: true
@@ -61,9 +62,9 @@ const showWindow = (fragment) => {
 app.on('ready', async () => {
   await createWindowAsync();
 
-  const exitIconPath = path.join(__dirname, `/assets/exit-ico.png`);
-  const configIconPath = path.join(__dirname, `/assets/config-ico.png`);
-  const appIconPath = path.join(__dirname, `/assets/application-ico.png`);
+  const exitIconPath = path.join(__dirname, assetsFolder, `/exit-ico.png`);
+  const configIconPath = path.join(__dirname, assetsFolder, `/config-ico.png`);
+  const appIconPath = path.join(__dirname, assetsFolder, `/application-ico.png`);
   const exitIcon = nativeImage.createFromPath(exitIconPath)
   const configIcon = nativeImage.createFromPath(configIconPath)
   const appIcon = nativeImage.createFromPath(appIconPath)
@@ -77,8 +78,8 @@ app.on('ready', async () => {
 
   tray.setContextMenu(contextMenu)
 
-  tray.setToolTip('Pull Request Viewer')
-  tray.setTitle('Pull Request Viewer')
+  tray.setToolTip('Pull Request Notifications')
+  tray.setTitle('Pull Request Notifications')
 
   tray.addListener('click', () => showWindow());
 })
@@ -105,6 +106,7 @@ ipcMain.on('request-app-balloon', (event, message, iconType, title) => {
     content: message
   });
 });
+
 
 /*
 app.setLoginItemSettings({
