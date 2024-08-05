@@ -38,7 +38,6 @@
     "@angular/platform-browser-dynamic": "^17.0.3",
     "@angular/router": "^17.0.3",
     "@types/chrome": "^0.0.143",
-    "electron-json-storage": "^4.6.0",
     "electron-store": "^10.0.0",
     "ngx-electron": "^2.2.0",
     "rxjs": "~6.6.0",

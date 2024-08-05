@@ -7,6 +7,12 @@ import {ElectronService} from "ngx-electron";
 export class ApplicationService {
   private _electronService = inject(ElectronService);
 
+  public navigateTo(url: string) {
+    if (this._electronService.isElectronApp)
+      this._electronService.ipcRenderer.send('navigate-to', url);
+      else window.open(url);
+  }
+
   public getSettings(key: string): Promise<any> {
     if (this._electronService.isElectronApp)
       return new Promise((resolve, reject) => {
@@ -14,7 +20,6 @@ export class ApplicationService {
         this._electronService.ipcRenderer.send('request-settings', key);
         // wait for response
         this._electronService.ipcRenderer.once(`settings-data:${key}`, (ev, data: any) => {
-          console.log('settings-data: ', key, data)
           resolve(data);
         });
       });

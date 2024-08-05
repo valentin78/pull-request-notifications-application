@@ -1,6 +1,6 @@
 // https://www.electronjs.org/docs/latest/tutorial/installation
 
-import {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage} from 'electron';
+import {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell} from 'electron';
 import url from "url";
 import path from "path";
 import {fileURLToPath} from 'url';
@@ -122,11 +122,14 @@ ipcMain.on("request-settings", (event, key) => {
   event.sender.send(`settings-data:${key}`, value);
 });
 
-
 ipcMain.on("set-settings", (event, key, data) => {
   const store = new Store();
   store.set(key, data);
   event.sender.send(`"set-settings:${key}`, true);
+});
+
+ipcMain.on("navigate-to", async (event, url) => {
+  await shell.openExternal(url)
 });
 
 /*

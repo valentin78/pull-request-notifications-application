@@ -3,9 +3,6 @@ import {ExtensionSettings, PullRequest} from '../models/models';
 import {PullRequestRole} from '../models/enums';
 import {ApplicationService} from "./application.service";
 
-/**
- * https://github.com/electron-userland/electron-json-storage
- */
 @Injectable()
 export class DataService {
   private _applicationService = inject(ApplicationService);
@@ -36,11 +33,11 @@ export class DataService {
   }
 
   public async getPullRequests(role: PullRequestRole): Promise<PullRequest[]> {
-    return await this.loadDataByGet(`${this._keys.pullRequests}_${role}`, []);
+    return await this.loadDataByGet(`${this._keys.pullRequests}.${role}`, []);
   }
 
   public async savePullRequests(role: PullRequestRole, values: PullRequest[]) {
-    await this.storeDataByKey(`${this._keys.pullRequests}_${role}`, values);
+    await this.storeDataByKey(`${this._keys.pullRequests}.${role}`, values);
   }
 
   public async getLastDataFetchingTimestamp(): Promise<number> {

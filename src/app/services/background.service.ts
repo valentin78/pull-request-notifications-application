@@ -5,9 +5,16 @@ import {ExtensionSettings, PullRequest} from '../models/models';
 import {DataService} from './data.service';
 import {NotificationService} from './notification.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {forkJoin, from, of, Subject, throwError} from 'rxjs';
+import {forkJoin, from, Observable, of, Subject, throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ApprovedRule, CommentRule, ConflictedRule, MergedOrDeclinedRule, NeedsWorkRule, ReviewerRule} from './bitbucket-pr-rules';
+import {
+  ApprovedRule,
+  CommentRule,
+  ConflictedRule,
+  MergedOrDeclinedRule,
+  NeedsWorkRule,
+  ReviewerRule
+} from './bitbucket-pr-rules';
 import Alarm = chrome.alarms.Alarm;
 
 @Injectable()
@@ -28,7 +35,7 @@ export class BackgroundService {
     })
   }
 
-  public get dataProcessed() {
+  public get dataProcessed(): Observable<any> {
     return this.dataProcessed$.asObservable();
   }
 
@@ -89,9 +96,8 @@ export class BackgroundService {
 
     this.notificationService.setBadge({message: '...', title: 'loading...', color: 'gray'});
     const processingTime = new Date();
-    this.bitbucketService
-      .getAllPullRequests(PullRequestState.Open)
-      .subscribe(async data => {
+    return new Promise(resolve => {
+      this.bitbucketService.getAllPullRequests(PullRequestState.Open).subscribe(async data => {
         const created = data.values.filter(v => v.author.user.name === this.settings.bitbucket?.username);
         const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === this.settings.bitbucket?.username));
         const participant = data.values.filter(v => v.participants.some(r => r.user.name === this.settings.bitbucket?.username));
@@ -108,7 +114,11 @@ export class BackgroundService {
 
         await this.dataService.saveLastDataFetchingTimestamp(runningTime);
         this.dataProcessed$.next();
+
+        console.log('Done');
+        resolve(true);
       });
+    });
   }
 
   /*

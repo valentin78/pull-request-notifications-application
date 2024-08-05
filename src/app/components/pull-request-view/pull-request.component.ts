@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {BitbucketComment, PullRequest} from '../../models/models';
 import {BitbucketMergeResultOutcome, PullRequestStatus} from '../../models/enums';
+import {ApplicationService} from '../../services/application.service';
 
 @Component({
   selector: 'app-pull-request',
@@ -8,9 +9,10 @@ import {BitbucketMergeResultOutcome, PullRequestStatus} from '../../models/enums
   styleUrls: ['./pull-request.component.scss']
 })
 export class PullRequestComponent implements OnInit {
-
   @Input() pullRequest!: PullRequest;
   @Input() showAuthorAvatar: boolean = true;
+
+  private _applicationService = inject(ApplicationService);
 
   selfUrl!: string;
   approved!: boolean;
@@ -19,9 +21,6 @@ export class PullRequestComponent implements OnInit {
   status!: string;
   commentsCount!: number;
   commentsTooltip?: string;
-
-  constructor() {
-  }
 
   ngOnInit(): void {
     if (this.pullRequest.links.self.length > 0) {
@@ -42,7 +41,7 @@ export class PullRequestComponent implements OnInit {
   }
 
   navigateTo(url: string) {
-    window.open(url);
+    this._applicationService.navigateTo(url)
   }
 
   onDisplayComments(_: MouseEvent) {

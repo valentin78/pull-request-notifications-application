@@ -8316,6 +8316,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mixme@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "mixme@npm:1.1.0"
+  checksum: 5df71bf7b6eafd1012280d2c2099edde775cb1cd3d08c9d3dba888c1eadc02e7c84065753c21d02ffe0caa770e6e03981b4ee574377ff5987363d225ba9ee4d1
+  languageName: node
+  linkType: hard
+
 "mkdirp@npm:^0.5.1":
   version: 0.5.6
   resolution: "mkdirp@npm:0.5.6"
@@ -8951,6 +8958,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pad@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "pad@npm:3.2.0"
+  dependencies:
+    wcwidth: ^1.0.1
+  checksum: c681c974613c3681058344d56090883260ba82401e507f11a21676a5cd5e4a9364b24fcaf9063d402311b7a8f1c38563a38c986b390595337f66c278a1d96698
+  languageName: node
+  linkType: hard
+
 "pako@npm:^1.0.3":
   version: 1.0.11
   resolution: "pako@npm:1.0.11"
@@ -9158,6 +9174,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"plug-and-play@npm:^2.5.8":
+  version: 2.5.8
+  resolution: "plug-and-play@npm:2.5.8"
+  dependencies:
+    mixme: ^1.1.0
+    toposort: ^2.0.2
+  checksum: 85745e032bc72ad100a5050f66d64ed83f5c26b262e6004a2221fd55ba8cefc52921e54e06ab63cf2f06ae092a52d7f6af215eede38a7e76c74768ea070c20fb
+  languageName: node
+  linkType: hard
+
 "portscanner@npm:2.2.0":
   version: 2.2.0
   resolution: "portscanner@npm:2.2.0"
@@ -9358,6 +9384,7 @@ __metadata:
     electron-store: ^10.0.0
     ngx-electron: ^2.2.0
     rxjs: ~6.6.0
+    shell: ^0.11.0
     tslib: ^2.1.0
     typescript: ~5.2.2
     zone.js: ~0.14.2
@@ -10205,6 +10232,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"shell@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "shell@npm:0.11.0"
+  dependencies:
+    mixme: ^1.1.0
+    pad: ^3.2.0
+    plug-and-play: ^2.5.8
+  checksum: a2a6e6f0c708a8c49a976bb45ea2432edae7d40815f5bfbf9e3f53c73dbfc61add903f41134c32b6235e7eb351749d6fd97dc7153ecc38754df445c484a183d1
+  languageName: node
+  linkType: hard
+
 "side-channel@npm:^1.0.4":
   version: 1.0.4
   resolution: "side-channel@npm:1.0.4"
@@ -10929,6 +10967,13 @@ __metadata:
   version: 1.0.1
   resolution: "toidentifier@npm:1.0.1"
   checksum: 952c29e2a85d7123239b5cfdd889a0dde47ab0497f0913d70588f19c53f7e0b5327c95f4651e413c74b785147f9637b17410ac8c846d5d4a20a5a33eb6dc3a45
+  languageName: node
+  linkType: hard
+
+"toposort@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "toposort@npm:2.0.2"
+  checksum: d64c74b570391c9432873f48e231b439ee56bc49f7cb9780b505cfdf5cb832f808d0bae072515d93834dd6bceca5bb34448b5b4b408335e4d4716eaf68195dcb
   languageName: node
   linkType: hard
 
