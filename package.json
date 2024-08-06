@@ -1,6 +1,7 @@
 {
   "name": "pull-request-notifications",
-  "version": "0.0.1",
+  "author": "Sergei Paduret, Valentin Gushan",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "ng": "ng",
