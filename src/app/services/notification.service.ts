@@ -7,11 +7,13 @@ import {NotificationOptions} from '../models/models';
 import {BitbucketService} from './bitbucket.service';
 import {GetWindowsNotificationBody} from '../other/notification.titles';
 import {SlackNotificationBuilder} from '../other/slack-notification.builder';
+import {ApplicationService} from './application.service';
 
 @Injectable()
 export class NotificationService {
   private dataService = inject(DataService);
   private bitbucketService = inject(BitbucketService);
+  private _applicationService = inject(ApplicationService);
 
   public requestPermission(): Observable<NotificationPermission> {
     if (Notification.permission !== 'denied') {
@@ -35,7 +37,7 @@ export class NotificationService {
             notification.onclick = (event) => {
               // prevent the browser from focusing the Notification's tab
               event.preventDefault();
-              window.open(clickUrl, '_blank');
+              this._applicationService.navigateTo(clickUrl);
             };
           }
         }

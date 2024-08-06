@@ -112,7 +112,6 @@ const setAutostartFlag = (openAtLogin) => {
   });
 }
 
-
 const applicationExit = () => {
   if (process.platform !== 'darwin') app.exit(0);
 }

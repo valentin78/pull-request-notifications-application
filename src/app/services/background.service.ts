@@ -35,9 +35,21 @@ export class BackgroundService {
     return this.dataProcessed$.asObservable();
   }
 
-  setupAlarms() {
-    if (!chrome.alarms) return; // todo
+  private _jobIntervalRef!: NodeJS.Timeout;
 
+  // todo reschedule after change settings
+  public async scheduleJob() {
+    const settings = await this.dataService.getExtensionSettings();
+
+    if (this._jobIntervalRef)
+      clearTimeout(this._jobIntervalRef);
+
+    this._jobIntervalRef = setInterval(async () => {
+      await this.doWork();
+    }, settings.refreshIntervalInMinutes * 60 * 1000);
+  }
+
+  public setupAlarms() {
     chrome.alarms.clearAll((wasCleared: boolean) => {
       if (wasCleared) {
         console.debug('alarms cleared');
@@ -82,7 +94,7 @@ export class BackgroundService {
     chrome.browserAction?.setBadgeText({text: message});
   }
 
-  async doWork() {
+  public async doWork() {
     let runningTime = Date.now();
     this.settings = await this.dataService.getExtensionSettings();
     this.lastDataFetchingTimestamp = await this.dataService.getLastDataFetchingTimestamp();

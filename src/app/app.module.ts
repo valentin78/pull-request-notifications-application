@@ -47,9 +47,13 @@ export let AppInjector: Injector;
       provide: APP_INITIALIZER,
       multi: true,
       deps: [
-        BackgroundService
+        BackgroundService,
+        ElectronService
       ],
-      useFactory: (backgroundService: BackgroundService) => () => backgroundService.setupAlarms(),
+      useFactory: (backgroundService: BackgroundService, electronService: ElectronService) => async () => {
+        if (electronService.isElectronApp) await backgroundService.scheduleJob();
+        else backgroundService.setupAlarms()
+      },
     },
   ],
   bootstrap: [AppComponent]

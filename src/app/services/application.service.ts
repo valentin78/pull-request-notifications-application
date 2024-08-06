@@ -7,10 +7,15 @@ import {ElectronService} from "ngx-electron";
 export class ApplicationService {
   private _electronService = inject(ElectronService);
 
+  public get isElectronApp(): boolean {
+    return this._electronService.isElectronApp;
+  }
+
   public navigateTo(url: string) {
     if (this._electronService.isElectronApp)
       this._electronService.ipcRenderer.send('navigate-to', url);
-      else window.open(url);
+    else
+      window.open(url, '_blank');
   }
 
   public getSettings(key: string): Promise<any> {
