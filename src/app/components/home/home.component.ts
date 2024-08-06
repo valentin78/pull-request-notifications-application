@@ -51,8 +51,6 @@ export class HomeComponent implements OnInit {
     const reviewing = await this.dataService.getPullRequests(PullRequestRole.Reviewer);
     const participant = await this.dataService.getPullRequests(PullRequestRole.Participant);
 
-    console.log('!!!!', created);
-
     this.created = created.sort(this.sortPullRequests);
     this.reviewing = reviewing.sort(this.sortPullRequests);
     this.participant = participant.sort(this.sortPullRequests);

@@ -9,7 +9,7 @@
 }
 
 .container {
-  padding: $pr-control-distance 3px;
+  padding: $pr-control-distance 0;
   border-top: 1px solid $border-color;
 
   &:hover {
@@ -34,7 +34,6 @@
         display: flex;
         align-items: center;
         white-space: nowrap;
-        margin-bottom: $pr-control-distance;
         overflow-x: hidden;
 
         .user {
@@ -43,11 +42,9 @@
 
         .title {
           color: #adbac7;
-          font-weight: bold;
           text-decoration: none;
-          font-size: 1.2em;
           display: inline-block;
-          padding: 3px 0;
+          margin-bottom: $pr-control-distance;
           overflow: hidden;
           text-overflow: ellipsis;
         }
@@ -57,6 +54,8 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
+        font-size: .9em;
+        opacity: .8;
 
         & > * {
           padding: 2px 3px;

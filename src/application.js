@@ -4,20 +4,21 @@ import {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell} from 'elect
 import url from "url";
 import path from "path";
 import {fileURLToPath} from 'url';
-
 import Store from 'electron-store';
 
+// if true, application will open devtools and auto open windows in fullscreen
+const debugMode = false;
+
+// path to application.js file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 let mainWindow, tray;
 
+// assets
 const assetsFolder = './assets/icons';
 const windowIcoPath = path.join(__dirname, assetsFolder, `/icon64.png`);
 const windowIco = nativeImage.createFromPath(windowIcoPath)
-
-//const settingsFolder = path.join(app.getPath('userData'), `/settings`);
-//storage.setDataPath(settingsFolder)
 
 const loadUrlAsync = async (fragment) => {
   await mainWindow.loadURL(
@@ -39,7 +40,8 @@ async function createWindowAsync() {
       nodeIntegration: true,
       contextIsolation: false
     },
-    show: false,
+    show: debugMode,
+    fullscreen: debugMode,
     closable: true
   })
 
@@ -49,8 +51,10 @@ async function createWindowAsync() {
 
   mainWindow.setMenu(null);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  if (debugMode) {
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools()
+  }
 
   mainWindow.on('close', function (evt) {
     evt.preventDefault();
@@ -78,9 +82,11 @@ app.on('ready', async () => {
   const configIcon = nativeImage.createFromPath(configIconPath)
   const appIcon = nativeImage.createFromPath(appIconPath)
   tray = new Tray(windowIco)
+
   const contextMenu = Menu.buildFromTemplate([
     {label: 'View PR\'s', type: 'normal', click: () => showWindow(), icon: appIcon},
     {label: 'Options', type: 'normal', icon: configIcon, click: () => showWindow('options')},
+    {label: 'Autostart', type: 'checkbox', checked: getAutostartFlag(), click: item => setAutostartFlag(item.checked)},
     {label: '-----', type: 'separator'},
     {label: 'Close', type: 'normal', click: applicationExit, icon: exitIcon}
   ])
@@ -92,6 +98,20 @@ app.on('ready', async () => {
 
   tray.addListener('click', () => showWindow());
 })
+
+const getAutostartFlag = () => {
+  return app.getLoginItemSettings({
+    path: app.getPath("exe")
+  })?.openAtLogin ?? false;
+}
+
+const setAutostartFlag = (openAtLogin) => {
+  app.setLoginItemSettings({
+    openAtLogin: openAtLogin,
+    path: app.getPath("exe")
+  });
+}
+
 
 const applicationExit = () => {
   if (process.platform !== 'darwin') app.exit(0);
@@ -132,9 +152,3 @@ ipcMain.on("navigate-to", async (event, url) => {
   await shell.openExternal(url)
 });
 
-/*
-app.setLoginItemSettings({
-  openAtLogin: arg.settings.startOnStartup,
-  path: electron.app.getPath("exe")
-});
-*/

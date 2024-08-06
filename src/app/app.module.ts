@@ -1,4 +1,4 @@
-import {importProvidersFrom, Injector, NgModule} from '@angular/core';
+import {APP_INITIALIZER, importProvidersFrom, Injector, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app/app.component';
@@ -12,7 +12,6 @@ import {PullRequestComponent} from './components/pull-request-view/pull-request.
 import {UserComponent} from './components/user/user.component';
 import {PullRequestStateComponent} from './components/pull-request-state/pull-request-state.component';
 import {NotificationService} from './services/notification.service';
-import {BackgroundPageComponent} from './components/background-page/background-page.component';
 import {BackgroundService} from './services/background.service';
 import {SnoozeNotificationComponent} from './components/snooze-notification/snooze-notification.component';
 import {ElectronService, NgxElectronModule} from "ngx-electron";
@@ -27,8 +26,7 @@ export let AppInjector: Injector;
     PullRequestComponent,
     UserComponent,
     PullRequestStateComponent,
-    BackgroundPageComponent,
-    SnoozeNotificationComponent,
+    SnoozeNotificationComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +42,15 @@ export let AppInjector: Injector;
     importProvidersFrom([
       NgxElectronModule
     ]),
-    ElectronService
+    ElectronService,
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      deps: [
+        BackgroundService
+      ],
+      useFactory: (backgroundService: BackgroundService) => () => backgroundService.setupAlarms(),
+    },
   ],
   bootstrap: [AppComponent]
 })

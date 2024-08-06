@@ -3,9 +3,8 @@
 .home {
   display: flex;
   flex-flow: column nowrap;
-  min-width: 550px;
-  min-height: 250px;
   cursor: default;
+  height: 100%;
 }
 
 .role {

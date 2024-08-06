@@ -19,7 +19,6 @@ import Alarm = chrome.alarms.Alarm;
 
 @Injectable()
 export class BackgroundService {
-  interval!: number;
   private dataProcessed$!: Subject<void>;
   private settings!: ExtensionSettings;
   private lastDataFetchingTimestamp!: number;
@@ -30,9 +29,6 @@ export class BackgroundService {
 
   constructor() {
     this.dataProcessed$ = new Subject();
-    this.dataService.getExtensionSettings().then(settings => {
-      this.interval = settings.refreshIntervalInMinutes;
-    })
   }
 
   public get dataProcessed(): Observable<any> {
@@ -40,6 +36,8 @@ export class BackgroundService {
   }
 
   setupAlarms() {
+    if (!chrome.alarms) return; // todo
+
     chrome.alarms.clearAll((wasCleared: boolean) => {
       if (wasCleared) {
         console.debug('alarms cleared');
