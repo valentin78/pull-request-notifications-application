@@ -47,6 +47,12 @@
           margin-bottom: $pr-control-distance;
           overflow: hidden;
           text-overflow: ellipsis;
+
+          ::ng-deep i {
+            color: rgb(83, 155, 245);
+            //font-weight: bold;
+            font-style: normal;
+          }
         }
       }
 
@@ -76,7 +82,6 @@
   background-color: #0052CC;
   color: white;
   border-radius: $pr-control-border-radius;
-  font-weight: 700;
   margin-right: $pr-control-distance;
 
   &.approved {

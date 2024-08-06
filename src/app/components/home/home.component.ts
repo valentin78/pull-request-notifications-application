@@ -51,12 +51,28 @@ export class HomeComponent implements OnInit {
     const reviewing = await this.dataService.getPullRequests(PullRequestRole.Reviewer);
     const participant = await this.dataService.getPullRequests(PullRequestRole.Participant);
 
-    this.created = created.sort(this.sortPullRequests);
-    this.reviewing = reviewing.sort(this.sortPullRequests);
-    this.participant = participant.sort(this.sortPullRequests);
+    this.created = this.groupAndSort(created);
+    this.reviewing = this.groupAndSort(reviewing);
+    this.participant = this.groupAndSort(participant);
+
     this.lastDataFetchingTimestamp = await this.dataService.getLastDataFetchingTimestamp();
 
     this.cd.markForCheck();
+  }
+
+  private groupAndSort(requests: PullRequest[]): PullRequest[] {
+    // group & sort inside group
+    const groups = requests.sort(this.sortPullRequests).reduce((groups: any, pr) => {
+      const key = /.*(CCM-[^\W]+).*/.exec(pr.title)?.[1] ?? '';
+      if (key) pr.title = pr.title.replace(key, `<i>${key}</i>`)
+      const arr = groups[key] as [] ?? [];
+      groups[key] = [...arr, pr].sort(this.sortPullRequests)
+      return groups;
+    }, {});
+    return Object.keys(groups).reduce((arr, key) => {
+      arr.push(...groups[key] as []);
+      return arr;
+    }, []);
   }
 
   private sortPullRequests(a: PullRequest, b: PullRequest): number {
