@@ -1,6 +1,6 @@
 # Bitbucket Pull Request Notifications
 
-Desktop version of [pull-request-notifications chrome extension](https://github.com/spaduret/pull-request-notifications), authored by Sergei Paduret. 
+Desktop version of [pull-request-notifications-chrome-extension](https://github.com/spaduret/pull-request-notifications), authored by Sergei Paduret. 
 
 Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.electron.build/) libraries to build desktop application. 
 
