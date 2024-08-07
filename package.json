@@ -1,21 +1,18 @@
 {
   "name": "pull-request-notifications",
-  "author": "Sergei Paduret, Valentin Gushan",
-  "version": "0.1.0",
+  "author": "Valentin Gushan",
+  "version": "0.9.1",
   "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration development --base-href index.html",
-    "watch": "ng build --watch --configuration development --base-href index.html",
-    "build:prod": "ng build --configuration production --base-href index.html",
-    "watch:prod": "ng build --watch --configuration production --base-href index.html",
-    "start:electron": "npm run build:prod && ELECTRON_DISABLE_SECURITY_WARNINGS=true electron .",
+    "start:electron": "npm run build && ELECTRON_DISABLE_SECURITY_WARNINGS=true electron .",
     "make:dir": "electron-builder --dir",
     "make:dist": "electron-builder"
   },
   "build": {
-    "appId": "pull-requests-viewer",
+    "appId": "pull-requests-notifications",
     "directories": {
       "buildResources": "buildResources"
     },
@@ -34,29 +31,28 @@
   "private": true,
   "main": "src/application.js",
   "dependencies": {
-    "@angular/animations": "^17.0.3",
-    "@angular/common": "^17.0.3",
-    "@angular/compiler": "^17.0.3",
-    "@angular/core": "^17.0.3",
-    "@angular/forms": "^17.0.3",
-    "@angular/platform-browser": "^17.0.3",
-    "@angular/platform-browser-dynamic": "^17.0.3",
-    "@angular/router": "^17.0.3",
+    "@angular/animations": "^17.3.12",
+    "@angular/common": "^17.3.12",
+    "@angular/compiler": "^17.3.12",
+    "@angular/core": "^17.3.12",
+    "@angular/forms": "^17.3.12",
+    "@angular/platform-browser": "^17.3.12",
+    "@angular/platform-browser-dynamic": "^17.3.12",
+    "@angular/router": "^17.3.12",
     "@types/chrome": "^0.0.143",
     "electron-store": "^10.0.0",
     "ngx-electron": "^2.2.0",
-    "rxjs": "~6.6.0",
-    "tslib": "^2.1.0",
-    "zone.js": "~0.14.2"
+    "rxjs": "~7.8.1",
+    "tslib": "^2.6.3",
+    "zone.js": "~0.14.10"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^17.0.1",
-    "@angular/cli": "^17.0.1",
-    "@angular/compiler-cli": "^17.0.3",
-    "@types/electron-json-storage": "^4",
-    "@types/node": "^12.11.1",
+    "@angular-devkit/build-angular": "^17.3.8",
+    "@angular/cli": "^17.3.8",
+    "@angular/compiler-cli": "^17.3.12",
+    "@types/node": "^18.19.43",
     "electron": "^31.3.1",
     "electron-builder": "^24.13.3",
-    "typescript": "~5.2.2"
+    "typescript": "~5.4.5"
   }
 }
