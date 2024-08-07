@@ -108,6 +108,7 @@ const getAutostartFlag = () => {
 const setAutostartFlag = (openAtLogin) => {
   app.setLoginItemSettings({
     openAtLogin: openAtLogin,
+    openAsHidden: true,
     path: app.getPath("exe")
   });
 }
@@ -128,7 +129,7 @@ app.on('window-all-closed', applicationExit);
 
 /* request-app-notification */
 ipcMain.on('request-app-balloon', (event, message, iconType, title) => {
-  tray.displayBalloon({
+  tray?.displayBalloon({
     title: title,
     iconType: iconType ?? 'info',
     content: message,
@@ -144,7 +145,7 @@ ipcMain.on("request-settings", (event, key) => {
 ipcMain.on("set-settings", (event, key, data) => {
   const store = new Store();
   store.set(key, data);
-  event.sender.send(`"set-settings:${key}`, true);
+  event.sender.send(`set-settings:${key}`, true);
 });
 
 ipcMain.on("navigate-to", async (event, url) => {

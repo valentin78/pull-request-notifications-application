@@ -86,8 +86,6 @@ export class HomeComponent implements OnInit {
 
   async onRefresh() {
     await this.backgroundService.doWork();
-    console.log('UPDATE');
-    this.lastDataFetchingTimestamp = await this.dataService.getLastDataFetchingTimestamp();
   }
 }
 

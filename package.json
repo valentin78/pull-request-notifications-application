@@ -16,9 +16,13 @@
   },
   "build": {
     "appId": "pull-requests-viewer",
+    "directories": {
+      "buildResources": "buildResources"
+    },
     "electronLanguages": [
       "en-US"
     ],
+    "productName": "pull-request-notifications",
     "files": [
       "!node_modules",
       "src/application.js",

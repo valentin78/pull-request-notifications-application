@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {BitbucketService} from './bitbucket.service';
 import {PullRequestActivityAction, PullRequestRole, PullRequestState} from '../models/enums';
 import {ExtensionSettings, PullRequest} from '../models/models';
@@ -16,6 +16,7 @@ import {
   ReviewerRule
 } from './bitbucket-pr-rules';
 import Alarm = chrome.alarms.Alarm;
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Injectable()
 export class BackgroundService {
@@ -23,6 +24,7 @@ export class BackgroundService {
   private settings!: ExtensionSettings;
   private lastDataFetchingTimestamp!: number;
 
+  private _destroyRef = inject(DestroyRef);
   private dataService = inject(DataService);
   private bitbucketService = inject(BitbucketService);
   private notificationService = inject(NotificationService);
@@ -107,7 +109,9 @@ export class BackgroundService {
     this.notificationService.setBadge({message: '...', title: 'loading...', color: 'gray'});
     const processingTime = new Date();
     return new Promise(resolve => {
-      this.bitbucketService.getAllPullRequests(PullRequestState.Open).subscribe(async data => {
+      this.bitbucketService.getAllPullRequests(PullRequestState.Open).pipe(
+        takeUntilDestroyed(this._destroyRef)
+      ).subscribe(async data => {
         const created = data.values.filter(v => v.author.user.name === this.settings.bitbucket?.username);
         const reviewing = data.values.filter(v => v.reviewers.some(r => r.user.name === this.settings.bitbucket?.username));
         const participant = data.values.filter(v => v.participants.some(r => r.user.name === this.settings.bitbucket?.username));

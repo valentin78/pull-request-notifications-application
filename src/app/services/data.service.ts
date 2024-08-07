@@ -14,7 +14,7 @@ export class DataService {
     pullRequests: 'pull-requests'
   };
 
-  private async loadDataByGet(key: string, defaultValue?: any): Promise<any> {
+  private async loadDataByKet(key: string, defaultValue?: any): Promise<any> {
     const value = await this._applicationService.getSettings(key);
     return value ?? defaultValue;
   }
@@ -24,7 +24,7 @@ export class DataService {
   }
 
   async getExtensionSettings(): Promise<ExtensionSettings> {
-    let settings = await this.loadDataByGet(this._keys.settings);
+    let settings = await this.loadDataByKet(this._keys.settings);
     return new ExtensionSettings(settings);
   }
 
@@ -33,16 +33,18 @@ export class DataService {
   }
 
   public async getPullRequests(role: PullRequestRole): Promise<PullRequest[]> {
-    return await this.loadDataByGet(`${this._keys.pullRequests}.${role}`, []);
+    return await this.loadDataByKet(`${this._keys.pullRequests}.${role}`, []);
   }
 
   public async savePullRequests(role: PullRequestRole, values: PullRequest[]) {
     await this.storeDataByKey(`${this._keys.pullRequests}.${role}`, values);
   }
 
+  /**
+   * return now - 1h, if last running time is not available
+   */
   public async getLastDataFetchingTimestamp(): Promise<number> {
-    // return now - 1h, if last running time is not available
-    return await this.loadDataByGet(this._keys.lastRunningTime, Date.now() - 60 * 60 * 1000);
+    return await this.loadDataByKet(this._keys.lastRunningTime, Date.now() - 60 * 60 * 1000);
   }
 
   public async saveLastDataFetchingTimestamp(timestamp: number) {
@@ -50,7 +52,7 @@ export class DataService {
   }
 
   public async getNotificationSnoozeSettings(): Promise<number[]> {
-    return await this.loadDataByGet(this._keys.snoozeSettings, []);
+    return await this.loadDataByKet(this._keys.snoozeSettings, []);
   }
 
   public async saveNotificationSnoozeSettings(settings: number[]) {
