@@ -19,4 +19,4 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 - block to run more than one copy of application
 - refactor code to use new Angular features
 - get rid of uses chrome api (clear code), and replace with electron api
-- fix issue with setup
+
