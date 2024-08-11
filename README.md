@@ -23,3 +23,4 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 ## Known problems and TODO
 - get rid of chrome api usage (clear code), and replace with electron api
 - add ability to display badge on taskbar
+- improve toolbar, add version info, link to ooptions
