@@ -18,5 +18,5 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 - Allow to run application at login, use tray menu
 
 ## Known problems and TODO
-- get rid of uses chrome api (clear code), and replace with electron api
+- get rid of chrome api usage (clear code), and replace with electron api
 - add ability to display badge on taskbar
