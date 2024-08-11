@@ -9,6 +9,11 @@ import Store from 'electron-store';
 // if true, application will open devtools and auto open windows in fullscreen
 const debugMode = false;
 
+const gotInstanceLock = app.requestSingleInstanceLock();
+if (!gotInstanceLock) {
+  app.quit();
+}
+
 // path to application.js file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,6 +76,11 @@ async function createWindowAsync() {
 const showWindow = (fragment) => {
   loadUrlAsync(fragment).then(() => mainWindow.show());
 }
+
+app.on('second-instance', (event, commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  showWindow();
+})
 
 app.on('ready', async () => {
   await createWindowAsync();
