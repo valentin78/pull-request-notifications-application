@@ -8,7 +8,10 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 
 - run `npm run start:electron` to run application in DEV mode
 - run `npm run make:dir` to build application 
-- run `npm run make:dist` to build setup 
+- run `npm run make:dist` to build setup
+
+## OS support
+- Windows
 
 ## Config file path 
 %userprofile%\AppData\Roaming\pull-request-notifications\config.json
