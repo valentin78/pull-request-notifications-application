@@ -1,10 +1,10 @@
 import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom, Injector} from '@angular/core';
 import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
-import {DataService} from '../../services/data.service';
-import {BitbucketService} from '../../services/bitbucket.service';
-import {NotificationService} from '../../services/notification.service';
-import {BackgroundService} from '../../services/background.service';
+import {DataService} from '../services/data.service';
+import {BitbucketService} from '../services/bitbucket.service';
+import {NotificationService} from '../services/notification.service';
+import {BackgroundService} from '../services/background.service';
 import {ElectronService, NgxElectronModule} from 'ngx-electron';
 import {HttpClientModule} from '@angular/common/http';
 

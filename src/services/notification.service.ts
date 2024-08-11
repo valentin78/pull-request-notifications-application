@@ -5,9 +5,9 @@ import {catchError} from 'rxjs/operators';
 import {from, Observable, of, throwError} from 'rxjs';
 import {NotificationOptions} from '../models/models';
 import {BitbucketService} from './bitbucket.service';
-import {GetWindowsNotificationBody} from '../other/notification.titles';
-import {SlackNotificationBuilder} from '../other/slack-notification.builder';
 import {ApplicationService} from './application.service';
+import {GetWindowsNotificationBody} from '../core/notification.titles';
+import {SlackNotificationBuilder} from '../core/slack-notification.builder';
 
 @Injectable()
 export class NotificationService {

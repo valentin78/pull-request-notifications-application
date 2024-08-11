@@ -1,5 +1,5 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {AppInjector} from '../components/app/app.config';
+import {AppInjector} from '../app/app.config';
 
 export const SLACK_API_URL = 'https://slack.com/api';
 
