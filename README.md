@@ -10,8 +10,8 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 - run `npm run make:dir` to build application 
 - run `npm run make:dist` to build setup 
 
-## Settings file path 
-%userprofile%\AppData\Roaming\pull-request-notifications\settings.json
+## Config file path 
+%userprofile%\AppData\Roaming\pull-request-notifications\config.json
 
 ## Additional Opportunities
 - Application runs in tray and allows open window by tray menu or click on tray icon
