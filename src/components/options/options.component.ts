@@ -4,13 +4,13 @@ import {BitbucketService} from '../../services/bitbucket.service';
 import {forkJoin, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
-import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
 import {NotificationService} from '../../services/notification.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {StatusMessage} from '../../models/statusMessage';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
+import {SLACK_API_URL, SlackClientService} from '../../services/slack-client.service';
 
 @Component({
   selector: 'app-options',
@@ -40,6 +40,7 @@ export class OptionsComponent implements OnInit {
   private _backgroundService = inject(BackgroundService);
   private _notificationService = inject(NotificationService);
   private _changeRef = inject(ChangeDetectorRef);
+  private _slackClientService = inject(SlackClientService);
 
   constructor() {
     this._settingsService.getExtensionSettings().then(settings => {
@@ -68,10 +69,8 @@ export class OptionsComponent implements OnInit {
   }
 
   onSlackTest() {
-    let slackClient = new SlackClient(this.slackSettings.token);
-
     const postMessage = () => {
-      slackClient
+      this._slackClientService
         .postMessage({
           'channel': this.slackSettings.memberId,
           'text': 'hello'
@@ -124,9 +123,8 @@ export class OptionsComponent implements OnInit {
       })
     );
 
-    let slackClient = new SlackClient();
     const slackValidate$ = this.enableSlackNotifications
-      ? slackClient.testAuth(this.slackSettings.token).pipe(
+      ? this._slackClientService.testAuth(this.slackSettings.token).pipe(
         tap((data: any) => {
           if (!data.ok) {
             throw new Error('wrong slack credentials');

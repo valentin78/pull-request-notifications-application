@@ -1,6 +1,5 @@
 import {inject, Injectable} from '@angular/core';
 import {DataService} from './data.service';
-import {SlackClient} from './slackClient';
 import {catchError} from 'rxjs/operators';
 import {from, Observable, of, throwError} from 'rxjs';
 import {NotificationOptions} from '../models/models';
@@ -8,12 +7,14 @@ import {BitbucketService} from './bitbucket.service';
 import {ApplicationService} from './application.service';
 import {GetWindowsNotificationBody} from '../core/notification.titles';
 import {SlackNotificationBuilder} from '../core/slack-notification.builder';
+import {SlackClientService} from './slack-client.service';
 
 @Injectable()
 export class NotificationService {
   private dataService = inject(DataService);
   private bitbucketService = inject(BitbucketService);
   private _applicationService = inject(ApplicationService);
+  private _slackClientService = inject(SlackClientService);
 
   public requestPermission(): Observable<NotificationPermission> {
     if (Notification.permission !== 'denied') {
@@ -60,7 +61,6 @@ export class NotificationService {
     // check if Slack is enabled
     if (extensionSettings.notifications.slack) {
       let slackSettings = extensionSettings.notifications.slack;
-      let slackClient = new SlackClient(slackSettings.token);
 
       let pr = options.pullRequest;
       this.bitbucketService
@@ -69,12 +69,12 @@ export class NotificationService {
         .subscribe(issues => {
           let messageOptions = new SlackNotificationBuilder(slackSettings.memberId, options, issues).build();
 
-          slackClient
+          this._slackClientService
             .postMessage(messageOptions)
             .pipe(
               catchError((error: any) => {
                 this.setBadge({title: error.error, color: 'red', message: 'slack'});
-                return throwError(error);
+                return throwError(() => error);
               }))
             .subscribe((data: any) => {
               if (!data.ok) {

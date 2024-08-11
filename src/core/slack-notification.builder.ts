@@ -1,7 +1,7 @@
 import {NotificationOptions, PullRequestIssue} from '../models/models';
 import {GetSlackNotificationTitle} from './notification.titles';
-import {SlackMessageOptions} from '../services/slackClient';
 import {PullRequestActivityAction} from '../models/enums';
+import {SlackMessageOptions} from '../models/slack-client.models';
 
 export class SlackNotificationBuilder {
   private readonly message: SlackMessageOptions;

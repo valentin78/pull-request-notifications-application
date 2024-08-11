@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom, Injector} from '@angular/core';
+import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom} from '@angular/core';
 import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
 import {DataService} from '../services/data.service';
@@ -7,9 +7,6 @@ import {NotificationService} from '../services/notification.service';
 import {BackgroundService} from '../services/background.service';
 import {ElectronService, NgxElectronModule} from 'ngx-electron';
 import {HttpClientModule} from '@angular/common/http';
-
-// todo get rid of this shit
-export let AppInjector: Injector;
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,11 +25,9 @@ export const appConfig: ApplicationConfig = {
       multi: true,
       deps: [
         BackgroundService,
-        ElectronService,
-        Injector
+        ElectronService
       ],
-      useFactory: (backgroundService: BackgroundService, electronService: ElectronService, injector: Injector) => {
-        AppInjector = injector;
+      useFactory: (backgroundService: BackgroundService, electronService: ElectronService) => {
         return async () => {
           if (electronService.isElectronApp) await backgroundService.scheduleJob();
           else backgroundService.setupAlarms()

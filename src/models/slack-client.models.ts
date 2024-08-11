@@ -1,40 +1,3 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {AppInjector} from '../app/app.config';
-
-export const SLACK_API_URL = 'https://slack.com/api';
-
-export class SlackClient {
-  private slackApiUrl: string = SLACK_API_URL;
-  private readonly token?: string;
-  private http: HttpClient;
-
-  constructor(token?: string) {
-    this.token = token;
-    this.http = AppInjector.get(HttpClient);
-  }
-
-  private static getHeaders(token?: string): HttpHeaders | { [p: string]: string | string[] } {
-    return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json; charset=utf-8'
-    };
-  }
-
-  testAuth(token: string) {
-    return this.http.post(
-      `${this.slackApiUrl}/auth.test`,
-      undefined,
-      {headers: SlackClient.getHeaders(token)});
-  }
-
-  postMessage(options: SlackMessageOptions) {
-    return this.http.post(
-      `${this.slackApiUrl}/chat.postMessage`,
-      options,
-      {headers: SlackClient.getHeaders(this.token)});
-  }
-}
-
 // https://api.slack.com/methods/chat.postMessage
 export class SlackMessageOptions {
   channel!: string;
@@ -127,10 +90,6 @@ export interface OptionField {
   value: string;
 }
 
-/*
- * Block Elements
- */
-
 export interface ImageElement {
   type: 'image';
   image_url: string;
@@ -164,13 +123,8 @@ export interface Confirm {
   style?: 'primary' | 'danger';
 }
 
-/*
- * Action Types
- */
-
 // Selects and Multiselects are available in different surface areas so I've separated them here
 export type Select = UsersSelect | StaticSelect | ConversationsSelect | ChannelsSelect | ExternalSelect;
-
 export type MultiSelect =
   MultiUsersSelect | MultiStaticSelect | MultiConversationsSelect | MultiChannelsSelect | MultiExternalSelect;
 
@@ -336,10 +290,6 @@ export interface DispatchActionConfig {
   trigger_actions_on?: ('on_enter_pressed' | 'on_character_entered')[];
 }
 
-/*
- * Block Types
- */
-
 export type KnownBlock = ImageBlock | ContextBlock | DividerBlock | SectionBlock;
 
 export interface Block {
@@ -358,11 +308,6 @@ export interface ContextBlock extends Block {
   type: 'context';
   elements: (ImageElement | PlainTextElement | MrkdwnElement)[];
 }
-
-// export interface ActionsBlock extends Block {
-//   type: 'actions';
-//   elements: (Button | Overflow | Datepicker | Timepicker | Select | RadioButtons | Checkboxes | Action)[];
-// }
 
 export interface DividerBlock extends Block {
   type: 'divider';
@@ -383,6 +328,11 @@ export interface SectionBlock extends Block {
     | RadioButtons
     | Checkboxes;
 }
+
+// export interface ActionsBlock extends Block {
+//   type: 'actions';
+//   elements: (Button | Overflow | Datepicker | Timepicker | Select | RadioButtons | Checkboxes | Action)[];
+// }
 
 // export interface FileBlock extends Block {
 //   type: 'file';
