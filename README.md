@@ -18,5 +18,5 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 - get rid of uses chrome api (clear code), and replace with electron api
 - add ability to display badge on taskbar
 
-##Settings file path 
-[%userprofile%\AppData\Roaming\pull-request-notifications]
+## Settings file path 
+%userprofile%\AppData\Roaming\pull-request-notifications\settings.json
