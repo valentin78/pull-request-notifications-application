@@ -7,15 +7,15 @@ import {SlackSettings} from '../models/models';
 export const SLACK_API_URL = 'https://slack.com/api';
 
 export class SlackClientService {
-  private http = inject(HttpClient);
+  private _http = inject(HttpClient);
   private _settingsService = inject(DataService);
 
-  private slackApiUrl: string = SLACK_API_URL;
-  private slackSettings?: SlackSettings;
+  private _slackApiUrl: string = SLACK_API_URL;
+  private _slackSettings?: SlackSettings;
 
   constructor() {
     this._settingsService.getExtensionSettings().then(settings => {
-      this.slackSettings = settings.notifications.slack || new SlackSettings();
+      this._slackSettings = settings.notifications.slack || new SlackSettings();
     });
   }
 
@@ -27,16 +27,16 @@ export class SlackClientService {
   }
 
   public testAuth(token: string) {
-    return this.http.post(
-      `${this.slackApiUrl}/auth.test`,
+    return this._http.post(
+      `${this._slackApiUrl}/auth.test`,
       undefined,
       {headers: this.getHeaders(token)});
   }
 
   public postMessage(options: SlackMessageOptions) {
-    return this.http.post(
-      `${this.slackApiUrl}/chat.postMessage`,
+    return this._http.post(
+      `${this._slackApiUrl}/chat.postMessage`,
       options,
-      {headers: this.getHeaders(this.slackSettings?.token)});
+      {headers: this.getHeaders(this._slackSettings?.token)});
   }
 }
