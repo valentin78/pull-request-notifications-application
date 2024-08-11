@@ -4,34 +4,37 @@ import {PullRequest} from '../../models/models';
 import {DataService} from '../../services/data.service';
 import {BackgroundService} from '../../services/background.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {DatePipe} from '@angular/common';
+import {PullRequestComponent} from '../pull-request-view/pull-request.component';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-main',
+  standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  imports: [
+    DatePipe,
+    PullRequestComponent,
+    RouterLink
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-  created: PullRequest[];
-  reviewing: PullRequest[];
-  participant: PullRequest[];
-  isSettingsValid!: boolean;
-  lastDataFetchingTimestamp?: number;
-  dateFormat = 'dd MMM, y HH:mm:ss'; // todo: save to settings
+  protected created: PullRequest[] = [];
+  protected reviewing: PullRequest[] = [];
+  protected participant: PullRequest[] = [];
+  protected isSettingsValid!: boolean;
+  protected lastDataFetchingTimestamp?: number;
+  protected dateFormat = 'dd MMM, y HH:mm:ss'; // todo: save to settings
 
-  private dataService = inject(DataService);
-  private backgroundService = inject(BackgroundService);
-  private cd = inject(ChangeDetectorRef);
+  private _dataService = inject(DataService);
+  private _backgroundService = inject(BackgroundService);
+  private _changeRef = inject(ChangeDetectorRef);
   private _destroyRef = inject(DestroyRef);
 
-  constructor() {
-    this.created = [];
-    this.reviewing = [];
-    this.participant = [];
-  }
-
   async ngOnInit(): Promise<void> {
-    await this.dataService.getExtensionSettings().then(async settings => {
+    await this._dataService.getExtensionSettings().then(async settings => {
       this.isSettingsValid = settings?.bitbucket?.isValid() || false;
       if (!this.isSettingsValid) {
         return;
@@ -40,24 +43,24 @@ export class HomeComponent implements OnInit {
       await this.readPullRequestData();
 
       // this is used only if new data were fetched during home screen preview
-      this.backgroundService.dataProcessed.pipe(
+      this._backgroundService.dataProcessed.pipe(
         takeUntilDestroyed(this._destroyRef)
       ).subscribe(async () => await this.readPullRequestData());
     });
   }
 
-  async readPullRequestData() {
-    const created = await this.dataService.getPullRequests(PullRequestRole.Author);
-    const reviewing = await this.dataService.getPullRequests(PullRequestRole.Reviewer);
-    const participant = await this.dataService.getPullRequests(PullRequestRole.Participant);
+  private async readPullRequestData() {
+    const created = await this._dataService.getPullRequests(PullRequestRole.Author);
+    const reviewing = await this._dataService.getPullRequests(PullRequestRole.Reviewer);
+    const participant = await this._dataService.getPullRequests(PullRequestRole.Participant);
 
     this.created = this.groupAndSort(created);
     this.reviewing = this.groupAndSort(reviewing);
     this.participant = this.groupAndSort(participant);
 
-    this.lastDataFetchingTimestamp = await this.dataService.getLastDataFetchingTimestamp();
+    this.lastDataFetchingTimestamp = await this._dataService.getLastDataFetchingTimestamp();
 
-    this.cd.markForCheck();
+    this._changeRef.markForCheck();
   }
 
   private groupAndSort(requests: PullRequest[]): PullRequest[] {
@@ -84,8 +87,8 @@ export class HomeComponent implements OnInit {
     // return aValue.localeCompare(bValue);
   }
 
-  async onRefresh() {
-    await this.backgroundService.doWork();
+  protected async onRefresh() {
+    await this._backgroundService.doWork();
   }
 }
 

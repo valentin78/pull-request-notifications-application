@@ -1,9 +1,14 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {DataService} from '../../services/data.service';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-snooze-notification',
+  standalone: true,
   templateUrl: './snooze-notification.component.html',
+  imports: [
+    NgClass
+  ],
   styleUrls: ['./snooze-notification.component.scss']
 })
 export class SnoozeNotificationComponent implements OnInit {

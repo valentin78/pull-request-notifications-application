@@ -1,40 +1,46 @@
-<div class="container" *ngIf="pullRequest" data-id="{{pullRequest.id}}">
-  <div class="content">
-    <div class="data">
+@if (pullRequest) {
+  <div class="container" data-id="{{pullRequest.id}}">
+    <div class="content">
+      <div class="data">
       <span class="self-url url" (click)="navigateTo(selfUrl)">
         @if (showAuthorAvatar) {
           <app-user class="user" [user]="pullRequest.author.user" [size]="24"/>
         }
         <span class="title" [innerHTML]="pullRequest.title"></span>
       </span>
-      <div class="status-bar">
+        <div class="status-bar">
         <span class="pr-status"
               [class.pr-can-be-merged]="approved"
               [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
-          {{status}}
-          <i *ngIf="hasConflicts" class="icon icon-warning"></i>
+          {{ status }}
+          @if (hasConflicts) {
+            <i class="icon icon-warning"></i>
+          }
         </span>
 
-        <span title="created date">{{pullRequest.createdDate | date}}</span>
+          <span title="created date">{{ pullRequest.createdDate | date }}</span>
 
-        <span class="to-ref url" (click)="navigateTo(pullRequest.fromRef.repository.links.self[0].href)">
-          {{pullRequest.fromRef.repository.name}}
+          <span class="to-ref url" (click)="navigateTo(pullRequest.fromRef.repository.links.self[0].href)">
+          {{ pullRequest.fromRef.repository.name }}
         </span>
 
-        <span class="to-ref" title="destination branch">{{pullRequest.toRef.displayId}}</span>
+          <span class="to-ref" title="destination branch">{{ pullRequest.toRef.displayId }}</span>
 
-        <span class="comments" *ngIf="commentsCount" title="{{commentsTooltip}}" (click)="onDisplayComments($event)">
-          {{commentsCount}}
-          <i class="icon icon-bubble"></i>
-        </span>
+          @if (commentsCount) {
+            <span class="comments"  title="{{commentsTooltip}}" (click)="onDisplayComments($event)">
+              {{ commentsCount }}
+              <i class="icon icon-bubble"></i>
+            </span>
+          }
 
-        <app-snooze-notification [id]="pullRequest.id"></app-snooze-notification>
+          <app-snooze-notification [id]="pullRequest.id"></app-snooze-notification>
+        </div>
+      </div>
+      <div class="reviewers">
+        @for (reviewer of pullRequest.reviewers; track reviewer) {
+          <app-user [user]="reviewer.user" [status]="reviewer.status"></app-user>
+        }
       </div>
     </div>
-    <div class="reviewers">
-      <ng-container *ngFor="let reviewer of pullRequest.reviewers">
-        <app-user [user]="reviewer.user" [status]="reviewer.status"></app-user>
-      </ng-container>
-    </div>
   </div>
-</div>
+}

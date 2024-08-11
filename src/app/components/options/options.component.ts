@@ -8,16 +8,18 @@ import {SLACK_API_URL, SlackClient} from '../../services/slackClient';
 import {BackgroundService} from '../../services/background.service';
 import {NotificationService} from '../../services/notification.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-
-class StatusMessage {
-  message!: string;
-  type?: 'info' | 'error';
-  hideAfter?: number;
-}
+import {StatusMessage} from '../../models/statusMessage';
+import {FormsModule} from '@angular/forms';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-options',
+  standalone: true,
   templateUrl: './options.component.html',
+  imports: [
+    FormsModule,
+    RouterLink
+  ],
   styleUrls: ['./options.component.scss']
 })
 export class OptionsComponent implements OnInit {
@@ -30,25 +32,23 @@ export class OptionsComponent implements OnInit {
   slackSettings!: SlackSettings;
   bitbucketSettings!: BitbucketSettings;
 
-  private statusMessage$: Subject<StatusMessage>;
+  private statusMessage$: Subject<StatusMessage> = new Subject();
 
   private _destroyRef = inject(DestroyRef);
+  private _settingsService = inject(DataService);
+  private _bitbucketService = inject(BitbucketService);
+  private _backgroundService = inject(BackgroundService);
+  private _notificationService = inject(NotificationService);
+  private _changeRef = inject(ChangeDetectorRef);
 
-  constructor(
-    private settingsService: DataService,
-    private bitbucketService: BitbucketService,
-    private backgroundService: BackgroundService,
-    private notificationService: NotificationService,
-    private cd: ChangeDetectorRef) {
-
-    settingsService.getExtensionSettings().then(settings => {
+  constructor() {
+    this._settingsService.getExtensionSettings().then(settings => {
       this.settings = settings;
       this.enableBrowserNotifications = this.settings.notifications.browser;
       this.enableSlackNotifications = !!this.settings.notifications.slack;
       this.slackSettings = this.settings.notifications.slack || new SlackSettings();
       this.bitbucketSettings = this.settings.bitbucket || new BitbucketSettings();
     })
-    this.statusMessage$ = new Subject();
   }
 
   ngOnInit(): void {
@@ -100,11 +100,11 @@ export class OptionsComponent implements OnInit {
   private showStatusMessage(msg: StatusMessage) {
     console.debug('status message:', msg);
     this.statusMessage = msg;
-    this.cd.detectChanges();
+    this._changeRef.detectChanges();
     if (msg.hideAfter || 5000 > 0) {
       setTimeout(() => {
         this.statusMessage = undefined;
-        this.cd.detectChanges();
+        this._changeRef.detectChanges();
       }, msg.hideAfter || 5000);
     }
   }
@@ -113,7 +113,7 @@ export class OptionsComponent implements OnInit {
   private saveSettings() {
     this.statusMessage$.next({message: 'saving...', hideAfter: 0});
 
-    const bitbucketValidate$ = this.bitbucketService.validateCredentials(
+    const bitbucketValidate$ = this._bitbucketService.validateCredentials(
       this.bitbucketSettings.url,
       this.bitbucketSettings.token,
       this.bitbucketSettings.username
@@ -151,10 +151,10 @@ export class OptionsComponent implements OnInit {
       this.settings.notifications.slack = this.enableSlackNotifications
         ? this.slackSettings
         : undefined;
-      await this.settingsService.saveExtensionSettings(this.settings);
+      await this._settingsService.saveExtensionSettings(this.settings);
 
       // fetch data
-      await this.backgroundService.doWork();
+      await this._backgroundService.doWork();
 
       this.statusMessage$.next({message: 'saved!'});
     });
@@ -178,7 +178,7 @@ export class OptionsComponent implements OnInit {
 
   onEnableBrowserNotifications(event: MouseEvent) {
     if (!this.enableBrowserNotifications) {
-      this.notificationService
+      this._notificationService
         .requestPermission()
         .subscribe(permission => {
           console.debug('permission:', permission);
@@ -195,7 +195,7 @@ export class OptionsComponent implements OnInit {
   }
 
   onBrowserNotificationTest() {
-    this.notificationService.sendBrowserNotification('test', 'hello', 'https://www.mozilla.org');
+    this._notificationService.sendBrowserNotification('test', 'hello', 'https://www.mozilla.org');
   }
 }
 

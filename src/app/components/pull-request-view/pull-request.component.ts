@@ -2,10 +2,20 @@ import {Component, inject, Input, OnInit} from '@angular/core';
 import {BitbucketComment, PullRequest} from '../../models/models';
 import {BitbucketMergeResultOutcome, PullRequestStatus} from '../../models/enums';
 import {ApplicationService} from '../../services/application.service';
+import {UserComponent} from '../user/user.component';
+import {DatePipe, NgClass} from '@angular/common';
+import {SnoozeNotificationComponent} from '../snooze-notification/snooze-notification.component';
 
 @Component({
   selector: 'app-pull-request',
+  standalone: true,
   templateUrl: './pull-request.component.html',
+  imports: [
+    UserComponent,
+    NgClass,
+    DatePipe,
+    SnoozeNotificationComponent
+  ],
   styleUrls: ['./pull-request.component.scss']
 })
 export class PullRequestComponent implements OnInit {

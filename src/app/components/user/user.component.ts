@@ -1,10 +1,16 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BitbucketUser} from '../../models/models';
 import {PullRequestStatus} from '../../models/enums';
+import {NgOptimizedImage, NgStyle} from '@angular/common';
 
 @Component({
   selector: 'app-user',
+  standalone: true,
   templateUrl: './user.component.html',
+  imports: [
+    NgStyle,
+    NgOptimizedImage
+  ],
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
