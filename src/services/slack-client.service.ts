@@ -1,11 +1,12 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {inject} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {SlackMessageOptions} from '../models/slack-client.models';
 import {DataService} from './data.service';
 import {SlackSettings} from '../models/models';
 
 export const SLACK_API_URL = 'https://slack.com/api';
 
+@Injectable()
 export class SlackClientService {
   private _http = inject(HttpClient);
   private _settingsService = inject(DataService);
