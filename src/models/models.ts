@@ -10,6 +10,8 @@ export class ExtensionSettings {
   bitbucket?: BitbucketSettings = new BitbucketSettings();
   refreshIntervalInMinutes: number = 1;
   notifications: NotificationSettings = new NotificationSettings();
+  groupByRegex: string | null = null;
+  taskLinkPattern: string | null = null;
 
   constructor(data?: ExtensionSettings) {
     if (data) {

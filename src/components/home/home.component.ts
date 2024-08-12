@@ -4,9 +4,13 @@ import {PullRequest} from '../../models/models';
 import {DataService} from '../../services/data.service';
 import {BackgroundService} from '../../services/background.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {DatePipe} from '@angular/common';
+import {DatePipe, NgClass, NgTemplateOutlet} from '@angular/common';
 import {PullRequestComponent} from '../pull-request-view/pull-request.component';
 import {RouterLink} from '@angular/router';
+import {ToKeyValuePipe} from '../../pipes/to-key-value.pipe';
+import {ApplicationService} from '../../services/application.service';
+
+type PullRequestGroups = Record<string, PullRequest[]>;
 
 @Component({
   selector: 'app-main',
@@ -16,25 +20,35 @@ import {RouterLink} from '@angular/router';
   imports: [
     DatePipe,
     PullRequestComponent,
-    RouterLink
+    RouterLink,
+    ToKeyValuePipe,
+    NgClass,
+    NgTemplateOutlet
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-  protected created: PullRequest[] = [];
-  protected reviewing: PullRequest[] = [];
-  protected participant: PullRequest[] = [];
+  protected created: PullRequestGroups = {};
+  protected reviewing: PullRequestGroups = {};
+  protected participant: PullRequestGroups = {};
   protected isSettingsValid!: boolean;
   protected lastDataFetchingTimestamp?: number;
   protected dateFormat = 'dd MMM, y HH:mm:ss'; // todo: save to settings
+
+  private _groupByRegex!: string | null;
+  protected taskLinkPattern!: string | null;
 
   private _dataService = inject(DataService);
   private _backgroundService = inject(BackgroundService);
   private _changeRef = inject(ChangeDetectorRef);
   private _destroyRef = inject(DestroyRef);
+  private _applicationService = inject(ApplicationService);
 
   async ngOnInit(): Promise<void> {
     await this._dataService.getExtensionSettings().then(async settings => {
+      this._groupByRegex = settings.groupByRegex;
+      this.taskLinkPattern = settings.taskLinkPattern;
+
       this.isSettingsValid = settings?.bitbucket?.isValid() || false;
       if (!this.isSettingsValid) {
         return;
@@ -47,6 +61,12 @@ export class HomeComponent implements OnInit {
         takeUntilDestroyed(this._destroyRef)
       ).subscribe(async () => await this.readPullRequestData());
     });
+  }
+
+  protected totalPullRequests(group: PullRequestGroups): number {
+    return Object.keys(group).reduce((result, key) => {
+      return result + group[key].length;
+    }, 0);
   }
 
   private async readPullRequestData() {
@@ -63,19 +83,21 @@ export class HomeComponent implements OnInit {
     this._changeRef.markForCheck();
   }
 
-  private groupAndSort(requests: PullRequest[]): PullRequest[] {
+  private groupAndSort(requests: PullRequest[]): PullRequestGroups {
     // group & sort inside group
-    const groups = requests.sort(this.sortPullRequests).reduce((groups: any, pr) => {
-      const key = /.*(CCM-[^\W]+).*/.exec(pr.title)?.[1] ?? '';
-      if (key) pr.title = pr.title.replace(key, `<i>${key}</i>`)
-      const arr = groups[key] as [] ?? [];
-      groups[key] = [...arr, pr].sort(this.sortPullRequests)
-      return groups;
-    }, {});
-    return Object.keys(groups).reduce((arr, key) => {
-      arr.push(...groups[key] as []);
-      return arr;
-    }, []);
+    return requests
+      .sort(this.sortPullRequests)
+      .reduce((groups: any, pr) => {
+        const key = this._groupByRegex
+          ? new RegExp(this._groupByRegex).exec(pr.title)?.[1] ?? ''
+          : '';
+        if (key) {
+          pr.title = pr.title.replace(key, `<i>${key}</i>`)
+        }
+        const arr = groups[key] as [] ?? [];
+        groups[key] = [...arr, pr];
+        return groups;
+      }, {});
   }
 
   private sortPullRequests(a: PullRequest, b: PullRequest): number {
@@ -89,6 +111,12 @@ export class HomeComponent implements OnInit {
 
   protected async onRefresh() {
     await this._backgroundService.doWork();
+  }
+
+  protected groupClick(groupKey: string) {
+    if (!this.taskLinkPattern) throw new Error(`taskLinkPattern cannot be null or undefined`);
+    const link: string = this.taskLinkPattern.replace('$1', groupKey);
+    this._applicationService.navigateTo(link);
   }
 }
 

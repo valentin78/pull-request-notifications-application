@@ -19,15 +19,13 @@
           <i style="margin-right: 2px;" class="icon icon-user"></i>
           Created
           @if (created) {
-            <span>&nbsp;| {{ created.length }}</span>
+            <span>&nbsp;| {{ totalPullRequests(created) }}</span>
           }
         </h3>
       </div>
       @if (created) {
         <div class="list">
-          @for (pr of created; track pr) {
-            <app-pull-request [pullRequest]="pr" [showAuthorAvatar]="false"/>
-          }
+          <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: created}"/>
         </div>
       }
     </div>
@@ -38,15 +36,13 @@
           <i style="margin-right: 2px;" class="icon icon-git"></i>
           Reviewing
           @if (reviewing) {
-            <span>&nbsp;| {{ reviewing.length }}</span>
+            <span>&nbsp;| {{ totalPullRequests(reviewing) }}</span>
           }
         </h3>
       </div>
       @if (reviewing) {
         <div class="list">
-          @for (pr of reviewing; track pr) {
-            <app-pull-request [pullRequest]="pr"/>
-          }
+          <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: reviewing}"/>
         </div>
       }
     </div>
@@ -57,15 +53,13 @@
           <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
           Participating
           @if (participant) {
-            <span>&nbsp;| {{ participant.length }}</span>
+            <span>&nbsp;| {{ totalPullRequests(participant) }}</span>
           }
         </h3>
       </div>
       @if (participant) {
         <div class="list">
-          @for (pr of participant; track pr) {
-            <app-pull-request [pullRequest]="pr"/>
-          }
+          <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: participant}"/>
         </div>
       }
     </div>
@@ -77,4 +71,20 @@
   </div>
 }
 
+<ng-template #renderItems let-items>
+  @for (group of items | toKeyValue; track group) {
+    @if (group.key !== '') {
+      <span class="group-title title"
+            [ngClass]="{'as-link': taskLinkPattern}"
+            (click)="groupClick(group.key)">
+        {{group.key}}
+      </span>
+    }
+    <div class="group" [ngClass]="{'no-group': group.key === ''}">
+      @for (pr of group.value; track pr) {
+        <app-pull-request class="pull-request" [pullRequest]="pr" [showAuthorAvatar]="false"/>
+      }
+    </div>
+  }
+</ng-template>
 

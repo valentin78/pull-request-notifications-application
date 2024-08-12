@@ -20,6 +20,39 @@
   color: $role-title-color;
 }
 
+.list {
+  .group-title {
+    margin-top: .5em;
+
+    &.as-link {
+      cursor: pointer;
+      color: rgb(83, 155, 245);
+      font-weight: bolder;
+    }
+  }
+
+  .group {
+    padding: .5em .5em 0;
+
+    &.no-group {
+      padding: 0;
+    }
+
+    .title {
+      font-weight: bolder;
+    }
+
+    .pull-request {
+      border-top: 1px solid $border-color;
+      display: block;
+
+      &:first-child {
+        border-top: 0;
+      }
+    }
+  }
+}
+
 .summary {
   display: flex;
   flex-flow: row nowrap;

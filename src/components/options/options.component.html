@@ -9,9 +9,21 @@
       <h3>General</h3>
       <div class="options-item">
         <span>Refresh interval:</span>
-        <input type="number" min="1" max="90" style="width: 30px;" [(ngModel)]="settings.refreshIntervalInMinutes">
+        <input type="number" min="1" max="90" style="width: 30px" [(ngModel)]="settings.refreshIntervalInMinutes">
         <span>, in minutes</span>
       </div>
+      <div class="options-item">
+        <span>Group by (regular expression):</span>
+        <input style="width: 150px" [(ngModel)]="settings.groupByRegex">
+        <span> use <i>()</i> to mark <i>$1</i> as group name, ex.: <b>(CCM-[^\W]+)</b></span>
+      </div>
+      @if (settings.groupByRegex && settings.groupByRegex.trim().length > 0) {
+        <div class="options-item">
+          <span>Link to task (by group):</span>
+          <input style="width: 150px" [(ngModel)]="settings.taskLinkPattern">
+          <span> use group key in patter, ex.: <b>https://teamvelocitymarketing.atlassian.net/browse/$1</b></span>
+        </div>
+      }
     </div>
 
     <div class="options-list">
