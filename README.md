@@ -19,8 +19,10 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 ## Additional Opportunities
 - Application runs in tray and allows open window by tray menu or click on tray icon
 - Allow to run application at login, use tray menu
+- ability to group pull requests, added link to task (extended options)
 
 ## Known problems and TODO
 - get rid of chrome api usage (clear code), and replace with electron api
 - add ability to display badge on taskbar https://www.electronjs.org/docs/latest/tutorial/windows-taskbar
 - improve toolbar, add version info, link to options, devtool link
+- save window size, position, state & restore 
