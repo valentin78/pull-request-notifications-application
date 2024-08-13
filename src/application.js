@@ -96,6 +96,7 @@ app.on('ready', async () => {
   const contextMenu = Menu.buildFromTemplate([
     {label: 'View PR\'s', type: 'normal', click: () => showWindow(), icon: appIcon},
     {label: 'Options', type: 'normal', icon: configIcon, click: () => showWindow('options')},
+    {label: 'Debug', type: 'normal', click: () => mainWindow.webContents.openDevTools()},
     {label: 'Autostart', type: 'checkbox', checked: getAutostartFlag(), click: item => setAutostartFlag(item.checked)},
     {label: '-----', type: 'separator'},
     {label: 'Close', type: 'normal', click: applicationExit, icon: exitIcon}

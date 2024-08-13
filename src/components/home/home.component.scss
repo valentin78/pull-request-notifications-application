@@ -2,74 +2,71 @@
 
 .home {
   display: flex;
-  flex-flow: column nowrap;
+  flex-direction: column;
   cursor: default;
   height: 100%;
-}
 
-.role {
-  margin-bottom: 10px;
-}
+  .summary {
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
 
-.title {
-  display: flex;
-  align-items: center;
-  height: 25px;
-  background-color: $title-background-color;
-  padding-left: 3px;
-  color: $role-title-color;
-}
+    .last-data-fetching-time {
+      font-size: 15px;
+      font-style: italic;
+      padding-left: 3px;
+    }
 
-.list {
-  .group-title {
-    margin-top: .5em;
-
-    &.as-link {
+    .refresh {
+      font-size: 20px;
       cursor: pointer;
-      color: rgb(83, 155, 245);
-      font-weight: bolder;
+      padding: 2px;
     }
   }
 
-  .group {
-    padding: .5em .5em 0;
+  .roles-container {
+    flex: 1 1 100%;
+    min-height: 200px;
+    overflow-y: auto;
 
-    &.no-group {
-      padding: 0;
-    }
+    .role {
+      margin-bottom: 10px;
 
-    .title {
-      font-weight: bolder;
-    }
+      .title {
+        display: flex;
+        align-items: center;
+        height: 25px;
+        background-color: $title-background-color;
+        padding: 7px 3px;
+        color: $role-title-color;
+      }
 
-    .pull-request {
-      border-top: 1px solid $border-color;
-      display: block;
+      .list {
+        .group-title {
+          //margin-top: .5em;
+          border-top: 1px solid $border-color;
+          padding: 3px;
 
-      &:first-child {
-        border-top: 0;
+          &.as-link {
+            cursor: pointer;
+            color: rgb(83, 155, 245);
+            font-weight: bolder;
+          }
+        }
+
+        .pull-request {
+          border-top: 1px solid $border-color;
+          display: block;
+
+          &:first-child {
+            border-top: 0;
+          }
+        }
       }
     }
   }
-}
-
-.summary {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.last-data-fetching-time {
-  font-size: 15px;
-  font-style: italic;
-  padding-left: 3px;
-}
-
-.refresh {
-  font-size: 20px;
-  cursor: pointer;
-  padding: 2px;
 }
 
 .no-settings {

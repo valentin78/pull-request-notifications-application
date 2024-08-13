@@ -8,60 +8,62 @@
         </span>
       }
       <span class="refresh" (click)="onRefresh()">
-      refresh list
-      <i class="icon icon-redo2" title="refresh"></i>
-    </span>
+        refresh list
+        <i class="icon icon-redo2" title="refresh"></i>
+      </span>
     </div>
 
-    <div class="role">
-      <div class="title">
-        <h3>
-          <i style="margin-right: 2px;" class="icon icon-user"></i>
-          Created
-          @if (created) {
-            <span>&nbsp;| {{ totalPullRequests(created) }}</span>
-          }
-        </h3>
-      </div>
-      @if (created) {
-        <div class="list">
-          <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: created}"/>
+    <div class="roles-container">
+      <div class="role">
+        <div class="title">
+          <h3>
+            <i style="margin-right: 2px;" class="icon icon-user"></i>
+            Created
+            @if (created) {
+              <span>&nbsp;| {{ totalPullRequests(created) }}</span>
+            }
+          </h3>
         </div>
-      }
-    </div>
+        @if (created) {
+          <div class="list">
+            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: created}"/>
+          </div>
+        }
+      </div>
 
-    <div class="role">
-      <div class="title">
-        <h3>
-          <i style="margin-right: 2px;" class="icon icon-git"></i>
-          Reviewing
-          @if (reviewing) {
-            <span>&nbsp;| {{ totalPullRequests(reviewing) }}</span>
-          }
-        </h3>
-      </div>
-      @if (reviewing) {
-        <div class="list">
-          <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: reviewing}"/>
+      <div class="role">
+        <div class="title">
+          <h3>
+            <i style="margin-right: 2px;" class="icon icon-git"></i>
+            Reviewing
+            @if (reviewing) {
+              <span>&nbsp;| {{ totalPullRequests(reviewing) }}</span>
+            }
+          </h3>
         </div>
-      }
-    </div>
+        @if (reviewing) {
+          <div class="list">
+            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: reviewing}"/>
+          </div>
+        }
+      </div>
 
-    <div class="role">
-      <div class="title">
-        <h3>
-          <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
-          Participating
-          @if (participant) {
-            <span>&nbsp;| {{ totalPullRequests(participant) }}</span>
-          }
-        </h3>
-      </div>
-      @if (participant) {
-        <div class="list">
-          <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: participant}"/>
+      <div class="role">
+        <div class="title">
+          <h3>
+            <i style="margin-right: 2px;" class="icon icon-bubbles"></i>
+            Participating
+            @if (participant) {
+              <span>&nbsp;| {{ totalPullRequests(participant) }}</span>
+            }
+          </h3>
         </div>
-      }
+        @if (participant) {
+          <div class="list">
+            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: participant}"/>
+          </div>
+        }
+      </div>
     </div>
 
   </div>
@@ -80,11 +82,9 @@
         {{group.key}}
       </span>
     }
-    <div class="group" [ngClass]="{'no-group': group.key === ''}">
-      @for (pr of group.value; track pr) {
-        <app-pull-request class="pull-request" [pullRequest]="pr" [showAuthorAvatar]="false"/>
-      }
-    </div>
+    @for (pr of group.value; track pr) {
+      <app-pull-request class="pull-request" [pullRequest]="pr" [showAuthorAvatar]="false"/>
+    }
   }
 </ng-template>
 
