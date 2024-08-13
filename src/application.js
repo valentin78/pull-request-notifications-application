@@ -121,7 +121,7 @@ app.on('ready', async () => {
       icon: getIcon('config-ico.png')
     },
     {
-      label: 'Autostart',
+      label: 'Startup',
       type: 'checkbox',
       checked: getAutostartFlag(),
       click: item => setAutostartFlag(item.checked)

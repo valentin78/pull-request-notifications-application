@@ -9,20 +9,20 @@
         <span class="title" [innerHTML]="pullRequest.title"></span>
       </span>
         <div class="status-bar">
-        <span class="pr-status"
-              [class.pr-can-be-merged]="approved"
-              [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
-          {{ status }}
-          @if (hasConflicts) {
-            <i class="icon icon-warning"></i>
-          }
-        </span>
+          <span class="pr-status"
+                [class.pr-can-be-merged]="approved"
+                [ngClass]="{'conflicts': hasConflicts, 'approved': approved, 'needs-work': needsWork}">
+            {{ status }}
+            @if (hasConflicts) {
+              <i class="icon icon-warning"></i>
+            }
+          </span>
 
           <span title="created date">{{ pullRequest.createdDate | date }}</span>
 
           <span class="to-ref url" (click)="navigateTo(pullRequest.fromRef.repository.links.self[0].href)">
-          {{ pullRequest.fromRef.repository.name }}
-        </span>
+            {{ pullRequest.fromRef.repository.name }}
+          </span>
 
           <span class="to-ref" title="destination branch">{{ pullRequest.toRef.displayId }}</span>
 

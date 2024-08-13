@@ -26,7 +26,7 @@
         </div>
         @if (created) {
           <div class="list">
-            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: created}"/>
+            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: created, avatar: false}"/>
           </div>
         }
       </div>
@@ -43,7 +43,7 @@
         </div>
         @if (reviewing) {
           <div class="list">
-            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: reviewing}"/>
+            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: reviewing, avatar: true}"/>
           </div>
         }
       </div>
@@ -60,7 +60,7 @@
         </div>
         @if (participant) {
           <div class="list">
-            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: participant}"/>
+            <ng-container *ngTemplateOutlet="renderItems; context: {$implicit: participant, avatar: true}"/>
           </div>
         }
       </div>
@@ -73,7 +73,7 @@
   </div>
 }
 
-<ng-template #renderItems let-items>
+<ng-template #renderItems let-items let-avatar=avatar>
   @for (group of items | toKeyValue; track group) {
     @if (group.key !== '') {
       <span class="group-title title"
@@ -83,7 +83,7 @@
       </span>
     }
     @for (pr of group.value; track pr) {
-      <app-pull-request class="pull-request" [pullRequest]="pr" [showAuthorAvatar]="false"/>
+      <app-pull-request class="pull-request" [pullRequest]="pr" [showAuthorAvatar]="avatar"/>
     }
   }
 </ng-template>

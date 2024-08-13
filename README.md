@@ -2,7 +2,8 @@
 
 Desktop version of [pull-request-notifications-chrome-extension](https://github.com/spaduret/pull-request-notifications), authored by Sergei Paduret. 
 
-Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.electron.build/) libraries to build desktop application. 
+Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.electron.build/) libraries to build desktop application.
+Icons: https://www.flaticon.com/
 
 ## Run and Build Instructions
 
@@ -36,3 +37,8 @@ All notable changes to this project will be documented in this file.
 ## v1.0.9
 ### Changed
 - improved context menu
+
+## v1.0.10
+### Changed
+- updated icons
+- fix: show author
