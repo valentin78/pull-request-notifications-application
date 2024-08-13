@@ -1,7 +1,7 @@
 {
   "name": "pull-request-notifications",
   "author": "Valentin Gushan",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "scripts": {
     "ng": "ng",
@@ -38,6 +38,7 @@
       "!node_modules/sass",
       "!node_modules/rxjs",
       "!node_modules/terser-webpack-plugin",
+      "src/core/electron-window-state.js",
       "src/application.js",
       "src/assets/**/*",
       "dist/browser/**/*"
