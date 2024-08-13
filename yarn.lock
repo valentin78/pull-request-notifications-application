@@ -7679,7 +7679,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonfile@npm:^6.0.1":
+"jsonfile@npm:^6.0.1, jsonfile@npm:^6.1.0":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
   dependencies:
@@ -9369,6 +9369,7 @@ __metadata:
     electron: ^31.3.1
     electron-builder: ^24.13.3
     electron-store: ^10.0.0
+    jsonfile: ^6.1.0
     ngx-electron: ^2.2.0
     rxjs: ~7.8.1
     tslib: ^2.6.3

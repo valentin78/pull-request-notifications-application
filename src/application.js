@@ -5,6 +5,7 @@ import url from "url";
 import path from "path";
 import {fileURLToPath} from 'url';
 import Store from 'electron-store';
+import windowStateKeeper from './core/electron-window-state.js';
 
 // if true, application will open devtools and auto open windows in fullscreen
 const debugMode = false;
@@ -37,9 +38,16 @@ const loadUrlAsync = async (fragment) => {
 };
 
 async function createWindowAsync() {
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 1000,
+    defaultHeight: 800
+  });
+
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 700,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
     icon: windowIco,
     webPreferences: {
       nodeIntegration: true,
@@ -50,9 +58,11 @@ async function createWindowAsync() {
     closable: true
   })
 
+  mainWindowState.manage(mainWindow);
+
   await loadUrlAsync();
 
-  mainWindow.getChildWindows()
+  // mainWindow.getChildWindows()
 
   mainWindow.setMenu(null);
 
@@ -61,12 +71,15 @@ async function createWindowAsync() {
     mainWindow.webContents.openDevTools()
   }
 
+  // hide window if user clicks on close button
   mainWindow.on('close', function (evt) {
     evt.preventDefault();
+    mainWindowState.saveState(mainWindow);
     mainWindow.hide();
   });
 
   mainWindow.on('closed', function () {
+    mainWindowState.saveState(mainWindow);
     mainWindow = null
   })
 
@@ -125,11 +138,15 @@ const setAutostartFlag = (openAtLogin) => {
 }
 
 const applicationExit = () => {
+  if (mainWindow) {
+    mainWindow.close()
+    mainWindow = null;
+  }
   if (process.platform !== 'darwin') app.exit(0);
 }
 
 app.on('activate', async () => {
-  if (mainWindow === null) await createWindowAsync()
+  if (!mainWindow) await createWindowAsync()
 })
 
 app.on('window-all-closed', applicationExit);
