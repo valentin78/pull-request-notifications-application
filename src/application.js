@@ -9,6 +9,7 @@ import windowStateKeeper from './core/electron-window-state.js';
 
 // if true, application will open devtools and auto open windows in fullscreen
 const debugMode = false;
+const title = `Pull Request Notifications v${app.getVersion()}`;
 
 const gotInstanceLock = app.requestSingleInstanceLock();
 if (!gotInstanceLock) {
@@ -55,7 +56,8 @@ async function createWindowAsync() {
     },
     show: debugMode,
     fullscreen: debugMode,
-    closable: true
+    closable: true,
+    title: title
   })
 
   mainWindowState.manage(mainWindow);
@@ -117,8 +119,8 @@ app.on('ready', async () => {
 
   tray.setContextMenu(contextMenu)
 
-  tray.setToolTip('Pull Request Notifications')
-  tray.setTitle('Pull Request Notifications')
+  tray.setToolTip(title)
+  tray.setTitle(title)
 
   tray.addListener('click', () => showWindow());
 })
