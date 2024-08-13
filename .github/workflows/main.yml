@@ -12,7 +12,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  release:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
@@ -53,10 +53,8 @@ jobs:
       - name: yarn install and run build
         # Runs a set of commands using the runners shell
         run: |
-          # npm install yarn
-          # todo: delete lock file
           yarn install
-          yarn run build:prod
+          yarn run make:dist
 
       #create new tag only on push event
       - name: Bump version and push tag
@@ -67,11 +65,12 @@ jobs:
           github_token: ${{ secrets.TOKEN }}
 
       #create new release only on push event
-      - name: Push Build to Releases
-        if: ${{ github.event_name == 'push' }}
-        uses: ncipollo/release-action@v1
+      - uses: CupOfTea696/gh-action-auto-release@v1.0.0
         with:
-          artifacts: "dist/pull-request-notifications/*"
-          token: ${{ secrets.TOKEN }}
-          commit: master
-          tag: ${{ steps.tag_version.outputs.new_tag }}
+          title: "Release: $version"
+          tag: "v$semver"
+          draft: false
+          regex: "/^Release: #{semver}$/i"
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+

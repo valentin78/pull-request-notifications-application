@@ -25,4 +25,10 @@ Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.
 - get rid of chrome api usage (clear code), and replace with electron api
 - add ability to display badge on taskbar https://www.electronjs.org/docs/latest/tutorial/windows-taskbar
 - improve toolbar, add version info, link to options, devtool link
- 
+
+# Changelog
+All notable changes to this project will be documented in this file.
+
+## v1.0.8
+### Changed
+- create auto release
