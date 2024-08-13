@@ -1,11 +1,13 @@
 // https://www.electronjs.org/docs/latest/tutorial/installation
 
-import {app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell} from 'electron';
+import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell } from 'electron';
 import url from "url";
 import path from "path";
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 import Store from 'electron-store';
 import windowStateKeeper from './core/electron-window-state.js';
+
+const projectUrl = `https://github.com/valentin78/pull-request-notifications-application`;
 
 // if true, application will open devtools and auto open windows in fullscreen
 const debugMode = false;
@@ -100,23 +102,53 @@ app.on('second-instance', (event, commandLine, workingDirectory) => {
 app.on('ready', async () => {
   await createWindowAsync();
 
-  const exitIconPath = path.join(__dirname, assetsFolder, `/exit-ico.png`);
-  const configIconPath = path.join(__dirname, assetsFolder, `/config-ico.png`);
-  const appIconPath = path.join(__dirname, assetsFolder, `/application-ico.png`);
-  const exitIcon = nativeImage.createFromPath(exitIconPath)
-  const configIcon = nativeImage.createFromPath(configIconPath)
-  const appIcon = nativeImage.createFromPath(appIconPath)
-  tray = new Tray(windowIco)
+  const getIcon = icoFile => {
+    const iconPath = path.join(__dirname, assetsFolder, `/`, icoFile);
+    return nativeImage.createFromPath(iconPath)
+  };
 
   const contextMenu = Menu.buildFromTemplate([
-    {label: 'View PR\'s', type: 'normal', click: () => showWindow(), icon: appIcon},
-    {label: 'Options', type: 'normal', icon: configIcon, click: () => showWindow('options')},
-    {label: 'Debug', type: 'normal', click: () => mainWindow.webContents.openDevTools()},
-    {label: 'Autostart', type: 'checkbox', checked: getAutostartFlag(), click: item => setAutostartFlag(item.checked)},
+    {
+      label: 'Show window',
+      type: 'normal',
+      click: () => showWindow(),
+      icon: getIcon('application-ico.png')
+    },
+    {
+      label: 'Options',
+      type: 'normal',
+      click: () => showWindow('options'),
+      icon: getIcon('config-ico.png')
+    },
+    {
+      label: 'Autostart',
+      type: 'checkbox',
+      checked: getAutostartFlag(),
+      click: item => setAutostartFlag(item.checked)
+    },
     {label: '-----', type: 'separator'},
-    {label: 'Close', type: 'normal', click: applicationExit, icon: exitIcon}
+    {
+      label: 'Debug',
+      type: 'normal',
+      click: () => mainWindow.webContents.openDevTools(),
+      icon: getIcon('code.png')
+    },
+    {
+      label: 'About',
+      type: 'normal',
+      click: () => shell.openExternal(projectUrl),
+      icon: getIcon('info.png')
+    },
+    {label: '-----', type: 'separator'},
+    {
+      label: 'Close',
+      type: 'normal',
+      click: applicationExit,
+      icon: getIcon('exit-ico.png')
+    }
   ])
 
+  tray = new Tray(windowIco)
   tray.setContextMenu(contextMenu)
 
   tray.setToolTip(title)
