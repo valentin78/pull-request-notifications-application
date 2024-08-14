@@ -12,7 +12,7 @@
     "make:dist": "electron-builder"
   },
   "private": true,
-  "main": "src/application.js",
+  "main": "src/application.mjs",
   "build": {
     "appId": "pull-requests-notifications",
     "directories": {
@@ -38,8 +38,7 @@
       "!node_modules/sass",
       "!node_modules/rxjs",
       "!node_modules/terser-webpack-plugin",
-      "src/core/electron-window-state.js",
-      "src/application.js",
+      "src/**.*.mjs",
       "src/assets/**/*",
       "dist/browser/**/*"
     ],

@@ -1,17 +1,9 @@
 @if (isSettingsValid) {
   <div class="home">
-    <div class="summary">
-      @if (lastDataFetchingTimestamp) {
-        <span class="last-data-fetching-time">
-          last data fetching time:
-          <span style="font-style: initial;">{{ lastDataFetchingTimestamp | date:dateFormat }}</span>
-        </span>
-      }
-      <span class="refresh" (click)="onRefresh()">
-        refresh list
-        <i class="icon icon-redo2" title="refresh"></i>
-      </span>
-    </div>
+    <app-toolbar
+      class="toolbar"
+      [lastDataFetchingTimestamp]="lastDataFetchingTimestamp"
+      (refreshData)="onRefresh()"/>
 
     <div class="roles-container">
       <div class="role">

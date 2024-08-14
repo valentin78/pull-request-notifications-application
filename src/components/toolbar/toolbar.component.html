@@ -1,0 +1,12 @@
+<div class="container">
+  @if (lastDataFetchingTimestampSig(); as timestamp) {
+    <span class="last-data-fetching-time">
+      last data fetching time:
+      <span style="font-style: initial;">{{ timestamp | date: dateFormat }}</span>
+    </span>
+  }
+  <span class="refresh" (click)="refreshData.emit()">
+    refresh list
+    <i class="icon icon-redo2" title="refresh"></i>
+  </span>
+</div>

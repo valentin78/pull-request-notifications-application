@@ -5,7 +5,8 @@ import url from "url";
 import path from "path";
 import { fileURLToPath } from 'url';
 import Store from 'electron-store';
-import windowStateKeeper from './core/electron-window-state.js';
+
+import windowStateKeeper from './core/electron-window-state.mjs';
 
 const projectUrl = `https://github.com/valentin78/pull-request-notifications-application`;
 

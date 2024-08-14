@@ -9,6 +9,7 @@ import {PullRequestComponent} from '../pull-request-view/pull-request.component'
 import {RouterLink} from '@angular/router';
 import {ToKeyValuePipe} from '../../pipes/to-key-value.pipe';
 import {ApplicationService} from '../../services/application.service';
+import {ToolbarComponent} from '../toolbar/toolbar.component';
 
 type PullRequestGroups = Record<string, PullRequest[]>;
 
@@ -23,7 +24,8 @@ type PullRequestGroups = Record<string, PullRequest[]>;
     RouterLink,
     ToKeyValuePipe,
     NgClass,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    ToolbarComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -33,7 +35,6 @@ export class HomeComponent implements OnInit {
   protected participant: PullRequestGroups = {};
   protected isSettingsValid!: boolean;
   protected lastDataFetchingTimestamp?: number;
-  protected dateFormat = 'dd MMM, y HH:mm:ss'; // todo: save to settings
 
   private _groupByRegex!: string | null;
   protected taskLinkPattern!: string | null;
