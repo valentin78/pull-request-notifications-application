@@ -25,7 +25,7 @@ Icons: https://www.flaticon.com/
 ## Known problems and TODO
 - get rid of chrome api usage (clear code), and replace with electron api
 - add ability to display badge on taskbar https://www.electronjs.org/docs/latest/tutorial/windows-taskbar
-- improve toolbar, add version info, link to options, devtool link
+- refactor & improve options
 
 # Changelog
 All notable changes to this project will be documented in this file.
