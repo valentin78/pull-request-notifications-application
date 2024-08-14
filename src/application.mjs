@@ -131,7 +131,7 @@ app.on('ready', async () => {
     {
       label: 'Debug',
       type: 'normal',
-      click: () => mainWindow.webContents.openDevTools(),
+      click: () => openDevTools(),
       icon: getIcon('code.png')
     },
     {
@@ -162,6 +162,10 @@ const getAutostartFlag = () => {
   return app.getLoginItemSettings({
     path: app.getPath("exe")
   })?.openAtLogin ?? false;
+}
+
+const openDevTools = () => {
+  mainWindow.webContents.openDevTools();
 }
 
 const setAutostartFlag = (openAtLogin) => {
@@ -215,3 +219,10 @@ ipcMain.on("navigate-to", async (event, url) => {
   await shell.openExternal(url)
 });
 
+ipcMain.on("open-dev-tools", (event, key, data) => {
+  openDevTools()
+});
+
+ipcMain.on("open-project", (event, key, data) => {
+  shell.openExternal(projectUrl);
+});

@@ -55,4 +55,14 @@ export class ApplicationService {
     if (this._electronService.isElectronApp)
       this._electronService.ipcRenderer.send('request-app-balloon', body, 'info', title);
   }
+
+  public openDevTools() {
+    if (this._electronService.isElectronApp)
+      this._electronService.ipcRenderer.send('open-dev-tools');
+  }
+
+  public openProject() {
+    if (this._electronService.isElectronApp)
+      this._electronService.ipcRenderer.send('open-project');
+  }
 }

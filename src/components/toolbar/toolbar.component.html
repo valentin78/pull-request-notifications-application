@@ -1,12 +1,19 @@
 <div class="container">
-  @if (lastDataFetchingTimestampSig(); as timestamp) {
-    <span class="last-data-fetching-time">
-      last data fetching time:
-      <span style="font-style: initial;">{{ timestamp | date: dateFormat }}</span>
-    </span>
-  }
-  <span class="refresh" (click)="refreshData.emit()">
-    refresh list
-    <i class="icon icon-redo2" title="refresh"></i>
-  </span>
+  <img ngSrc="info.png" alt="" height="24" width="24" class="button"
+       [attr.title]="lastDataFetchingTimestampSig() ? 'last data fetching time: ' + (lastDataFetchingTimestampSig() | date: dateFormat) : null"
+       (click)="openProject()">
+
+  <img ngSrc="code.png" alt="" height="24" width="24" class="button"
+       title="Open DevTools"
+       (click)="openDevTools()">
+
+  <img ngSrc="config-ico.png" alt="" height="24" width="24" class="button"
+       title="Options"
+       (click)="openConfig()">
+
+  <img ngSrc="refresh.png" alt="" height="24" width="24" class="button"
+       title="Refresh List"
+       style="margin-left: auto"
+       (click)="refreshData.emit()">
+
 </div>

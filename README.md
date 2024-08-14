@@ -42,3 +42,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - updated icons
 - fix: show author
+
+## v1.0.11
+### Changed
+- improved toolbar
+

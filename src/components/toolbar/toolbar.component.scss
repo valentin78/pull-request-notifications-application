@@ -2,12 +2,11 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  justify-content: space-between;
+  padding: 12px;
+  gap: 14px;
 
-  .last-data-fetching-time {
-    font-size: 15px;
-    font-style: italic;
-    padding-left: 3px;
+  .button {
+    cursor: pointer;
   }
 
   .refresh {
