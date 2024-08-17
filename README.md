@@ -5,6 +5,10 @@ Desktop version of [pull-request-notifications-chrome-extension](https://github.
 Uses [Electron](https://www.electronjs.org/) and [Electron-Builder](https://www.electron.build/) libraries to build desktop application.
 Icons: https://www.flaticon.com/
 
+![main-window](https://github.com/user-attachments/assets/8b2e1803-fc84-4cb6-a888-b95eb3c85dde)
+![options](https://github.com/user-attachments/assets/60cbbc25-df15-4177-848e-e1517c9d67a8)
+
+
 ## Run and Build Instructions
 
 - run `npm run start:electron` to run application in DEV mode
