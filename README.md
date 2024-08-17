@@ -23,6 +23,7 @@ Icons: https://www.flaticon.com/
 - ability to group pull requests, added link to task (extended options)
 
 ## Known problems and TODO
+- fix: issue with notification icon
 - get rid of chrome api usage (clear code), and replace with electron api
 - add ability to display badge on taskbar https://www.electronjs.org/docs/latest/tutorial/windows-taskbar
 - refactor & improve options
