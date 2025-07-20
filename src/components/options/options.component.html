@@ -15,7 +15,7 @@
       <div class="options-item">
         <span>Group by (regular expression):</span>
         <input style="width: 150px" [(ngModel)]="settings.groupByRegex">
-        <span> use <i>()</i> to mark <i>$1</i> as group name, ex.: <b>(CCM-[^\W]+)</b></span>
+        <span> use <i>()</i> to mark <i>$1</i> as group name, ex.: <b>([A-Z]+-[^\W]+)</b></span>
       </div>
       @if (settings.groupByRegex && settings.groupByRegex.trim().length > 0) {
         <div class="options-item">

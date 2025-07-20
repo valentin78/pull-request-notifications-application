@@ -1,9 +1,8 @@
 // https://www.electronjs.org/docs/latest/tutorial/installation
 
-import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell } from 'electron';
-import url from "url";
+import { app, BrowserWindow, ipcMain, Menu, nativeImage, shell, Tray } from 'electron';
+import url, { fileURLToPath } from "url";
 import path from "path";
-import { fileURLToPath } from 'url';
 import Store from 'electron-store';
 
 import windowStateKeeper from './core/electron-window-state.mjs';

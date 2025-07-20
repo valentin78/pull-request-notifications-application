@@ -3,7 +3,7 @@ import {BitbucketComment, PullRequest} from '../../models/models';
 import {BitbucketMergeResultOutcome, PullRequestStatus} from '../../models/enums';
 import {ApplicationService} from '../../services/application.service';
 import {UserComponent} from '../user/user.component';
-import {DatePipe, NgClass} from '@angular/common';
+import {DatePipe, NgClass, NgOptimizedImage} from '@angular/common';
 import {SnoozeNotificationComponent} from '../snooze-notification/snooze-notification.component';
 
 @Component({
@@ -14,7 +14,8 @@ import {SnoozeNotificationComponent} from '../snooze-notification/snooze-notific
     UserComponent,
     NgClass,
     DatePipe,
-    SnoozeNotificationComponent
+    SnoozeNotificationComponent,
+    NgOptimizedImage
   ],
   styleUrls: ['./pull-request.component.scss']
 })
@@ -86,5 +87,10 @@ export class PullRequestComponent implements OnInit {
 
     tooltip += '\n';
     return tooltip;
+  }
+
+  protected async copyToClipboard(ev: MouseEvent, url: string ) {
+    ev.stopPropagation();
+    await navigator.clipboard.writeText(url);
   }
 }

@@ -2,12 +2,22 @@
   <div class="container" data-id="{{pullRequest.id}}">
     <div class="content">
       <div class="data">
-      <span class="self-url url" (click)="navigateTo(selfUrl)">
-        @if (showAuthorAvatar) {
-          <app-user class="user" [user]="pullRequest.author.user" [size]="24"/>
-        }
-        <span class="title" [innerHTML]="pullRequest.title"></span>
-      </span>
+        <span class="self-url url" (click)="navigateTo(selfUrl)">
+          @if (showAuthorAvatar) {
+            <app-user class="user" [user]="pullRequest.author.user" [size]="24"/>
+          }
+          <span class="title" [innerHTML]="pullRequest.title"></span>
+
+          <img ngSrc="copy-clipboard.png"
+               [width]="24"
+               [height]="24"
+               alt="copy"
+               style="margin-left: 14px; cursor: pointer"
+               title="Copy URL to clipboard"
+               (click)="copyToClipboard($event, selfUrl)"
+          />
+        </span>
+
         <div class="status-bar">
           <span class="pr-status"
                 [class.pr-can-be-merged]="approved"
@@ -27,7 +37,7 @@
           <span class="to-ref" title="destination branch">{{ pullRequest.toRef.displayId }}</span>
 
           @if (commentsCount) {
-            <span class="comments"  title="{{commentsTooltip}}" (click)="onDisplayComments($event)">
+            <span class="comments" title="{{commentsTooltip}}" (click)="onDisplayComments($event)">
               {{ commentsCount }}
               <i class="icon icon-bubble"></i>
             </span>
